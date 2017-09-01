@@ -37,4 +37,16 @@ class ViewUsersTest extends TestCase
             ->assertJsonFragment([$accountUsers[2]->name])
             ->assertJsonMissing([$notAccountUser->name]);
     }
+
+    /** @test */
+    public function unauthenticated_users_cannot_request_users()
+    {
+        $account = factory(Account::class)->create();
+        $accountUsers = factory(User::class, 3)->create([
+            'account_id' => $account->id
+        ]);
+
+        $response = $this->json('GET', 'api/users')
+            ->assertStatus(401);
+    }
 }
