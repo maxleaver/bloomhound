@@ -20,10 +20,8 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 // Route::get('/login', 'Auth\LoginController@login');
 // Route::get('/login/refresh', 'Auth\LoginController@refresh');
 
-// Route::middleware('auth:api')->group(function () {
-// 	Route::get('/logout', 'Auth\LoginController@logout');
+Route::middleware('auth:api')->group(function () {
+	// Route::get('/logout', 'Auth\LoginController@logout');
 
-// 	Route::get('/user', function (Request $request) {
-// 	    return $request->user();
-// 	});
-// });
+	Route::get('/users', 'UserController@index');
+});
