@@ -2,28 +2,41 @@
 
 API example for Bloomhound
 
+## Requirements
+
+[**Composer**](https://getcomposer.org)
+PHP dependency manager
+
+[**PHPUnit**](https://phpunit.de/manual/current/en/installation.html)
+PHP testing framework
+
+A web server of some kind (see Laravel Valet below if you're on OSX).
+
 ## Installation
 
-Clone the repository to your local machine. Use .env.example as a template to create a .env file in the root directory. You should not have to make any changes, unless you want to populate your MailTrap.io info for email testing (see Helpful Tools below). Run the following (assumes you have Composer installed already):
+After cloning the repository to your local machine, create a .env file in the root directory using .env.example as a template. You should not have to make any changes, unless you want to populate your MailTrap.io info for email testing (see Helpful Tools below).
 
+Run the following commands in your console (assumes you have already installed Composer):
+
+Installs all dependencies
 ``` bash
 composer install
 
 ```
 
-Generate a unique APP_KEY by running:
+Generates a unique APP_KEY
 ``` bash
 php artisan key:generate
 
 ```
 
-Generate a unique JWT by running:
+Generates a unique secret key for generating JWT (JSON Web Tokens)
 ``` bash
 php artisan jwt:secret
 
 ```
 
-Build up the database (currently a simple sqlite file):
+Builds up the database (a sqlite file in the database directory)
 ``` bash
 php artisan migrate
 
@@ -31,25 +44,20 @@ php artisan migrate
 
 ## Usage
 
-Simply make an HTTP request to your development server using any route in `routes/api.php`.
+Make an HTTP request to your development server using any route in `routes/api.php`.
 
+
+## Running Tests
 ``` bash
-# run all tests
+# runs all tests
 phpunit
 
-# run single test class
+# runs a single test class
 phpunit --filter SomeTest
 
 ```
 
 ## Helpful Tools
-
-[**Composer**](https://getcomposer.org)
-PHP dependency manager
-
-[**PHPUnit](https://phpunit.de/manual/current/en/installation.html)
-PHP testing framework
-
 [**Laravel Valet**](https://laravel.com/docs/5.4/valet)
 Quick development web server
 
