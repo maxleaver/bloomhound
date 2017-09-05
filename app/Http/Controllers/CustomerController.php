@@ -42,12 +42,16 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Customer $customer)
     {
-        //
+        if ($customer->account->id !== Auth::user()->account->id) {
+            abort(404);
+        }
+
+        return json_encode(compact('customer'));
     }
 
     /**

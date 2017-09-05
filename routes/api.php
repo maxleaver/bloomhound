@@ -30,5 +30,6 @@ Route::middleware('auth:api')->group(function () {
 	Route::get('invitations', 'InviteController@index');
 
 	Route::get('customers', 'CustomerController@index');
+	Route::get('customers/{customer}', 'CustomerController@show');
 	Route::post('customers', 'CustomerController@store');
 });
