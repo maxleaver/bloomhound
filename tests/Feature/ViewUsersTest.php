@@ -16,13 +16,13 @@ class ViewUsersTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $account = factory(Account::class)->create();
-        $accountUsers = factory(User::class, 3)->create([
+        $account = create(Account::class);
+        $accountUsers = create(User::class, [
             'account_id' => $account->id
-        ]);
+        ], 3);
 
-        $someOtherAccount = factory(Account::class)->create();
-        $notAccountUser = factory(User::class)->create([
+        $someOtherAccount = create(Account::class);
+        $notAccountUser = create(User::class, [
             'account_id' => $someOtherAccount->id
         ]);
 
@@ -41,10 +41,10 @@ class ViewUsersTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_request_users()
     {
-        $account = factory(Account::class)->create();
-        $accountUsers = factory(User::class, 3)->create([
+        $account = create(Account::class);
+        $accountUsers = create(User::class, [
             'account_id' => $account->id
-        ]);
+        ], 3);
 
         $response = $this->json('GET', 'api/users')
             ->assertStatus(401);

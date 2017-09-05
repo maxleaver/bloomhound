@@ -32,7 +32,7 @@ class RegisterAccountTest extends TestCase
     /** @test */
     public function a_user_can_only_register_one_account()
     {
-        $user = factory(User::class)->create();
+        $user = create(User::class);
 
         $request = $this->makeRequest($user->email);
 

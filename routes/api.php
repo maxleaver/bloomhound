@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::post('register', 'Auth\RegisterController@register');
 Route::post('auth', 'Auth\LoginController@login');
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::get('invite/accept', 'InviteController@accept')->name('invite');
 
 // Route::get('/login', 'Auth\LoginController@login');
 // Route::get('/login/refresh', 'Auth\LoginController@refresh');
@@ -23,5 +24,6 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::middleware('auth:api')->group(function () {
 	// Route::get('/logout', 'Auth\LoginController@logout');
 
-	Route::get('/users', 'UserController@index');
+	Route::get('users', 'UserController@index');
+	Route::post('users', 'InviteController@store');
 });

@@ -25,7 +25,7 @@ class ForgotPasswordTest extends TestCase
     {
         Notification::fake();
 
-        $user = factory(User::class)->create();
+        $user = create(User::class);
 
         $response = $this->json('POST', 'api/password/email', ['email' => $user->email])
             ->assertStatus(200)
@@ -43,7 +43,7 @@ class ForgotPasswordTest extends TestCase
 
         // Make a user, but don't persist it
         // so it won't exist in the database
-        $user = factory(User::class)->make();
+        $user = make(User::class);
 
         $response = $this->json('POST', 'api/password/email', ['email' => $user->email])
             ->assertStatus(200)

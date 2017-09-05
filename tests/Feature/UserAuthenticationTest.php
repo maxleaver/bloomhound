@@ -16,7 +16,7 @@ class UserAuthenticationTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = factory(User::class)->create([
+        $user = create(User::class, [
             'password' => bcrypt('abc123')
         ]);
 
@@ -35,7 +35,7 @@ class UserAuthenticationTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = factory(User::class)->create([
+        $user = create(User::class, [
             'password' => bcrypt('abc123')
         ]);
 
