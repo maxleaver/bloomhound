@@ -29,4 +29,14 @@ class CustomerTest extends TestCase
     {
         $this->assertInstanceOf('App\Account', $this->customer->account);
     }
+
+    /** @test */
+    public function a_customer_has_contacts()
+    {
+        create('App\Contact', [
+            'customer_id' => $this->customer->id
+        ]);
+
+        $this->assertInstanceOf('App\Contact', $this->customer->contacts->first());
+    }
 }

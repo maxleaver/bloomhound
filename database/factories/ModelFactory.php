@@ -51,3 +51,19 @@ $factory->define(App\Customer::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(App\Contact::class, function (Faker $faker) {
+    $account = factory('App\Account')->create();
+    $customer = factory('App\Customer')->create(['account_id' => $account->id]);
+
+    return [
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'email' => $faker->email,
+        'phone' => $faker->phoneNumber,
+        'relationship' => $faker->sentence,
+        'address' => $faker->address,
+        'account_id' => $account->id,
+        'customer_id' => $customer->id
+    ];
+});
+

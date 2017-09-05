@@ -19,4 +19,9 @@ class Customer extends Model
     {
         return $this->belongsTo('App\Account');
     }
+
+    public function contacts()
+    {
+        return $this->hasMany('App\Contact');
+    }
 }

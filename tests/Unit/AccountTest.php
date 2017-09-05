@@ -52,4 +52,14 @@ class AccountTest extends TestCase
 
         $this->assertInstanceOf('App\Customer', $this->account->customers->first());
     }
+
+    /** @test */
+    public function an_account_has_contacts()
+    {
+        create('App\Contact', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\Contact', $this->account->contacts->first());
+    }
 }
