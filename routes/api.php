@@ -18,7 +18,6 @@ Route::post('auth', 'Auth\LoginController@login');
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::post('invitation/accept/{invite}', 'InviteController@accept')->name('invite');
 
-// Route::get('/login', 'Auth\LoginController@login');
 // Route::get('/login/refresh', 'Auth\LoginController@refresh');
 
 Route::middleware('auth:api')->group(function () {

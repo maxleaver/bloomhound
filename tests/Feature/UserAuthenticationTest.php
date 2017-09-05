@@ -16,7 +16,7 @@ class UserAuthenticationTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = create(User::class, [
+        $user = create('App\User', [
             'password' => bcrypt('abc123')
         ]);
 
@@ -35,7 +35,7 @@ class UserAuthenticationTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = create(User::class, [
+        $user = create('App\User', [
             'password' => bcrypt('abc123')
         ]);
 
@@ -47,5 +47,20 @@ class UserAuthenticationTest extends TestCase
         $response = $this->json('POST', 'api/auth', $request)
             ->assertStatus(200)
             ->assertJsonStructure(['token']);
+    }
+
+    /** @test */
+    public function a_user_can_only_get_an_auth_token_with_a_correct_password()
+    {
+        $user = create('App\User');
+
+        $request = [
+            'email' => $user->email,
+            'password' => 'The Wrong Password'
+        ];
+
+        $response = $this->json('POST', 'api/auth', $request)
+            ->assertStatus(422)
+            ->assertJsonFragment(['errors']);
     }
 }

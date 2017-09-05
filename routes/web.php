@@ -19,5 +19,3 @@ Route::post('password/reset', [
 	'as' => 'password.reset',
 	'uses' => 'Auth\ForgotPasswordController@showLinkRequestForm'
 ]);
-
-Route::get('/home', 'HomeController@index')->name('home');
