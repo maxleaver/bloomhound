@@ -26,4 +26,6 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::get('users', 'UserController@index');
 	Route::post('users', 'InviteController@store');
+
+	Route::get('invitations', 'InviteController@index');
 });

@@ -13,6 +13,13 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class InviteController extends Controller
 {
+	public function index()
+	{
+		// Get list of invitations for authenticated users account
+		$invites = Invite::where('account_id', Auth::user()->account->id)->get();
+		return json_encode(compact('invites'));
+	}
+
 	public function store()
 	{
 		$data = $this->validate(request(), [
