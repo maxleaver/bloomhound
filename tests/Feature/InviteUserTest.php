@@ -25,7 +25,7 @@ class InviteUserTest extends TestCase
 
         $this->assertEquals(Invite::count(), 0);
 
-        $response = $this->json('POST', 'api/users', $request, $this->getAuthHeader($user))
+        $response = $this->json('POST', 'api/users', $request, authAsUser($user))
         	->assertStatus(200);
 
         $this->assertEquals(Invite::count(), 1);
@@ -44,7 +44,7 @@ class InviteUserTest extends TestCase
 
         $this->assertEquals(Invite::count(), 0);
 
-        $response = $this->json('POST', 'api/users', $request, $this->getAuthHeader($firstUser))
+        $response = $this->json('POST', 'api/users', $request, authAsUser($firstUser))
             ->assertStatus(422);
 
         $this->assertEquals(Invite::count(), 0);
@@ -56,7 +56,7 @@ class InviteUserTest extends TestCase
         $user = create(User::class);
         $request = ['email' => 'some_invalid_string'];
 
-        $response = $this->json('POST', 'api/users', $request, $this->getAuthHeader($user))
+        $response = $this->json('POST', 'api/users', $request, authAsUser($user))
             ->assertStatus(422);
     }
 
@@ -67,11 +67,5 @@ class InviteUserTest extends TestCase
 
         $response = $this->json('POST', 'api/users', $request)
             ->assertStatus(401);
-    }
-
-    protected function getAuthHeader($user)
-    {
-        $token = auth()->guard('api')->login($user);
-        return ['Authorization' => 'Bearer ' . $token];
     }
 }

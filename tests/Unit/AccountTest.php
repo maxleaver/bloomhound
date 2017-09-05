@@ -42,4 +42,14 @@ class AccountTest extends TestCase
 
         $this->assertInstanceOf('App\Invite', $this->account->invitations->first());
     }
+
+    /** @test */
+    public function an_account_has_customers()
+    {
+        create('App\Customer', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\Customer', $this->account->customers->first());
+    }
 }

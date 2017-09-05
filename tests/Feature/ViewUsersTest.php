@@ -26,11 +26,7 @@ class ViewUsersTest extends TestCase
             'account_id' => $someOtherAccount->id
         ]);
 
-        $token = auth()->guard('api')->login($accountUsers[0]);
-
-        $headers['Authorization'] = 'Bearer ' . $token;
-
-        $response = $this->get('api/users', [], $headers)
+        $response = $this->get('api/users', [], authAsUser($accountUsers[0]))
         	->assertStatus(200)
             ->assertJsonFragment([$accountUsers[0]->name])
             ->assertJsonFragment([$accountUsers[1]->name])

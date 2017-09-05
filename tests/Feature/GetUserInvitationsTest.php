@@ -25,7 +25,7 @@ class GetUserInvitationsTest extends TestCase
             'account_id' => $someOtherAccount->id
         ]);
 
-        $response = $this->json('GET', 'api/invitations', [], $this->getAuthHeader($user))
+        $response = $this->json('GET', 'api/invitations', [], authAsUser($user))
             ->assertStatus(200)
             ->assertJsonFragment([$accountInvites[0]->email])
             ->assertJsonMissing([$notAccountInvite->email]);
@@ -36,11 +36,5 @@ class GetUserInvitationsTest extends TestCase
     {
         $response = $this->json('GET', 'api/invitations')
             ->assertStatus(401);
-    }
-
-    protected function getAuthHeader($user)
-    {
-        $token = auth()->guard('api')->login($user);
-        return ['Authorization' => 'Bearer ' . $token];
     }
 }

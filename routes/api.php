@@ -28,4 +28,7 @@ Route::middleware('auth:api')->group(function () {
 	Route::post('users', 'InviteController@store');
 
 	Route::get('invitations', 'InviteController@index');
+
+	Route::get('customers', 'CustomerController@index');
+	Route::post('customers', 'CustomerController@store');
 });
