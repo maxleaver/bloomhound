@@ -16,13 +16,16 @@ class InviteUserTest extends TestCase
     /** @test */
     public function a_user_can_invite_other_users()
     {
+        $this->withoutExceptionHandling();
+
         Mail::fake();
 
         $user = create(User::class);
+        $request = ['email' => 'john@doe.com'];
 
         $this->assertEquals(Invite::count(), 0);
 
-        $response = $this->post('api/users', ['email' => 'john@doe.com'], $this->getAuthHeader($user))
+        $response = $this->json('POST', 'api/users', $request, $this->getAuthHeader($user))
         	->assertStatus(200);
 
         $this->assertEquals(Invite::count(), 1);
@@ -37,15 +40,12 @@ class InviteUserTest extends TestCase
     {
         $firstUser = create(User::class);
         $secondUser = create(User::class);
+        $request = ['email' => $secondUser->email];
 
         $this->assertEquals(Invite::count(), 0);
 
-        $response = $this->json(
-            'POST',
-            'api/users',
-            ['email' => $secondUser->email],
-            $this->getAuthHeader($firstUser)
-        )->assertStatus(422);
+        $response = $this->json('POST', 'api/users', $request, $this->getAuthHeader($firstUser))
+            ->assertStatus(422);
 
         $this->assertEquals(Invite::count(), 0);
     }
@@ -54,20 +54,18 @@ class InviteUserTest extends TestCase
     public function invalid_invite_requests_will_throw_a_validation_error()
     {
         $user = create(User::class);
+        $request = ['email' => 'some_invalid_string'];
 
-        $badEmail = 'some_invalid_string';
-        $response = $this->json(
-            'POST',
-            'api/users',
-            ['email' => $badEmail],
-            $this->getAuthHeader($user)
-        )->assertStatus(422);
+        $response = $this->json('POST', 'api/users', $request, $this->getAuthHeader($user))
+            ->assertStatus(422);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_invite_other_users()
     {
-        $response = $this->json('POST', 'api/users', ['email' => 'john@doe.com'])
+        $request = ['email' => 'john@doe.com'];
+
+        $response = $this->json('POST', 'api/users', $request)
             ->assertStatus(401);
     }
 

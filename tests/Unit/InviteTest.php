@@ -19,7 +19,7 @@ class InviteTest extends TestCase
     }
 
     /** @test */
-    public function it_generates_a_unique_token_on_creation()
+    public function an_invite_generates_a_unique_token_on_creation()
     {
     	$invite = make('App\Invite');
     	$this->assertNull($invite->token);
@@ -28,9 +28,15 @@ class InviteTest extends TestCase
     }
 
 	/** @test */
-    public function it_has_a_path()
+    public function an_invite_has_a_path()
     {
         $this->assertNotNull($this->invite->url);
         $this->assertEquals(route('invite', ['token' => $this->invite->token]), $this->invite->url);
+    }
+
+    /** @test */
+    public function an_invite_has_an_account()
+    {
+        $this->assertInstanceOf('App\Account', $this->invite->account);
     }
 }

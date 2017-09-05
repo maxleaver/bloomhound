@@ -38,9 +38,8 @@ class RegisterController extends Controller
             'name' => $data['company']
         ]);
 
-        // Create user and join to account
-        $user = User::forceCreate([
-            'account_id' => $account->id,
+        // Add new user to account
+        $user = $account->users()->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),

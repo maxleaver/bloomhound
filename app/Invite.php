@@ -10,9 +10,24 @@ class Invite extends Model
 	    'email'
 	];
 
+	public function account()
+    {
+        return $this->belongsTo('App\Account');
+    }
+
 	public function getUrlAttribute()
 	{
 		return route('invite', ['token' => $this->token]);
+	}
+
+	/**
+	 * Get the route key for the model.
+	 *
+	 * @return string
+	 */
+	public function getRouteKeyName()
+	{
+	    return 'token';
 	}
 
 	protected static function boot()

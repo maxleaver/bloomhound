@@ -22,4 +22,24 @@ class AccountTest extends TestCase
     public function an_account_has_a_name() {
         $this->assertNotNull($this->account->name);
     }
+
+    /** @test */
+    public function an_account_has_users()
+    {
+        create('App\User', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\User', $this->account->users->first());
+    }
+
+    /** @test */
+    public function an_account_has_user_invites()
+    {
+        create('App\Invite', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\Invite', $this->account->invitations->first());
+    }
 }

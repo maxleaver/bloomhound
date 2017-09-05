@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::post('register', 'Auth\RegisterController@register');
 Route::post('auth', 'Auth\LoginController@login');
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::get('invite/accept', 'InviteController@accept')->name('invite');
+Route::post('invitation/accept/{invite}', 'InviteController@accept')->name('invite');
 
 // Route::get('/login', 'Auth\LoginController@login');
 // Route::get('/login/refresh', 'Auth\LoginController@refresh');
