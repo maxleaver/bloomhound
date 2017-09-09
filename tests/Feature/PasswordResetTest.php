@@ -3,13 +3,12 @@
 namespace Tests\Feature;
 
 use App\Account;
-use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Auth\Notifications\ResetPassword;
 
-class ForgotPasswordTest extends TestCase
+class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,19 +16,16 @@ class ForgotPasswordTest extends TestCase
     {
         parent::setUp();
 
-        $this->withoutExceptionHandling();
+        Notification::fake();
     }
 
     /** @test */
     public function a_registered_user_can_request_a_password_reset_email()
     {
-        Notification::fake();
+        $user = create('App\User');
 
-        $user = create(User::class);
-
-        $response = $this->json('POST', 'api/password/email', ['email' => $user->email])
-            ->assertStatus(200)
-            ->assertJsonStructure(['message']);
+        $this->post(route('password.email'), ['email' => $user->email])
+            ->assertStatus(302);
 
         Notification::assertSentTo(
             [$user], ResetPassword::class
@@ -39,18 +35,24 @@ class ForgotPasswordTest extends TestCase
     /** @test */
     public function an_unregistered_user_cannot_receive_a_password_reset_email()
     {
-        Notification::fake();
+        // Make a user, but don't persist it to the database
+        $user = make('App\User');
 
-        // Make a user, but don't persist it
-        // so it won't exist in the database
-        $user = make(User::class);
-
-        $response = $this->json('POST', 'api/password/email', ['email' => $user->email])
-            ->assertStatus(200)
-            ->assertJsonStructure(['message']);
+        $this->post(route('password.email'), ['email' => $user->email])
+            ->assertStatus(302);
 
         Notification::assertNotSentTo(
             [$user], ResetPassword::class
         );
+    }
+
+    /** @test */
+    public function authenticated_users_cant_access_the_registration_form()
+    {
+        $user = create('App\User');
+
+        $this->actingAs($user)
+            ->post(route('password.email'))
+            ->assertRedirect(route('home'));
     }
 }

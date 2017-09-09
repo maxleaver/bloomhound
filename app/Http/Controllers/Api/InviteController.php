@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Auth;
 use App\Account;
 use App\Invite;
 use App\Mail\UserInvited;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class InviteController extends Controller
 {
 	public function index()
 	{
 		$invites = Invite::where('account_id', Auth::user()->account->id)->get();
-		return json_encode(compact('invites'));
+		return response()->jsend_success($invites);
 	}
 
 	public function store()
@@ -53,9 +52,7 @@ class InviteController extends Controller
 
 		$invite->delete();
 
-		$token = JWTAuth::fromUser($user);
-
-		// Return auth token
-		return json_encode(compact('token'));
+		// TODO: This should either be a token, or removed from the API
+		return response()->jsend_success($user);
 	}
 }

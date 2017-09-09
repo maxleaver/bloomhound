@@ -4,16 +4,32 @@ namespace App\Http\Controllers\Auth;
 
 use App\Account;
 use App\User;
-use App\Events\AccountRegistered;
 use App\Http\Controllers\Controller;
+use App\Events\AccountRegistered;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Validator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Register Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles the registration of new users as well as their
+    | validation and creation. By default this controller uses a trait to
+    | provide this functionality without requiring any additional code.
+    |
+    */
+    use RegistersUsers;
+    /**
+     * Where to redirect users after registration.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/home';
+
     /**
      * Create a new controller instance.
      *
@@ -21,46 +37,54 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-
+        $this->middleware('guest');
     }
-
-    protected function register(Request $request)
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
     {
-        $data = $this->validate(request(), [
+        return Validator::make($data, [
             'name' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6|confirmed',
         ]);
-
+    }
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return \App\User
+     */
+    protected function create(array $data)
+    {
         // Create the account
         $account = Account::create([
             'name' => $data['company']
         ]);
 
         // Add new user to account
-        $user = $account->users()->create([
+        return $account->users()->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
 
-        try {
-            if (! $token = JWTAuth::fromUser($user)) {
-                return response()->json(['user_not_found'], 404);
-            }
-        } catch (TokenExpiredException $e) {
-            return response()->json(['token_expired'], $e->getStatusCode());
-        } catch (TokenInvalidException $e) {
-            return response()->json(['token_invalid'], $e->getStatusCode());
-        } catch (JWTException $e) {
-            return response()->json(['token_absent' => $e->getMessage()], $e->getStatusCode());
-        }
-
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(Request $request, User $user)
+    {
         // Trigger account registered event
-        event(new AccountRegistered($account));
-
-        // Return auth token
-        return json_encode(compact('token'));
+        event(new AccountRegistered($user));
     }
 }

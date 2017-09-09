@@ -1,4 +1,8 @@
 {
+    "name": "bloomhound",
+    "version": "1.0.0",
+    "description": "Bloomhound",
+    "author": "Max Leaver <maxleaver@gmail.com>",
     "private": true,
     "scripts": {
         "dev": "npm run development",
@@ -9,13 +13,24 @@
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
-    "devDependencies": {
+    "dependencies": {
         "axios": "^0.16.2",
-        "bootstrap-sass": "^3.3.7",
+        "buefy": "^0.5.2",
+        "bulma": "^0.5.1",
+        "moment": "^2.18.1",
+        "vue": "^2.4.2",
+        "vue-router": "^2.7.0",
+        "vuex": "^2.4.0"
+    },
+    "devDependencies": {
+        "babel-eslint": "^7.2.3",
         "cross-env": "^5.0.1",
-        "jquery": "^3.1.1",
-        "laravel-mix": "^1.0",
-        "lodash": "^4.17.4",
-        "vue": "^2.1.10"
+        "eslint": "^4.6.1",
+        "eslint-config-airbnb-base": "^12.0.0",
+        "eslint-friendly-formatter": "^3.0.0",
+        "eslint-loader": "^1.9.0",
+        "eslint-plugin-html": "^3.2.1",
+        "eslint-plugin-import": "^2.7.0",
+        "laravel-mix": "^1.0"
     }
 }

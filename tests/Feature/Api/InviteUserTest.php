@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Api\Feature;
 
 use App\User;
 use App\Invite;
 use App\Mail\UserInvited;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -23,9 +24,11 @@ class InviteUserTest extends TestCase
         $user = create(User::class);
         $request = ['email' => 'john@doe.com'];
 
+        Passport::actingAs($user, ['api/users']);
+
         $this->assertEquals(Invite::count(), 0);
 
-        $response = $this->json('POST', 'api/users', $request, authAsUser($user))
+        $response = $this->json('POST', 'api/users', $request)
         	->assertStatus(200);
 
         $this->assertEquals(Invite::count(), 1);
@@ -42,9 +45,11 @@ class InviteUserTest extends TestCase
         $secondUser = create(User::class);
         $request = ['email' => $secondUser->email];
 
+        Passport::actingAs($firstUser, ['api/users']);
+
         $this->assertEquals(Invite::count(), 0);
 
-        $response = $this->json('POST', 'api/users', $request, authAsUser($firstUser))
+        $response = $this->json('POST', 'api/users', $request)
             ->assertStatus(422);
 
         $this->assertEquals(Invite::count(), 0);
@@ -56,7 +61,9 @@ class InviteUserTest extends TestCase
         $user = create(User::class);
         $request = ['email' => 'some_invalid_string'];
 
-        $response = $this->json('POST', 'api/users', $request, authAsUser($user))
+        Passport::actingAs($user, ['api/users']);
+
+        $response = $this->json('POST', 'api/users', $request)
             ->assertStatus(422);
     }
 

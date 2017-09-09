@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Api\Feature;
 
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ViewCustomersTest extends TestCase
+class GetCustomersTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -16,7 +17,9 @@ class ViewCustomersTest extends TestCase
         $accountCustomers = create('App\Customer', ['account_id' => $user->account->id], 3);
         $notAccountCustomers = create('App\Customer', [], 3);
 
-        $response = $this->json('GET', 'api/customers', [], authAsUser($user))
+        Passport::actingAs($user, ['api/customers']);
+
+        $response = $this->json('GET', 'api/customers')
     		->assertStatus(200)
     		->assertJsonFragment([$accountCustomers[0]->name])
     		->assertJsonFragment([$accountCustomers[1]->name])
@@ -29,7 +32,10 @@ class ViewCustomersTest extends TestCase
     {
     	$user = create('App\User');
     	$customers = create('App\Customer', ['account_id' => $user->account->id], 3);
-    	$response = $this->json('GET', 'api/customers/' . $customers[0]->id, [], authAsUser($user))
+
+        Passport::actingAs($user, ['api/customers/' . $customers[0]->id]);
+
+    	$response = $this->json('GET', 'api/customers/' . $customers[0]->id)
     		->assertStatus(200)
     		->assertJsonFragment([$customers[0]->name])
             ->assertJsonMissing([$customers[1]->name]);
@@ -42,7 +48,9 @@ class ViewCustomersTest extends TestCase
     	$accountCustomers = create('App\Customer', ['account_id' => $user->account->id], 3);
     	$notAccountCustomer = create('App\Customer');
 
-    	$response = $this->json('GET', 'api/customers/' . $notAccountCustomer->id, [], authAsUser($user))
+        Passport::actingAs($user, ['api/customers/' . $notAccountCustomer->id]);
+
+    	$response = $this->json('GET', 'api/customers/' . $notAccountCustomer->id, [])
     		->assertStatus(404);
     }
 }

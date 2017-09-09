@@ -1,17 +1,7 @@
+/* global Vue */
 
-window._ = require('lodash');
-
-/**
- * We'll load jQuery and the Bootstrap jQuery plugin which provides support
- * for JavaScript based Bootstrap features such as modals and tabs. This
- * code may be modified to fit the specific needs of your application.
- */
-
-try {
-    window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap-sass');
-} catch (e) {}
+import Buefy from 'buefy';
+import 'buefy/lib/buefy.css';
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -29,25 +19,20 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * a simple convenience so we don't have to attach every token manually.
  */
 
-let token = document.head.querySelector('meta[name="csrf-token"]');
+const token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
+window.Vue = require('vue');
 
-// import Echo from 'laravel-echo'
+Vue.use(Buefy);
 
-// window.Pusher = require('pusher-js');
+window.events = new Vue();
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key'
-// });
+window.flash = function flash(message, level = 'success') {
+  window.events.$emit('flash', { message, level });
+};

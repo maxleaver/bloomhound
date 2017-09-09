@@ -4,63 +4,74 @@ namespace Tests\Feature;
 
 use App\Account;
 use App\User;
+use App\Events\AccountRegistered;
+use App\Mail\NewAccountWelcome;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterAccountTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp()
+    {
+        parent::setUp();
+
+        Mail::fake();
+    }
+
     /** @test */
     public function an_unregistered_user_can_register_an_account()
     {
-        $this->withoutExceptionHandling();
+        $request = [
+        	'name' => 'John Doe',
+        	'company' => 'Company, Inc.',
+        	'email' => 'john@doe.com',
+        	'password' => 'foobar',
+        	'password_confirmation' => 'foobar'
+        ];
 
-        $request = $this->makeRequest();
+        $this->post(route('register'), $request)
+        	->assertRedirect(route('home'));
 
-        $this->assertEquals(User::count(), 0);
-        $this->assertEquals(Account::count(), 0);
+        $account = Account::whereName('Company, Inc.')->first();
+        $user = User::whereName('John Doe')->first();
 
-        $response = $this->json('POST', 'api/register', $request)
-        	->assertStatus(200)
-            ->assertJsonStructure(['token']);
-
-        $this->assertEquals(User::count(), 1);
-        $this->assertEquals(Account::count(), 1);
+        $this->assertNotNull($account);
+        $this->assertNotNull($user);
     }
 
     /** @test */
     public function a_user_can_only_register_one_account()
     {
-        $user = create(User::class);
+        $user = create('App\User');
 
-        $request = $this->makeRequest($user->email);
+        $request = [
+        	'name' => $user->name,
+        	'company' => 'Company, Inc.',
+        	'email' => $user->email,
+        	'password' => 'foobar',
+        	'password_confirmation' => 'foobar'
+        ];
 
-        $response = $this->json('POST', 'api/register', $request)
-            ->assertStatus(422)
-            ->assertJsonStructure([
-                'errors' => [
-                    'email' => [
-                        ['message']
-                    ]
-                ]
-            ]);
+        $this->post(route('register'), $request)
+        	->assertStatus(302);
     }
 
     /** @test */
     public function a_welcome_email_confirmation_is_sent_when_a_user_registers()
     {
-
-    }
-
-    protected function makeRequest($email = 'johndoe@gmail.com')
-    {
-        return [
-            'name' => 'John Doe',
-            'company' => 'Some Company, Inc.',
-            'email' => $email,
-            'password' => 'my-password',
-            'scope' => '*',
+    	$request = [
+        	'name' => 'John Doe',
+        	'company' => 'Company, Inc.',
+        	'email' => 'john@doe.com',
+        	'password' => 'foobar',
+        	'password_confirmation' => 'foobar'
         ];
+
+        $this->post(route('register'), $request);
+
+    	Mail::assertSent(NewAccountWelcome::class);
     }
 }

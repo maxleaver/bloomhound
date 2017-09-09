@@ -1,13 +1,14 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Api\Feature;
 
 use App\Account;
 use App\User;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ViewUsersTest extends TestCase
+class GetUsersTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -26,7 +27,9 @@ class ViewUsersTest extends TestCase
             'account_id' => $someOtherAccount->id
         ]);
 
-        $response = $this->get('api/users', [], authAsUser($accountUsers[0]))
+        Passport::actingAs($accountUsers[0], ['api/users']);
+
+        $response = $this->get('api/users')
         	->assertStatus(200)
             ->assertJsonFragment([$accountUsers[0]->name])
             ->assertJsonFragment([$accountUsers[1]->name])

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\User;
 use Auth;
+use App\Customer;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,18 +16,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('account_id', Auth::user()->account_id)->get();
-        return response($users->toJson());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $customers = Customer::where('account_id', Auth::user()->account->id)->get();
+        return response()->jsend_success($customers);
     }
 
     /**
@@ -37,29 +28,31 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255'
+        ]);
 
+        // Add customer to account
+        $customers = Auth::user()->account->customers()->create([
+            'name' => $data['name']
+        ]);
+
+        return response()->jsend_success($customers);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Customer $customer)
     {
-        //
-    }
+        if ($customer->account->id !== Auth::user()->account->id) {
+            abort(404);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->jsend_success($customer);
     }
 
     /**

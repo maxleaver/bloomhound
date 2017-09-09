@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Auth;
 use App\Contact;
 use App\Customer;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -48,7 +49,7 @@ class ContactController extends Controller
         $contact->customer()->associate($customer);
         $contact->save();
 
-        return json_encode(compact('contact'));
+        return response()->jsend_success($contact);
     }
 
     /**

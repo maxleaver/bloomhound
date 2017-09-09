@@ -1,12 +1,13 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Api\Feature;
 
 use App\Customer;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class AddCustomerTest extends TestCase
+class PostCustomersTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,9 +19,11 @@ class AddCustomerTest extends TestCase
     		'name' => 'Some customer name'
     	];
 
+        Passport::actingAs($user, ['api/customers']);
+
     	$this->assertEquals(Customer::count(), 0);
 
-    	$response = $this->json('POST', 'api/customers', $request, authAsUser($user))
+    	$response = $this->json('POST', 'api/customers', $request)
     		->assertStatus(200);
 
     	$this->assertEquals(Customer::count(), 1);

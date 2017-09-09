@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
 use App\Customer;
 use Illuminate\Http\Request;
 
@@ -15,8 +14,17 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::where('account_id', Auth::user()->account->id)->get();
-        return json_encode(compact('customers'));
+        return view('customers.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -27,16 +35,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validate(request(), [
-            'name' => 'required|string|max:255'
-        ]);
-
-        // Add customer to account
-        $customer = Auth::user()->account->customers()->create([
-            'name' => $data['name']
-        ]);
-
-        return json_encode(compact('customer'));
+        //
     }
 
     /**
@@ -47,11 +46,18 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(404);
-        }
+        return view('customers.show', compact('customer'));
+    }
 
-        return json_encode(compact('customer'));
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
     }
 
     /**

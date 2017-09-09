@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Api\Feature;
 
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class AddContactTest extends TestCase
+class PostContactsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -34,9 +35,11 @@ class AddContactTest extends TestCase
     /** @test */
     public function a_user_can_add_a_contact_to_a_customer()
     {
-    	$this->assertEquals($this->customer->contacts()->count(), 0);
+        Passport::actingAs($this->user, ['api/contacts']);
 
-    	$response = $this->json('POST', 'api/contacts', $this->request, authAsUser($this->user))
+        $this->assertEquals($this->customer->contacts()->count(), 0);
+
+    	$response = $this->json('POST', 'api/contacts', $this->request)
     		->assertStatus(200)
     		->assertJsonFragment(['john@doe.com']);
 
@@ -53,9 +56,11 @@ class AddContactTest extends TestCase
     /** @test */
     public function users_cannot_add_contacts_to_customers_in_other_accounts()
     {
-    	$this->request['customer_id'] = 555;
+    	Passport::actingAs($this->user, ['api/contacts']);
 
-    	$response = $this->json('POST', 'api/contacts', $this->request, authAsUser($this->user))
+        $this->request['customer_id'] = 555;
+
+    	$response = $this->json('POST', 'api/contacts', $this->request)
     		->assertStatus(404);
     }
 }

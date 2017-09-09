@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Api\Feature;
 
 use App\Invite;
 use App\User;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -25,7 +26,9 @@ class GetUserInvitationsTest extends TestCase
             'account_id' => $someOtherAccount->id
         ]);
 
-        $response = $this->json('GET', 'api/invitations', [], authAsUser($user))
+        Passport::actingAs($user, ['api/invitations']);
+
+        $response = $this->json('GET', 'api/invitations')
             ->assertStatus(200)
             ->assertJsonFragment([$accountInvites[0]->email])
             ->assertJsonMissing([$notAccountInvite->email]);

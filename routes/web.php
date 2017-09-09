@@ -11,11 +11,23 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::post('password/reset', [
-	'as' => 'password.reset',
-	'uses' => 'Auth\ForgotPasswordController@showLinkRequestForm'
-]);
+Auth::routes();
+
+Route::middleware('auth')->group(function () {
+	Route::get('/home', 'HomeController@index')->name('home');
+
+	// Route::get('users', 'UserController@index');
+	// Route::post('users', 'InviteController@store');
+
+	// Route::get('invitations', 'InviteController@index');
+
+	Route::get('/customers', 'CustomerController@index')->name('customers.index');
+	Route::get('/customers/{customer}', 'CustomerController@show')->name('customers.show');
+	Route::post('/customers', 'CustomerController@store')->name('customers.store');
+
+	// Route::post('contacts', 'ContactController@store');
+});

@@ -30,15 +30,15 @@ php artisan key:generate
 
 ```
 
-Generates a unique secret key for generating JWT (JSON Web Tokens)
-``` bash
-php artisan jwt:secret
-
-```
-
 Builds up the database (a sqlite file in the database directory)
 ``` bash
 php artisan migrate
+
+```
+
+Creates the encryption keys needed to generate secure access tokens
+``` bash
+php artisan passport:install
 
 ```
 
