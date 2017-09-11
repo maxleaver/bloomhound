@@ -13,9 +13,8 @@
 
   <div class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item " href="{{ route('customers.index') }}">
-        Customers
-      </a>
+      <a class="navbar-item " href="{{ route('customers.index') }}">Customers</a>
+      <a class="navbar-item " href="{{ route('contacts.index') }}">Contacts</a>
     </div>
 
     <div class="navbar-end">

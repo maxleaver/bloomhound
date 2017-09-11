@@ -4,7 +4,7 @@
       <div class="level-left">
         <div class="level-item">
           <p class="subtitle is-5">
-            <strong>{{ items.length }}</strong> customers
+            <strong>{{ items.length }}</strong> contacts
           </p>
         </div>
       </div>
@@ -16,14 +16,14 @@
             <span class="icon is-small">
               <i class="fa fa-plus"></i>
             </span>
-            <span>Add a Customer</span>
+            <span>Add a Contact</span>
           </button>
         </p>
       </div>
     </nav>
 
     <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <new-customer @created="add"></new-customer>
+      <add-contact @created="add" :customer_id="customer_id"></add-contact>
     </b-modal>
 
     <b-table
@@ -31,11 +31,26 @@
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"
       default-sort="name"
-      @click="onClick"
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
           <strong>{{ props.row.name }}</strong>
+        </b-table-column>
+
+        <b-table-column field="email" label="Email" sortable>
+          {{ props.row.email }}
+        </b-table-column>
+
+        <b-table-column field="phone" label="Phone" sortable>
+          {{ props.row.phone }}
+        </b-table-column>
+
+        <b-table-column field="relationship" label="Relationship" sortable>
+          {{ props.row.relationship }}
+        </b-table-column>
+
+        <b-table-column field="address" label="Address" sortable>
+          {{ props.row.address }}
         </b-table-column>
 
         <b-table-column field="created_at" label="Created On" sortable centered>
@@ -61,13 +76,16 @@
 </template>
 
 <script>
-import NewCustomer from './NewCustomer.vue';
+import AddContact from './AddContact.vue';
 import collection from '../mixins/collection';
 
 export default {
-  name: 'customer-list',
-  components: { NewCustomer },
+  name: 'contact-list',
+  components: { AddContact },
   mixins: [collection],
+  props: {
+    customer_id: Number,
+  },
 
   data() {
     return {
@@ -84,13 +102,9 @@ export default {
 
   methods: {
     fetch() {
-      window.axios.get('api/customers')
+      const url = this.customer_id ? `customers/${this.customer_id}/contacts` : 'contacts';
+      window.axios.get(`/api/${url}`)
         .then(this.refresh);
-    },
-
-    onClick(data) {
-      // Redirect to detail page
-      window.location.href = `/customers/${data.id}`;
     },
   },
 };

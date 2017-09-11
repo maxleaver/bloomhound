@@ -25,9 +25,15 @@ Route::middleware('auth')->group(function () {
 
 	// Route::get('invitations', 'InviteController@index');
 
-	Route::get('/customers', 'CustomerController@index')->name('customers.index');
-	Route::get('/customers/{customer}', 'CustomerController@show')->name('customers.show');
-	Route::post('/customers', 'CustomerController@store')->name('customers.store');
+	Route::prefix('customers')->group(function () {
+	    Route::get('/', 'CustomerController@index')->name('customers.index');
+	    Route::post('/', 'CustomerController@store')->name('customers.store');
+		Route::get('/{customer}', 'CustomerController@show')->name('customers.show');
+	});
+
+	Route::prefix('contacts')->group(function () {
+	    Route::get('/', 'ContactController@index')->name('contacts.index');
+	});
 
 	// Route::post('contacts', 'ContactController@store');
 });

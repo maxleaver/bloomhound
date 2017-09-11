@@ -1,11 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use Auth;
-use App\Contact;
-use App\Customer;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -17,8 +13,17 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Auth::user()->account->contacts;
-        return response()->jsend_success($contacts);
+        return view('contacts.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -29,28 +34,7 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validate(request(), [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'relationship' => 'nullable|string|max:255',
-            'customer_id' => 'required|integer'
-        ]);
-
-        $customer = Customer::findOrFail($data['customer_id']);
-
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(404);
-        }
-
-        $contact = new Contact($data);
-        $contact->account()->associate(Auth::user()->account);
-        $contact->customer()->associate($customer);
-        $contact->save();
-
-        return response()->jsend_success($contact);
+        //
     }
 
     /**
@@ -60,6 +44,17 @@ class ContactController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }
