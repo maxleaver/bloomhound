@@ -57,4 +57,13 @@ class ContactTest extends TestCase
     public function it_is_assigned_to_a_customer() {
         $this->assertInstanceOf('App\Customer', $this->contact->customer);
     }
+
+    /** @test */
+    public function it_has_a_name_attribute()
+    {
+        $this->assertEquals(
+            $this->contact->name,
+            $this->contact->first_name . ' ' . $this->contact->last_name
+        );
+    }
 }
