@@ -14,9 +14,11 @@ A web server of some kind (see Laravel Valet below if you're on OSX).
 
 ## Installation
 
-After cloning the repository to your local machine, create a .env file in the root directory using .env.example as a template. You should not have to make any changes, unless you want to populate your MailTrap.io info for email testing (see Helpful Tools below).
+Clone the repository to your local machine.
 
-Run the following commands in your console (assumes you have already installed Composer):
+Create a .env file in the root directory, using .env.example as a template. Update the database and email server entries to the settings on your server.
+
+Install Composer if you haven't already, then run the following in your console:
 
 Installs all dependencies
 ``` bash
@@ -69,4 +71,3 @@ GUI for using Git
 
 [**MailTrap.io**](https://mailtrap.io/)
 Free email testing server for development
-
