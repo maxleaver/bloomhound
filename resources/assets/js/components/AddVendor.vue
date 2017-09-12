@@ -14,14 +14,16 @@
           <b-input
             type="text"
             v-model="name"
-            required>
+            :disabled="isSubmitting"
+            required
+          >
           </b-input>
         </b-field>
       </section>
 
       <footer class="modal-card-foot">
-        <button class="button" type="button" @click="$parent.close()">Close</button>
-        <button class="button is-primary">Add Vendor</button>
+        <button class="button" type="button" @click="$parent.close()" :disabled="isSubmitting">Close</button>
+        <button class="button is-primary" v-bind:class="{'is-loading' : isSubmitting}">Add Vendor</button>
       </footer>
     </div>
   </form>
@@ -33,12 +35,15 @@ export default {
 
   data() {
     return {
+      isSubmitting: false,
       name: '',
     };
   },
 
   methods: {
     onSubmit() {
+      this.isSubmitting = true;
+
       window.axios.post('/api/vendors', {
         name: this.name,
       })

@@ -15,7 +15,9 @@
             type="text"
             v-model="name"
             size="is-medium"
-            required>
+            :disabled="isSubmitting"
+            required
+          >
           </b-input>
         </b-field>
 
@@ -25,8 +27,8 @@
       </section>
 
       <footer class="modal-card-foot">
-        <button class="button" type="button" @click="$parent.close()">Close</button>
-        <button class="button is-primary">Add Event</button>
+        <button class="button" type="button" @click="$parent.close()" :disabled="isSubmitting">Close</button>
+        <button class="button is-primary" v-bind:class="{'is-loading' : isSubmitting}">Add Event</button>
       </footer>
     </div>
   </form>
@@ -38,6 +40,7 @@ export default {
 
   data() {
     return {
+      isSubmitting: false,
       name: '',
       date: new Date(),
       isFullWidth: true,
@@ -46,6 +49,8 @@ export default {
 
   methods: {
     onSubmit() {
+      this.isSubmitting = true;
+
       window.axios.post('/api/events', {
         name: this.name,
         date: this.date,

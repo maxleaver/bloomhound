@@ -15,14 +15,15 @@
             type="text"
             v-model="name"
             placeholder="John and Jane Doe"
+            :disabled="isSubmitting"
             required>
           </b-input>
         </b-field>
       </section>
 
       <footer class="modal-card-foot">
-        <button class="button" type="button" @click="$parent.close()">Close</button>
-        <button class="button is-primary">Add Customer</button>
+        <button class="button" type="button" @click="$parent.close()" :disabled="isSubmitting">Close</button>
+        <button class="button is-primary" v-bind:class="{'is-loading' : isSubmitting}">Add Customer</button>
       </footer>
     </div>
   </form>
@@ -30,16 +31,19 @@
 
 <script>
 export default {
-  name: 'new-customer',
+  name: 'add-customer',
 
   data() {
     return {
       name: '',
+      isSubmitting: false,
     };
   },
 
   methods: {
     onSubmit() {
+      this.isSubmitting = true;
+
       window.axios.post('/api/customers', { name: this.name })
         .catch((error) => {
           window.flash(error.response.data, 'danger');

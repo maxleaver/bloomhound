@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <new-customer @created="add"></new-customer>
+      <add-customer @created="add"></add-customer>
     </b-modal>
 
     <b-table
@@ -61,12 +61,12 @@
 </template>
 
 <script>
-import NewCustomer from './NewCustomer.vue';
+import AddCustomer from './AddCustomer.vue';
 import collection from '../mixins/collection';
 
 export default {
   name: 'customer-list',
-  components: { NewCustomer },
+  components: { AddCustomer },
   mixins: [collection],
 
   data() {
