@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Vendor;
 use Auth;
-use App\Customer;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class CustomerController extends Controller
+class VendorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Auth::user()->account->customers;
-        return response()->jsend_success($customers);
+        $vendors = Auth::user()->account->vendors;
+        return response()->jsend_success($vendors);
     }
 
     /**
@@ -29,30 +29,25 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $data = $this->validate(request(), [
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
         ]);
 
-        // Add customer to account
-        $customers = Auth::user()->account->customers()->create([
-            'name' => $data['name']
-        ]);
+        $vendor = new Vendor($data);
+        $vendor->account()->associate(Auth::user()->account);
+        $vendor->save();
 
-        return response()->jsend_success($customers);
+        return response()->jsend_success($vendor);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show($id)
     {
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(404);
-        }
-
-        return response()->jsend_success($customer);
+        //
     }
 
     /**

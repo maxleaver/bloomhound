@@ -1,7 +1,7 @@
 <template>
   <form
     method="POST"
-    action="/api/customers"
+    action="/api/contacts"
     @submit.prevent="onSubmit"
   >
     <div class="modal-card">
@@ -68,7 +68,7 @@
 
 <script>
 export default {
-  name: 'add-customer',
+  name: 'add-contact',
   props: {
     customer_id: Number,
   },

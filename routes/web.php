@@ -39,4 +39,8 @@ Route::middleware('auth')->group(function () {
 	Route::prefix('events')->group(function () {
 	    Route::get('/', 'EventController@index')->name('events.index');
 	});
+
+	Route::prefix('vendors')->group(function () {
+		Route::get('/', 'VendorController@index')->name('vendors.index');
+	});
 });

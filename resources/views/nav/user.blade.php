@@ -16,6 +16,7 @@
       <a class="navbar-item" href="{{ route('customers.index') }}">Customers</a>
       <a class="navbar-item" href="{{ route('contacts.index') }}">Contacts</a>
       <a class="navbar-item" href="{{ route('events.index') }}">Events</a>
+      <a class="navbar-item" href="{{ route('vendors.index') }}">Vendors</a>
     </div>
 
     <div class="navbar-end">

@@ -34,4 +34,9 @@ class Account extends Model
     {
         return $this->hasMany('App\Event');
     }
+
+    public function vendors()
+    {
+        return $this->hasMany('App\Vendor');
+    }
 }

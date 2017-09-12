@@ -72,4 +72,14 @@ class AccountTest extends TestCase
 
         $this->assertInstanceOf('App\Event', $this->account->events->first());
     }
+
+    /** @test */
+    public function an_account_has_vendors()
+    {
+        create('App\Vendor', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\Vendor', $this->account->vendors->first());
+    }
 }
