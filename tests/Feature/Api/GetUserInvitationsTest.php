@@ -26,8 +26,7 @@ class GetUserInvitationsTest extends TestCase
             'account_id' => $someOtherAccount->id
         ]);
 
-        Passport::actingAs($user, ['api/invitations']);
-
+        Passport::actingAs($user);
         $response = $this->json('GET', 'api/invitations')
             ->assertStatus(200)
             ->assertJsonFragment([$accountInvites[0]->email])

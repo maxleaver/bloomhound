@@ -19,4 +19,9 @@ class Vendor extends Model
     {
         return $this->belongsTo('App\Account');
     }
+
+    public function notes()
+    {
+        return $this->morphMany('App\Note', 'notable');
+    }
 }

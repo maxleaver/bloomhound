@@ -19,10 +19,9 @@ class PostCustomersTest extends TestCase
     		'name' => 'Some customer name'
     	];
 
-        Passport::actingAs($user, ['api/customers']);
-
     	$this->assertEquals(Customer::count(), 0);
 
+        Passport::actingAs($user);
     	$response = $this->json('POST', 'api/customers', $request)
     		->assertStatus(200);
 

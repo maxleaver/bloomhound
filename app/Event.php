@@ -28,4 +28,9 @@ class Event extends Model
     {
         return $this->belongsTo('App\EventStatus');
     }
+
+    public function notes()
+    {
+        return $this->morphMany('App\Note', 'notable');
+    }
 }

@@ -66,4 +66,17 @@ class ContactTest extends TestCase
             $this->contact->first_name . ' ' . $this->contact->last_name
         );
     }
+
+    /** @test */
+    public function a_contact_has_notes()
+    {
+        create('App\Note', [
+            'user_id' => create('App\User', ['account_id' => $this->contact->account->id]),
+            'notable_id' => $this->contact->id,
+            'notable_type' => 'App\Contact',
+            'text' => 'This is a note.',
+        ]);
+
+        $this->assertInstanceOf('App\Note', $this->contact->notes->first());
+    }
 }

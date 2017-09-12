@@ -8,5 +8,9 @@ $factory->define(App\Vendor::class, function (Faker $faker) {
             return factory('App\Account')->create()->id;
         },
     	'name' => $faker->company,
+    	'email' => $faker->email,
+    	'phone' => $faker->phoneNumber,
+    	'website' => $faker->url,
+    	'address' => $faker->address
     ];
 });

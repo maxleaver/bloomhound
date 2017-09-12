@@ -28,8 +28,7 @@ class GetEventsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_events_for_their_account()
     {
-    	Passport::actingAs($this->user, [$this->url]);
-
+    	Passport::actingAs($this->user);
         $response = $this->json('GET', $this->url)
     		->assertStatus(200)
     		->assertJsonFragment([$this->events[0]->name])

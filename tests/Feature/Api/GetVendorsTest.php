@@ -30,8 +30,7 @@ class GetVendorsTest extends TestCase
     {
     	$this->withoutExceptionHandling();
 
-        Passport::actingAs($this->user, [$this->url]);
-
+        Passport::actingAs($this->user);
         $response = $this->json('GET', $this->url)
     		->assertStatus(200)
     		->assertJsonFragment([$this->vendors[0]->name])

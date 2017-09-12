@@ -28,20 +28,32 @@ Route::middleware('auth:api')->group(function () {
 		Route::get('/{customer}', 'CustomerController@show');
 		Route::get('/{customer}/contacts', 'ContactCustomerController@index');
 		Route::post('/', 'CustomerController@store');
+
+		Route::get('/{customer}/notes', 'NoteController@index');
+		Route::post('/{customer}/notes', 'NoteController@store');
 	});
 
 	Route::prefix('contacts')->group(function () {
 	    Route::get('/', 'ContactController@index');
 		Route::post('/', 'ContactController@store');
+
+		Route::get('/{contact}/notes', 'NoteController@index');
+		Route::post('/{contact}/notes', 'NoteController@store');
 	});
 
 	Route::prefix('events')->group(function () {
 		Route::get('/', 'EventController@index');
 		Route::post('/', 'EventController@store');
+
+		Route::get('/{event}/notes', 'NoteController@index');
+		Route::post('/{event}/notes', 'NoteController@store');
 	});
 
 	Route::prefix('vendors')->group(function () {
 		Route::get('/', 'VendorController@index');
 		Route::post('/', 'VendorController@store');
+
+		Route::get('/{vendor}/notes', 'NoteController@index');
+		Route::post('/{vendor}/notes', 'NoteController@store');
 	});
 });

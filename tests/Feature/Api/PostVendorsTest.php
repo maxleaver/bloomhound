@@ -24,10 +24,9 @@ class PostVendorsTest extends TestCase
     /** @test */
     public function a_user_can_add_a_vendor()
     {
-        Passport::actingAs($this->user, [$this->url]);
-
         $this->assertEquals($this->user->account->vendors()->count(), 0);
 
+        Passport::actingAs($this->user);
     	$response = $this->json('POST', $this->url, ['name' => 'Vendor Name'])
     		->assertStatus(200)
     		->assertJsonFragment(['Vendor Name']);

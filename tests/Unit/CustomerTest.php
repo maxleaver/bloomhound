@@ -49,4 +49,17 @@ class CustomerTest extends TestCase
 
         $this->assertInstanceOf('App\Event', $this->customer->events->first());
     }
+
+    /** @test */
+    public function a_customer_has_notes()
+    {
+        create('App\Note', [
+            'user_id' => create('App\User', ['account_id' => $this->customer->account->id]),
+            'notable_id' => $this->customer->id,
+            'notable_type' => 'App\Customer',
+            'text' => 'This is a note.',
+        ]);
+
+        $this->assertInstanceOf('App\Note', $this->customer->notes->first());
+    }
 }

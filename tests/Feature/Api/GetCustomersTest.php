@@ -17,8 +17,7 @@ class GetCustomersTest extends TestCase
         $accountCustomers = create('App\Customer', ['account_id' => $user->account->id], 3);
         $notAccountCustomers = create('App\Customer', [], 3);
 
-        Passport::actingAs($user, ['api/customers']);
-
+        Passport::actingAs($user);
         $response = $this->json('GET', 'api/customers')
     		->assertStatus(200)
     		->assertJsonFragment([$accountCustomers[0]->name])
@@ -33,8 +32,7 @@ class GetCustomersTest extends TestCase
     	$user = create('App\User');
     	$customers = create('App\Customer', ['account_id' => $user->account->id], 3);
 
-        Passport::actingAs($user, ['api/customers/' . $customers[0]->id]);
-
+        Passport::actingAs($user);
     	$response = $this->json('GET', 'api/customers/' . $customers[0]->id)
     		->assertStatus(200)
     		->assertJsonFragment([$customers[0]->name])
@@ -48,8 +46,7 @@ class GetCustomersTest extends TestCase
     	$accountCustomers = create('App\Customer', ['account_id' => $user->account->id], 3);
     	$notAccountCustomer = create('App\Customer');
 
-        Passport::actingAs($user, ['api/customers/' . $notAccountCustomer->id]);
-
+        Passport::actingAs($user);
     	$response = $this->json('GET', 'api/customers/' . $notAccountCustomer->id, [])
     		->assertStatus(404);
     }

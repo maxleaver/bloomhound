@@ -47,4 +47,17 @@ class EventTest extends TestCase
     {
         $this->assertInstanceOf('App\Account', $this->event->account);
     }
+
+    /** @test */
+    public function an_event_has_notes()
+    {
+        create('App\Note', [
+            'user_id' => create('App\User', ['account_id' => $this->event->account->id]),
+            'notable_id' => $this->event->id,
+            'notable_type' => 'App\Event',
+            'text' => 'This is a note.',
+        ]);
+
+        $this->assertInstanceOf('App\Note', $this->event->notes->first());
+    }
 }

@@ -2,8 +2,6 @@
 
 namespace Tests\Api\Feature;
 
-use App\Account;
-use App\User;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,18 +15,17 @@ class GetUsersTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $account = create(Account::class);
-        $accountUsers = create(User::class, [
+        $account = create('App\Account');
+        $accountUsers = create('App\User', [
             'account_id' => $account->id
         ], 3);
 
-        $someOtherAccount = create(Account::class);
-        $notAccountUser = create(User::class, [
+        $someOtherAccount = create('App\Account');
+        $notAccountUser = create('App\User', [
             'account_id' => $someOtherAccount->id
         ]);
 
-        Passport::actingAs($accountUsers[0], ['api/users']);
-
+        Passport::actingAs($accountUsers[0]);
         $response = $this->get('api/users')
         	->assertStatus(200)
             ->assertJsonFragment([$accountUsers[0]->name])
@@ -40,8 +37,8 @@ class GetUsersTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_request_users()
     {
-        $account = create(Account::class);
-        $accountUsers = create(User::class, [
+        $account = create('App\Account');
+        $accountUsers = create('App\User', [
             'account_id' => $account->id
         ], 3);
 

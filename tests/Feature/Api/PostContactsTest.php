@@ -27,10 +27,9 @@ class PostContactsTest extends TestCase
     /** @test */
     public function a_user_can_add_a_contact_to_a_customer()
     {
-        Passport::actingAs($this->user, ['api/contacts']);
-
         $this->assertEquals($this->customer->contacts()->count(), 0);
 
+        Passport::actingAs($this->user);
     	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
     		->assertStatus(200)
     		->assertJsonFragment([$this->contact->email]);
@@ -48,10 +47,9 @@ class PostContactsTest extends TestCase
     /** @test */
     public function users_can_only_add_contacts_to_existing_customers()
     {
-    	Passport::actingAs($this->user, ['api/contacts']);
-
         $this->contact->customer_id = 555;
 
+        Passport::actingAs($this->user);
     	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
     		->assertStatus(404);
     }
@@ -59,11 +57,10 @@ class PostContactsTest extends TestCase
     /** @test */
     public function users_can_only_add_contacts_to_customers_on_their_account()
     {
-        Passport::actingAs($this->user, ['api/contacts']);
-
         $someOtherCustomer = create('App\Customer');
         $this->contact->customer_id = $someOtherCustomer->id;
 
+        Passport::actingAs($this->user);
         $response = $this->json('POST', 'api/contacts', $this->contact->toArray())
             ->assertStatus(403);
     }

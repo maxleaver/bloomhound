@@ -24,10 +24,9 @@ class InviteUserTest extends TestCase
         $user = create(User::class);
         $request = ['email' => 'john@doe.com'];
 
-        Passport::actingAs($user, ['api/users']);
-
         $this->assertEquals(Invite::count(), 0);
 
+        Passport::actingAs($user);
         $response = $this->json('POST', 'api/users', $request)
         	->assertStatus(200);
 
@@ -45,10 +44,9 @@ class InviteUserTest extends TestCase
         $secondUser = create(User::class);
         $request = ['email' => $secondUser->email];
 
-        Passport::actingAs($firstUser, ['api/users']);
-
         $this->assertEquals(Invite::count(), 0);
 
+        Passport::actingAs($firstUser);
         $response = $this->json('POST', 'api/users', $request)
             ->assertStatus(422);
 
@@ -61,8 +59,7 @@ class InviteUserTest extends TestCase
         $user = create(User::class);
         $request = ['email' => 'some_invalid_string'];
 
-        Passport::actingAs($user, ['api/users']);
-
+        Passport::actingAs($user);
         $response = $this->json('POST', 'api/users', $request)
             ->assertStatus(422);
     }
@@ -70,9 +67,7 @@ class InviteUserTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_invite_other_users()
     {
-        $request = ['email' => 'john@doe.com'];
-
-        $response = $this->json('POST', 'api/users', $request)
+        $response = $this->json('POST', 'api/users', ['email' => 'john@doe.com'])
             ->assertStatus(401);
     }
 }

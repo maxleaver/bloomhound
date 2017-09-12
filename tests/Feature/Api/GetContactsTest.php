@@ -18,8 +18,7 @@ class GetContactsTest extends TestCase
     	$contacts = create('App\Contact', ['account_id' => $user->account->id], 3);
     	$someOtherContact = create('App\Contact');
 
-    	Passport::actingAs($user, ['api/contacts']);
-
+    	Passport::actingAs($user);
         $response = $this->json('GET', 'api/contacts')
     		->assertStatus(200)
     		->assertJsonFragment([$contacts[0]->email])
@@ -49,8 +48,7 @@ class GetContactsTest extends TestCase
 
     	$url = 'api/customers/' . $customer->id . '/contacts';
 
-    	Passport::actingAs($user, [$url]);
-
+    	Passport::actingAs($user);
         $response = $this->json('GET', $url)
     		->assertStatus(200)
     		->assertJsonFragment([$contacts[0]->email])

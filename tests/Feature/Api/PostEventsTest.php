@@ -28,19 +28,15 @@ class PostEventsTest extends TestCase
             'name' => 'Event Name',
             'date' => '2017-09-12T12:37:55.729Z'
         ];
-
         $this->url = 'api/events';
     }
 
     /** @test */
     public function an_authenticated_user_can_add_an_event()
     {
-        $this->withoutExceptionHandling();
-
-        Passport::actingAs($this->user, [$this->url]);
-
     	$this->assertEquals(Event::count(), 0);
 
+        Passport::actingAs($this->user);
     	$response = $this->json('POST', $this->url, $this->request)
     		->assertStatus(200);
 

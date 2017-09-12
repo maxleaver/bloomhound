@@ -41,4 +41,14 @@ class UserTest extends TestCase
     {
         $this->assertInstanceOf('App\Account', $this->user->account);
     }
+
+    /** @test */
+    public function a_user_has_notes()
+    {
+        create('App\Note', [
+            'user_id' => $this->user->id
+        ]);
+
+        $this->assertInstanceOf('App\Note', $this->user->notes->first());
+    }
 }

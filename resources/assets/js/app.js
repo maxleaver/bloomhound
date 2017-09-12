@@ -18,6 +18,7 @@ Vue.component('flash', require('./components/Flash.vue'));
 Vue.component('customer-list', require('./components/CustomerList.vue'));
 Vue.component('contact-list', require('./components/ContactList.vue'));
 Vue.component('event-list', require('./components/EventList.vue'));
+Vue.component('note-list', require('./components/NoteList.vue'));
 Vue.component('vendor-list', require('./components/VendorList.vue'));
 
 /* eslint-disable no-unused-vars */

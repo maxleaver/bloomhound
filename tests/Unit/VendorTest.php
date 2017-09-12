@@ -25,8 +25,45 @@ class VendorTest extends TestCase
     }
 
     /** @test */
+    public function a_vendor_has_a_phone_number()
+    {
+        $this->assertNotNull($this->vendor->phone);
+    }
+
+    /** @test */
+    public function a_vendor_has_an_email()
+    {
+        $this->assertNotNull($this->vendor->email);
+    }
+
+    /** @test */
+    public function a_vendor_has_a_website()
+    {
+        $this->assertNotNull($this->vendor->website);
+    }
+
+    /** @test */
+    public function a_vendor_has_an_address()
+    {
+        $this->assertNotNull($this->vendor->address);
+    }
+
+    /** @test */
     public function a_vendor_has_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->vendor->account);
+    }
+
+    /** @test */
+    public function a_vendor_has_notes()
+    {
+        create('App\Note', [
+            'user_id' => create('App\User', ['account_id' => $this->vendor->account->id]),
+            'notable_id' => $this->vendor->id,
+            'notable_type' => 'App\Vendor',
+            'text' => 'This is a note.',
+        ]);
+
+        $this->assertInstanceOf('App\Note', $this->vendor->notes->first());
     }
 }

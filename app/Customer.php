@@ -29,4 +29,9 @@ class Customer extends Model
     {
         return $this->hasMany('App\Event');
     }
+
+    public function notes()
+    {
+        return $this->morphMany('App\Note', 'notable');
+    }
 }
