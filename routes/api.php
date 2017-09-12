@@ -57,4 +57,8 @@ Route::middleware('auth:api')->group(function () {
 		Route::get('/{vendor}/notes', 'NoteController@index');
 		Route::post('/{vendor}/notes', 'NoteController@store');
 	});
+
+	Route::prefix('notes')->group(function () {
+		Route::delete('/{note}', 'NoteController@destroy');
+	});
 });

@@ -70,12 +70,18 @@ class NoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Note $note
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Note $note)
     {
-        //
+        if ($note->user->account->id !== Auth::user()->account->id) {
+            abort(404);
+        }
+
+        $note->delete();
+
+        return response()->jsend_success();
     }
 
     protected function getClassType($string)

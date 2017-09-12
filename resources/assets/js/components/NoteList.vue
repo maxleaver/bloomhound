@@ -1,17 +1,15 @@
 <template>
   <div>
-    <article class="message is-warning" v-for="item in items">
-      <div class="message-body">
-        <div class="content">
-          <p>
-            <strong>{{ item.user.name }}</strong> posted on {{ item.created_at }}
-          </p>
-        </div>
-        <div>
-          {{ item.text }}
-        </div>
-      </div>
-    </article>
+    <note
+      v-for="(item, index) in items"
+      :key="item.id"
+      :id="item.id"
+      :index="index"
+      :submitted_by="item.user.name"
+      :created_at="item.created_at"
+      :text="item.text"
+      @deleted="remove"
+    ></note>
 
     <div class="box">
       <add-note @created="add" :url="path"></add-note>
@@ -21,11 +19,12 @@
 
 <script>
 import AddNote from './AddNote.vue';
+import Note from './Note.vue';
 import collection from '../mixins/collection';
 
 export default {
   name: 'note-list',
-  components: { AddNote },
+  components: { AddNote, Note },
   mixins: [collection],
 
   data() {
