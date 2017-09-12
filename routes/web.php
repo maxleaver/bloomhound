@@ -27,20 +27,21 @@ Route::middleware('auth')->group(function () {
 
 	Route::prefix('customers')->group(function () {
 	    Route::get('/', 'CustomerController@index')->name('customers.index');
-	    Route::post('/', 'CustomerController@store')->name('customers.store');
 		Route::get('/{customer}', 'CustomerController@show')->name('customers.show');
 	});
 
 	Route::prefix('contacts')->group(function () {
 	    Route::get('/', 'ContactController@index')->name('contacts.index');
-	    // Route::post('/', 'ContactController@store');
+	    Route::get('/{contact}', 'ContactController@show')->name('contacts.show');
 	});
 
 	Route::prefix('events')->group(function () {
 	    Route::get('/', 'EventController@index')->name('events.index');
+	    Route::get('/{event}', 'EventController@show')->name('events.show');
 	});
 
 	Route::prefix('vendors')->group(function () {
 		Route::get('/', 'VendorController@index')->name('vendors.index');
+		Route::get('/{vendor}', 'VendorController@show')->name('vendors.show');
 	});
 });

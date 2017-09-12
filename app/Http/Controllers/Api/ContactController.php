@@ -55,12 +55,16 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Contact $contact)
     {
-        //
+        if ($contact->account->id !== Auth::user()->account->id) {
+            abort(404);
+        }
+
+        return response()->jsend_success($contact);
     }
 
     /**

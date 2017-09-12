@@ -31,6 +31,7 @@
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"
       default-sort="name"
+      @click="onClick"
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
@@ -105,6 +106,11 @@ export default {
       const url = this.customer_id ? `customers/${this.customer_id}/contacts` : 'contacts';
       window.axios.get(`/api/${url}`)
         .then(this.refresh);
+    },
+
+    onClick(data) {
+      // Redirect to detail page
+      window.location.href = `/contacts/${data.id}`;
     },
   },
 };

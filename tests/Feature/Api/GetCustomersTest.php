@@ -27,7 +27,7 @@ class GetCustomersTest extends TestCase
     }
 
 	/** @test */
-    public function a_user_can_view_a_specific_customer()
+    public function a_user_can_get_a_specific_customer()
     {
     	$user = create('App\User');
     	$customers = create('App\Customer', ['account_id' => $user->account->id], 3);
@@ -40,7 +40,7 @@ class GetCustomersTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_only_view_a_customer_on_their_account()
+    public function a_user_can_only_get_customers_on_their_account()
     {
     	$user = create('App\User');
     	$accountCustomers = create('App\Customer', ['account_id' => $user->account->id], 3);

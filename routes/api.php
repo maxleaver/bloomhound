@@ -35,6 +35,7 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::prefix('contacts')->group(function () {
 	    Route::get('/', 'ContactController@index');
+	    Route::get('/{contact}', 'ContactController@show');
 		Route::post('/', 'ContactController@store');
 
 		Route::get('/{contact}/notes', 'NoteController@index');

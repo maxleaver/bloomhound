@@ -31,6 +31,7 @@
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"
       default-sort="date"
+      @click="onClick"
     >
       <template scope="props">
         <b-table-column field="status" label="Status" sortable>
@@ -93,6 +94,11 @@ export default {
     fetch() {
       window.axios.get('/api/events')
         .then(this.refresh);
+    },
+
+    onClick(data) {
+      // Redirect to detail page
+      window.location.href = `/events/${data.id}`;
     },
   },
 };

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Vendor;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
@@ -29,12 +30,12 @@ class VendorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Vendor $vendor)
     {
-        //
+        return view('vendors.show', compact('vendor'));
     }
 
     /**
