@@ -29,4 +29,9 @@ class Account extends Model
     {
         return $this->hasMany('App\Contact');
     }
+
+    public function events()
+    {
+        return $this->hasMany('App\Event');
+    }
 }

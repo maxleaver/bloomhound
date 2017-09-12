@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
-use App\Contact;
 use App\Customer;
-use App\Http\Controllers\Controller;
+use App\Event;
+use App\EventStatus;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class ContactController extends Controller
+class EventController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +19,8 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Auth::user()->account->contacts;
-        return response()->jsend_success($contacts);
+        $events = Auth::user()->account->events->load('status');
+        return response()->jsend_success($events);
     }
 
     /**
@@ -30,26 +32,18 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $data = $this->validate(request(), [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'relationship' => 'nullable|string|max:255',
-            'customer_id' => 'required|integer'
+            'date' => 'required|date',
+            'name' => 'required|string',
         ]);
 
-        $customer = Customer::findOrFail($data['customer_id']);
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
+        $event = new Event;
+        $event->name = $data['name'];
+        $event->date = Carbon::parse($data['date']);
+        $event->account()->associate(Auth::user()->account);
+        $event->status()->associate(EventStatus::whereName('draft')->first());
+        $event->save();
 
-        $contact = new Contact($data);
-        $contact->account()->associate(Auth::user()->account);
-        $contact->customer()->associate($customer);
-        $contact->save();
-
-        return response()->jsend_success($contact);
+        return response()->jsend_success($event);
     }
 
     /**

@@ -17,6 +17,7 @@ require('./bootstrap');
 Vue.component('flash', require('./components/Flash.vue'));
 Vue.component('customer-list', require('./components/CustomerList.vue'));
 Vue.component('contact-list', require('./components/ContactList.vue'));
+Vue.component('event-list', require('./components/EventList.vue'));
 
 /* eslint-disable no-unused-vars */
 const app = new Vue({

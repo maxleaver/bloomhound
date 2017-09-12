@@ -33,7 +33,10 @@ Route::middleware('auth')->group(function () {
 
 	Route::prefix('contacts')->group(function () {
 	    Route::get('/', 'ContactController@index')->name('contacts.index');
+	    // Route::post('/', 'ContactController@store');
 	});
 
-	// Route::post('contacts', 'ContactController@store');
+	Route::prefix('events')->group(function () {
+	    Route::get('/', 'EventController@index')->name('events.index');
+	});
 });

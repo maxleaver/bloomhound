@@ -39,4 +39,14 @@ class CustomerTest extends TestCase
 
         $this->assertInstanceOf('App\Contact', $this->customer->contacts->first());
     }
+
+    /** @test */
+    public function a_customer_has_events()
+    {
+        create('App\Event', [
+            'customer_id' => $this->customer->id
+        ]);
+
+        $this->assertInstanceOf('App\Event', $this->customer->events->first());
+    }
 }

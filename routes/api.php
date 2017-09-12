@@ -34,4 +34,9 @@ Route::middleware('auth:api')->group(function () {
 	    Route::get('/', 'ContactController@index');
 		Route::post('/', 'ContactController@store');
 	});
+
+	Route::prefix('events')->group(function () {
+		Route::get('/', 'EventController@index');
+		Route::post('/', 'EventController@store');
+	});
 });

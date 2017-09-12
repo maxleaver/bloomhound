@@ -10,9 +10,10 @@ class PostContactsTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $user;
+    protected $contact;
     protected $customer;
     protected $request;
+    protected $user;
 
     protected function setUp()
     {
@@ -20,16 +21,7 @@ class PostContactsTest extends TestCase
 
         $this->user = create('App\User');
         $this->customer = create('App\Customer', ['account_id' => $this->user->account->id]);
-
-        $this->request = [
-    		'first_name' => 'John',
-    		'last_name' => 'Doe',
-    		'email' => 'john@doe.com',
-    		'phone' => '5556667788',
-    		'address' => '',
-    		'relationship' => 'some string',
-    		'customer_id' => $this->customer->id
-    	];
+        $this->contact = make('App\Contact', ['customer_id' => $this->customer->id]);
     }
 
     /** @test */
@@ -39,9 +31,9 @@ class PostContactsTest extends TestCase
 
         $this->assertEquals($this->customer->contacts()->count(), 0);
 
-    	$response = $this->json('POST', 'api/contacts', $this->request)
+    	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
     		->assertStatus(200)
-    		->assertJsonFragment(['john@doe.com']);
+    		->assertJsonFragment([$this->contact->email]);
 
     	$this->assertEquals($this->customer->contacts()->count(), 1);
     }
@@ -49,18 +41,30 @@ class PostContactsTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_add_contacts()
     {
-    	$response = $this->json('POST', 'api/contacts', $this->request)
+    	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
     		->assertStatus(401);
     }
 
     /** @test */
-    public function users_cannot_add_contacts_to_customers_in_other_accounts()
+    public function users_can_only_add_contacts_to_existing_customers()
     {
     	Passport::actingAs($this->user, ['api/contacts']);
 
-        $this->request['customer_id'] = 555;
+        $this->contact->customer_id = 555;
 
-    	$response = $this->json('POST', 'api/contacts', $this->request)
+    	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
     		->assertStatus(404);
+    }
+
+    /** @test */
+    public function users_can_only_add_contacts_to_customers_on_their_account()
+    {
+        Passport::actingAs($this->user, ['api/contacts']);
+
+        $someOtherCustomer = create('App\Customer');
+        $this->contact->customer_id = $someOtherCustomer->id;
+
+        $response = $this->json('POST', 'api/contacts', $this->contact->toArray())
+            ->assertStatus(403);
     }
 }
