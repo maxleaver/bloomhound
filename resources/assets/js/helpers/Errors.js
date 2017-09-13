@@ -21,7 +21,6 @@ export default class Errors {
 
   clear(field) {
     if (field) {
-      console.log('Clearing: ', field);
       delete this.errors[field];
       return;
     }
@@ -30,7 +29,6 @@ export default class Errors {
   }
 
   any() {
-    console.log('Has Errors: ', Object.keys(this.errors).length > 0);
     return Object.keys(this.errors).length > 0;
   }
 }

@@ -3,6 +3,7 @@
     method="POST"
     action="/api/events"
     @submit.prevent="onSubmit"
+    @keydown="form.errors.clear($event.target.name)"
   >
     <div class="modal-card">
       <header class="modal-card-head">
@@ -10,40 +11,55 @@
       </header>
 
       <section class="modal-card-body">
-      <b-field label="Event Name">
+      <b-field
+        label="Event Name"
+        :type="form.errors.has('name') ? 'is-danger' : ''"
+        :message="form.errors.has('name') ? form.errors.get('name') : ''"
+      >
           <b-input
             type="text"
-            v-model="name"
+            v-model="form.name"
             size="is-medium"
             :disabled="isSubmitting"
             required
-          >
-          </b-input>
+          ></b-input>
         </b-field>
 
         <template>
-          <b-datepicker v-model="date" inline></b-datepicker>
+          <b-datepicker
+            v-model="form.date"
+            inline
+          ></b-datepicker>
         </template>
       </section>
 
       <footer class="modal-card-foot">
         <button class="button" type="button" @click="$parent.close()" :disabled="isSubmitting">Close</button>
-        <button class="button is-primary" v-bind:class="{'is-loading' : isSubmitting}">Add Event</button>
+        <button
+          class="button is-primary"
+          type="submit"
+          v-bind:class="{'is-loading' : isSubmitting}"
+          :disabled="isSubmitting || form.errors.any()"
+        >Add Event</button>
       </footer>
     </div>
   </form>
 </template>
 
 <script>
+import Form from '../helpers/Form';
+
 export default {
   name: 'add-event',
 
   data() {
     return {
       isSubmitting: false,
-      name: '',
-      date: new Date(),
       isFullWidth: true,
+      form: new Form({
+        name: '',
+        date: new Date(),
+      }),
     };
   },
 
@@ -51,26 +67,17 @@ export default {
     onSubmit() {
       this.isSubmitting = true;
 
-      window.axios.post('/api/events', {
-        name: this.name,
-        date: this.date,
-      })
-        .catch((error) => {
-          window.flash(error.response.data, 'danger');
-        })
+      this.form.post('/api/events')
         .then(({ data }) => {
-          this.reset();
+          this.isSubmitting = false;
 
-          window.flash('Event successfully added!', 'success');
+          window.location.href = `/events/${data.id}`;
+        })
+        .catch(() => {
+          this.isSubmitting = false;
 
-          this.$emit('created', data.data);
-
-          this.$parent.close();
+          window.flash('There was a problem saving your event!', 'danger');
         });
-    },
-
-    reset() {
-      Object.assign(this.$data, this.$options.data());
     },
   },
 };

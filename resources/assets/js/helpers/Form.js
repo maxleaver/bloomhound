@@ -1,16 +1,22 @@
 import Errors from './Errors';
 
 export default class Form {
-  constructor(data) {
+  constructor(data, skipReset = false) {
     this.originalData = data;
     this.errors = new Errors();
+    this.skipReset = skipReset;
 
+    // Convert data fields into properties of the form
     Object.keys(data).forEach((key) => {
       this[key] = data[key];
     });
   }
 
   reset() {
+    if (this.skipReset) {
+      return;
+    }
+
     Object.keys(this.originalData).forEach((key) => {
       this[key] = '';
     });
@@ -32,12 +38,10 @@ export default class Form {
     return new Promise((resolve, reject) => {
       window.axios[requestType](url, this.data())
         .then((response) => {
-          console.log('Success: ', response.data);
           this.onSuccess(response.data);
           resolve(response.data);
         })
         .catch((error) => {
-          console.log('Errors: ', error.response.data.errors);
           this.onFail(error.response.data.errors);
           reject(error.response.data);
         });

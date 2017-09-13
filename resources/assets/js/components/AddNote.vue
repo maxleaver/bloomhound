@@ -2,21 +2,33 @@
   <form
     method="POST"
     @submit.prevent="onSubmit"
+    @keydown="form.errors.clear($event.target.name)"
   >
-    <b-field label="Add a Note">
+    <b-field
+      label="Add a Note"
+      :type="form.errors.has('text') ? 'is-danger' : ''"
+      :message="form.errors.has('text') ? form.errors.get('text') : ''"
+    >
       <b-input
         type="textarea"
-        v-model="text"
+        v-model="form.text"
         :disabled="isSubmitting"
         required
       ></b-input>
     </b-field>
 
-    <button class="button is-primary" v-bind:class="{'is-loading' : isSubmitting}">Add Note</button>
+    <button
+      class="button is-primary"
+      type="submit"
+      v-bind:class="{'is-loading' : isSubmitting}"
+      :disabled="isSubmitting || form.errors.any()"
+    >Add Note</button>
   </form>
 </template>
 
 <script>
+import Form from '../helpers/Form';
+
 export default {
   name: 'add-note',
   props: {
@@ -26,7 +38,9 @@ export default {
   data() {
     return {
       isSubmitting: false,
-      text: '',
+      form: new Form({
+        text: '',
+      }),
     };
   },
 
@@ -34,23 +48,19 @@ export default {
     onSubmit() {
       this.isSubmitting = true;
 
-      window.axios.post(this.url, {
-        text: this.text,
-      })
-        .catch((error) => {
-          window.flash(error.response.data, 'danger');
-        })
+      this.form.post(this.url)
         .then(({ data }) => {
-          this.reset();
+          this.isSubmitting = false;
 
           window.flash('Note added!', 'success');
 
-          this.$emit('created', data.data);
-        });
-    },
+          this.$emit('created', data);
+        })
+        .catch(() => {
+          this.isSubmitting = false;
 
-    reset() {
-      Object.assign(this.$data, this.$options.data());
+          window.flash('There was a problem saving your note!', 'danger');
+        });
     },
   },
 };

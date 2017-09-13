@@ -3,6 +3,7 @@
     method="POST"
     action="/api/vendors"
     @submit.prevent="onSubmit"
+    @keydown="form.errors.clear($event.target.name)"
   >
     <div class="modal-card">
       <header class="modal-card-head">
@@ -10,33 +11,45 @@
       </header>
 
       <section class="modal-card-body">
-        <b-field label="Name">
+        <b-field
+          label="Name"
+          :type="form.errors.has('name') ? 'is-danger' : ''"
+          :message="form.errors.has('name') ? form.errors.get('name') : ''"
+        >
           <b-input
             type="text"
-            v-model="name"
+            v-model="form.name"
             :disabled="isSubmitting"
             required
-          >
-          </b-input>
+          ></b-input>
         </b-field>
       </section>
 
       <footer class="modal-card-foot">
         <button class="button" type="button" @click="$parent.close()" :disabled="isSubmitting">Close</button>
-        <button class="button is-primary" v-bind:class="{'is-loading' : isSubmitting}">Add Vendor</button>
+        <button
+          class="button is-primary"
+          type="submit"
+          v-bind:class="{'is-loading' : isSubmitting}"
+          :disabled="isSubmitting || form.errors.any()"
+        >Add Vendor</button>
       </footer>
     </div>
   </form>
 </template>
 
 <script>
+import Form from '../helpers/Form';
+
 export default {
   name: 'add-vendor',
 
   data() {
     return {
       isSubmitting: false,
-      name: '',
+      form: new Form({
+        name: '',
+      }),
     };
   },
 
@@ -44,25 +57,21 @@ export default {
     onSubmit() {
       this.isSubmitting = true;
 
-      window.axios.post('/api/vendors', {
-        name: this.name,
-      })
-        .catch((error) => {
-          window.flash(error.response.data, 'danger');
-        })
+      this.form.post('/api/vendors')
         .then(({ data }) => {
-          this.reset();
+          this.isSubmitting = false;
 
           window.flash('Vendor successfully added!', 'success');
 
-          this.$emit('created', data.data);
+          this.$emit('created', data);
 
           this.$parent.close();
-        });
-    },
+        })
+        .catch(() => {
+          this.isSubmitting = false;
 
-    reset() {
-      Object.assign(this.$data, this.$options.data());
+          window.flash('There was a problem saving your vendor!', 'danger');
+        });
     },
   },
 };
