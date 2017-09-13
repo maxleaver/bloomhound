@@ -14,10 +14,26 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Response::macro('jsend_success', function ($data = null) {
+        Response::macro('jsend_success', function ($data = null, $status = 200) {
             $content = ['status' => 'success', 'data' => $data];
 
-            $response = Response::make($content);
+            $response = Response::make($content, $status);
+            $response->header('Content-Type', 'application/json');
+            return $response;
+        });
+
+        Response::macro('jsend_fail', function ($data = null, $status = 400) {
+            $content = ['status' => 'fail', 'errors' => $data];
+
+            $response = Response::make($content, $status);
+            $response->header('Content-Type', 'application/json');
+            return $response;
+        });
+
+        Response::macro('jsend_error', function ($message = null, $status = 500) {
+            $content = ['status' => 'error', 'message' => $message];
+
+            $response = Response::make($content, $status);
             $response->header('Content-Type', 'application/json');
             return $response;
         });
