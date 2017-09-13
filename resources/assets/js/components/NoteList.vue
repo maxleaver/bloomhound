@@ -9,6 +9,7 @@
       :created_at="item.created_at"
       :text="item.text"
       @deleted="remove"
+      @updated="update"
     ></note>
 
     <div class="box">
@@ -47,6 +48,10 @@ export default {
 
     setPath() {
       this.path = `/api${window.location.pathname}/notes`;
+    },
+
+    update(index, newText) {
+      this.items[index].text = newText;
     },
   },
 };

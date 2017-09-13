@@ -60,5 +60,6 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::prefix('notes')->group(function () {
 		Route::delete('/{note}', 'NoteController@destroy');
+		Route::put('/{note}', 'NoteController@update');
 	});
 });

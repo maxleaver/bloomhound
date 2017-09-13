@@ -59,12 +59,20 @@ class NoteController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Note $note)
     {
-        //
+        $data = $this->validate(request(), [
+            'text' => 'required|string',
+        ]);
+
+        if ($note->user->account->id !== Auth::user()->account->id) {
+            abort(404);
+        }
+
+        $note->update(['text' => $data['text']]);
     }
 
     /**

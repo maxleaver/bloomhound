@@ -5,7 +5,6 @@
   >
     <b-field label="Add a Note">
       <b-input
-        maxlength="200"
         type="textarea"
         v-model="text"
         :disabled="isSubmitting"
