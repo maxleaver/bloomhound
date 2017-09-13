@@ -14,7 +14,6 @@ class UpdateNotesTest extends TestCase
     protected $request;
     protected $updateText;
     protected $user;
-    protected $url;
 
     protected function setUp()
     {

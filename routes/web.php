@@ -18,30 +18,31 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
-	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('home', 'HomeController@index')->name('home');
 
 	// Route::get('users', 'UserController@index');
 	// Route::post('users', 'InviteController@store');
 
 	// Route::get('invitations', 'InviteController@index');
+	Route::get('my/profile', 'ProfileController@index')->name('my.profile');
 
 	Route::prefix('customers')->group(function () {
 	    Route::get('/', 'CustomerController@index')->name('customers.index');
-		Route::get('/{customer}', 'CustomerController@show')->name('customers.show');
+		Route::get('{customer}', 'CustomerController@show')->name('customers.show');
 	});
 
 	Route::prefix('contacts')->group(function () {
 	    Route::get('/', 'ContactController@index')->name('contacts.index');
-	    Route::get('/{contact}', 'ContactController@show')->name('contacts.show');
+	    Route::get('{contact}', 'ContactController@show')->name('contacts.show');
 	});
 
 	Route::prefix('events')->group(function () {
 	    Route::get('/', 'EventController@index')->name('events.index');
-	    Route::get('/{event}', 'EventController@show')->name('events.show');
+	    Route::get('{event}', 'EventController@show')->name('events.show');
 	});
 
 	Route::prefix('vendors')->group(function () {
 		Route::get('/', 'VendorController@index')->name('vendors.index');
-		Route::get('/{vendor}', 'VendorController@show')->name('vendors.show');
+		Route::get('{vendor}', 'VendorController@show')->name('vendors.show');
 	});
 });

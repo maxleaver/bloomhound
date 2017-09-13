@@ -26,7 +26,7 @@
         </a>
 
         <div class="navbar-dropdown is-right">
-          <a class="navbar-item" href="">Profile</a>
+          <a class="navbar-item" href="{{ route('my.profile') }}">Profile</a>
           <a class="navbar-item" href="">Account Settings</a>
 
           <hr class="navbar-divider">

@@ -20,6 +20,8 @@ Vue.component('contact-list', require('./components/ContactList.vue'));
 Vue.component('event-list', require('./components/EventList.vue'));
 Vue.component('note-list', require('./components/NoteList.vue'));
 Vue.component('vendor-list', require('./components/VendorList.vue'));
+Vue.component('update-password', require('./components/UpdatePassword.vue'));
+Vue.component('update-profile', require('./components/UpdateProfile.vue'));
 
 /* eslint-disable no-unused-vars */
 const app = new Vue({
