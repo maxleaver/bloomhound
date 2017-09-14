@@ -28,8 +28,8 @@ class PostEventNotesTest extends TestCase
     {
     	$this->assertEquals($this->event->notes()->count(), 0);
 
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl($this->event->id), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl($this->event->id), $this->request)
     		->assertStatus(200);
 
         $this->assertEquals($this->event->notes()->count(), 1);
@@ -40,17 +40,24 @@ class PostEventNotesTest extends TestCase
     {
     	$event = create('App\Event');
 
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl($event->id), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl($event->id), $this->request)
     		->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_add_notes_to_events_that_exist()
     {
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl(123), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl(123), $this->request)
     		->assertStatus(404);
+    }
+
+    /** @test */
+    public function unauthenticated_users_cannot_post_events()
+    {
+        $this->postJson($this->getUrl($this->event->id), $this->request)
+            ->assertStatus(401);
     }
 
     protected function getUrl($id)

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,8 +27,8 @@ class GetEventsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_events_for_their_account()
     {
-    	Passport::actingAs($this->user);
-        $response = $this->json('GET', $this->url)
+    	$this->signIn($this->user)
+            ->getJson($this->url)
     		->assertStatus(200)
     		->assertJsonFragment([$this->events[0]->name])
     		->assertJsonFragment([$this->events[1]->name])
@@ -40,7 +39,7 @@ class GetEventsTest extends TestCase
     /** @test */
     public function unauthorized_users_cannot_get_events()
     {
-    	$response = $this->json('GET', $this->url)
+    	$this->getJson($this->url)
     		->assertStatus(401);
     }
 }

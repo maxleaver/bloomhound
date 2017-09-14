@@ -2,9 +2,6 @@
 
 namespace Tests\Api\Feature;
 
-use App\Invite;
-use App\User;
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -12,31 +9,42 @@ class GetUserInvitationsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $invites;
+    protected $url;
+    protected $user;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->user = create('App\User');
+        $this->invites = create('App\Invite', [
+            'account_id' => $this->user->account->id
+        ], 3);
+        $this->url = 'api/invitations';
+    }
+
     /** @test */
     public function authenticated_users_can_get_a_list_of_pending_user_invitations_for_their_account()
     {
-        $user = create(User::class);
         $someOtherAccount = create('App\Account');
-
-        $accountInvites = create(Invite::class, [
-            'account_id' => $user->account->id
-        ], 3);
-
-        $notAccountInvite = create(Invite::class, [
+        $notAccountInvite = create('App\Invite', [
             'account_id' => $someOtherAccount->id
         ]);
 
-        Passport::actingAs($user);
-        $response = $this->json('GET', 'api/invitations')
+        $this->signIn($this->user)
+            ->getJson($this->url)
             ->assertStatus(200)
-            ->assertJsonFragment([$accountInvites[0]->email])
+            ->assertJsonFragment([$this->invites[0]->email])
+            ->assertJsonFragment([$this->invites[1]->email])
+            ->assertJsonFragment([$this->invites[2]->email])
             ->assertJsonMissing([$notAccountInvite->email]);
     }
 
     /** @test */
     public function unauthenticated_users_cant_get_a_list_of_user_invitations()
     {
-        $response = $this->json('GET', 'api/invitations')
+        $this->getJson($this->url)
             ->assertStatus(401);
     }
 }

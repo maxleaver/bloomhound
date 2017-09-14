@@ -2,7 +2,6 @@
 
 namespace Tests\Api\Feature;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -13,6 +12,7 @@ class PostContactsTest extends TestCase
     protected $contact;
     protected $customer;
     protected $request;
+    protected $url;
     protected $user;
 
     protected function setUp()
@@ -22,6 +22,7 @@ class PostContactsTest extends TestCase
         $this->user = create('App\User');
         $this->customer = create('App\Customer', ['account_id' => $this->user->account->id]);
         $this->contact = make('App\Contact', ['customer_id' => $this->customer->id]);
+        $this->url = 'api/contacts';
     }
 
     /** @test */
@@ -29,8 +30,8 @@ class PostContactsTest extends TestCase
     {
         $this->assertEquals($this->customer->contacts()->count(), 0);
 
-        Passport::actingAs($this->user);
-    	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
+    	$this->signIn($this->user)
+            ->postJson($this->url, $this->contact->toArray())
     		->assertStatus(200)
     		->assertJsonFragment([$this->contact->email]);
 
@@ -40,7 +41,7 @@ class PostContactsTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_add_contacts()
     {
-    	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
+    	$this->postJson($this->url, $this->contact->toArray())
     		->assertStatus(401);
     }
 
@@ -49,8 +50,8 @@ class PostContactsTest extends TestCase
     {
         $this->contact->customer_id = 555;
 
-        Passport::actingAs($this->user);
-    	$response = $this->json('POST', 'api/contacts', $this->contact->toArray())
+    	$this->signIn($this->user)
+            ->postJson($this->url, $this->contact->toArray())
     		->assertStatus(404);
     }
 
@@ -60,8 +61,8 @@ class PostContactsTest extends TestCase
         $someOtherCustomer = create('App\Customer');
         $this->contact->customer_id = $someOtherCustomer->id;
 
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', 'api/contacts', $this->contact->toArray())
+        $this->signIn($this->user)
+            ->postJson($this->url, $this->contact->toArray())
             ->assertStatus(403);
     }
 }

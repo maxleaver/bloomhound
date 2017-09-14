@@ -29,8 +29,8 @@ class UpdateProfileTest extends TestCase
     /** @test */
     public function a_user_can_update_their_profile()
     {
-        Passport::actingAs($this->user);
-    	$response = $this->json('PATCH', $this->url, $this->request)
+    	$this->signIn($this->user)
+            ->patchJson($this->url, $this->request)
     		->assertStatus(200);
 
         $this->assertEquals($this->user->fresh()->name, $this->request['name']);
@@ -40,7 +40,7 @@ class UpdateProfileTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_update_a_profile()
     {
-    	$response = $this->json('PATCH', $this->url, $this->request)
+    	$this->patchJson($this->url, $this->request)
     		->assertStatus(401);
     }
 }

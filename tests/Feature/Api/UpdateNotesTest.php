@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,8 +27,8 @@ class UpdateNotesTest extends TestCase
     /** @test */
     public function a_user_can_update_a_note()
     {
-    	Passport::actingAs($this->user);
-    	$response = $this->json('PUT', $this->getUrl($this->note->id), $this->request)
+    	$this->signIn($this->user)
+            ->putJson($this->getUrl($this->note->id), $this->request)
     		->assertStatus(200);
 
     	$this->assertEquals($this->note->fresh()->text, $this->updateText);
@@ -40,15 +39,15 @@ class UpdateNotesTest extends TestCase
     {
     	$otherAccountNote = create('App\Note');
 
-    	Passport::actingAs($this->user);
-    	$response = $this->json('PUT', $this->getUrl($otherAccountNote->id), $this->request)
+    	$this->signIn($this->user)
+            ->putJson($this->getUrl($otherAccountNote->id), $this->request)
     		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_update_notes()
     {
-    	$response = $this->json('PUT', $this->getUrl($this->note->id), $this->request)
+    	$this->putJson($this->getUrl($this->note->id), $this->request)
     		->assertStatus(401);
     }
 

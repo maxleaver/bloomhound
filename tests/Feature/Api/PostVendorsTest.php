@@ -2,7 +2,6 @@
 
 namespace Tests\Api\Feature;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -10,6 +9,7 @@ class PostVendorsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $request;
     protected $user;
     protected $url;
 
@@ -19,6 +19,7 @@ class PostVendorsTest extends TestCase
 
         $this->user = create('App\User');
         $this->url = 'api/vendors';
+        $this->request = ['name' => 'Vendor Name'];
     }
 
     /** @test */
@@ -26,10 +27,10 @@ class PostVendorsTest extends TestCase
     {
         $this->assertEquals($this->user->account->vendors()->count(), 0);
 
-        Passport::actingAs($this->user);
-    	$response = $this->json('POST', $this->url, ['name' => 'Vendor Name'])
+    	$this->signIn($this->user)
+            ->postJson($this->url, $this->request)
     		->assertStatus(200)
-    		->assertJsonFragment(['Vendor Name']);
+    		->assertJsonFragment([$this->request['name']]);
 
     	$this->assertEquals($this->user->account->vendors()->count(), 1);
     }
@@ -37,7 +38,7 @@ class PostVendorsTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_add_vendors()
     {
-    	$response = $this->json('POST', $this->url, ['name' => 'Vendor Name'])
+    	$this->postJson($this->url, $this->request)
     		->assertStatus(401);
     }
 }

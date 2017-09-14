@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -31,8 +30,8 @@ class GetVendorNotesTest extends TestCase
     {
     	$someOtherNote = create('App\Note');
 
-        Passport::actingAs($this->user);
-        $response = $this->json('GET', $this->getUrl($this->vendor->id))
+        $this->signIn($this->user)
+            ->getJson($this->getUrl($this->vendor->id))
     		->assertStatus(200)
     		->assertJsonFragment([$this->notes[0]->text])
     		->assertJsonFragment([$this->notes[1]->text])
@@ -45,15 +44,15 @@ class GetVendorNotesTest extends TestCase
         $otherVendor = create('App\Vendor');
         $otherNotes = create('App\Note', ['notable_id' => $otherVendor->id, 'notable_type' => 'App\Vendor'], 3);
 
-        Passport::actingAs($this->user);
-        $response = $this->json('GET', $this->getUrl($otherVendor->id))
+        $this->signIn($this->user)
+            ->getJson($this->getUrl($otherVendor->id))
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_view_notes()
     {
-        $response = $this->json('GET', $this->getUrl($this->vendor->id))
+        $this->getJson($this->getUrl($this->vendor->id))
             ->assertStatus(401);
     }
 

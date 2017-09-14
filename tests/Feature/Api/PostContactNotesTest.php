@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,8 +27,8 @@ class PostContactNotesTest extends TestCase
     {
         $this->assertEquals($this->contact->notes()->count(), 0);
 
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl($this->contact->id), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl($this->contact->id), $this->request)
     		->assertStatus(200);
 
         $this->assertEquals($this->contact->notes()->count(), 1);
@@ -40,23 +39,23 @@ class PostContactNotesTest extends TestCase
     {
         $contact = create('App\Contact');
 
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl($contact->id), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl($contact->id), $this->request)
     		->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_add_notes_to_contacts_that_exist()
     {
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl(123), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl(123), $this->request)
     		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticed_users_cant_post_notes()
     {
-        $response = $this->json('POST', $this->getUrl($this->contact->id), $this->request)
+        $this->postJson($this->getUrl($this->contact->id), $this->request)
             ->assertStatus(401);
     }
 

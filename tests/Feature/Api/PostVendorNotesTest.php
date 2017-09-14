@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,8 +27,8 @@ class PostVendorNotesTest extends TestCase
     {
     	$this->assertEquals($this->vendor->notes()->count(), 0);
 
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl($this->vendor->id), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl($this->vendor->id), $this->request)
     		->assertStatus(200);
 
         $this->assertEquals($this->vendor->notes()->count(), 1);
@@ -40,17 +39,24 @@ class PostVendorNotesTest extends TestCase
     {
     	$vendor = create('App\Vendor');
 
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl($vendor->id), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl($vendor->id), $this->request)
     		->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_add_notes_to_vendors_that_exist()
     {
-        Passport::actingAs($this->user);
-        $response = $this->json('POST', $this->getUrl(123), $this->request)
+        $this->signIn($this->user)
+            ->postJson($this->getUrl(123), $this->request)
     		->assertStatus(404);
+    }
+
+    /** @test */
+    public function unauthenticated_users_cannot_add_vendors()
+    {
+        $this->postJson($this->getUrl($this->vendor->id), $this->request)
+            ->assertStatus(401);
     }
 
     protected function getUrl($id)

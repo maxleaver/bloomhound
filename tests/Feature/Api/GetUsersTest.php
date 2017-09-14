@@ -2,7 +2,6 @@
 
 namespace Tests\Api\Feature;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -10,39 +9,42 @@ class GetUsersTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function a_user_can_see_other_users_on_their_account()
+    protected $account;
+    protected $url;
+    protected $users;
+
+    protected function setUp()
     {
-        $this->withoutExceptionHandling();
+        parent::setUp();
 
-        $account = create('App\Account');
-        $accountUsers = create('App\User', [
-            'account_id' => $account->id
+        $this->account = create('App\Account');
+        $this->users = create('App\User', [
+            'account_id' => $this->account->id
         ], 3);
+        $this->url = 'api/users';
+    }
 
+    /** @test */
+    public function a_user_can_get_a_list_of_users_on_their_account()
+    {
         $someOtherAccount = create('App\Account');
         $notAccountUser = create('App\User', [
             'account_id' => $someOtherAccount->id
         ]);
 
-        Passport::actingAs($accountUsers[0]);
-        $response = $this->get('api/users')
+        $this->signIn($this->users[0])
+            ->getJson($this->url)
         	->assertStatus(200)
-            ->assertJsonFragment([$accountUsers[0]->name])
-            ->assertJsonFragment([$accountUsers[1]->name])
-            ->assertJsonFragment([$accountUsers[2]->name])
+            ->assertJsonFragment([$this->users[0]->name])
+            ->assertJsonFragment([$this->users[1]->name])
+            ->assertJsonFragment([$this->users[2]->name])
             ->assertJsonMissing([$notAccountUser->name]);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_request_users()
     {
-        $account = create('App\Account');
-        $accountUsers = create('App\User', [
-            'account_id' => $account->id
-        ], 3);
-
-        $response = $this->json('GET', 'api/users')
+        $this->getJson($this->url)
             ->assertStatus(401);
     }
 }

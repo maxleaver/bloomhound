@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -31,8 +30,8 @@ class GetContactNotesTest extends TestCase
     {
     	$someOtherNote = create('App\Note');
 
-        Passport::actingAs($this->user);
-        $response = $this->json('GET', $this->getUrl($this->contact->id))
+        $this->signIn($this->user)
+            ->get($this->getUrl($this->contact->id))
     		->assertStatus(200)
     		->assertJsonFragment([$this->notes[0]->text])
     		->assertJsonFragment([$this->notes[1]->text])
@@ -44,8 +43,8 @@ class GetContactNotesTest extends TestCase
     {
         $newContact = create('App\Contact', ['account_id' => $this->user->account->id]);
 
-        Passport::actingAs($this->user);
-        $response = $this->json('GET', $this->getUrl($newContact->id))
+        $this->signIn($this->user)
+            ->getJson($this->getUrl($newContact->id))
             ->assertStatus(200)
             ->assertJson([
                 'data' => [],
@@ -59,15 +58,15 @@ class GetContactNotesTest extends TestCase
         $otherContact = create('App\Contact');
         $otherNotes = create('App\Note', ['notable_id' => $otherContact->id, 'notable_type' => 'App\Contact'], 3);
 
-        Passport::actingAs($this->user);
-        $response = $this->json('GET', $this->getUrl($otherContact->id))
+        $this->signIn($this->user)
+            ->getJson($this->getUrl($otherContact->id))
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_view_notes()
     {
-        $response = $this->json('GET', $this->getUrl($this->contact->id))
+        $this->getJson($this->getUrl($this->contact->id))
             ->assertStatus(401);
     }
 

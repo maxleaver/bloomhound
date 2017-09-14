@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -31,8 +30,8 @@ class GetContactsTest extends TestCase
     {
     	$someOtherContact = create('App\Contact');
 
-    	Passport::actingAs($this->user);
-        $response = $this->json('GET', 'api/contacts')
+        $this->signIn($this->user)
+            ->getJson('api/contacts')
     		->assertStatus(200)
     		->assertJsonFragment([$this->contacts[0]->email])
     		->assertJsonFragment([$this->contacts[1]->email])
@@ -50,8 +49,8 @@ class GetContactsTest extends TestCase
 
     	$url = 'api/customers/' . $this->customer->id . '/contacts';
 
-    	Passport::actingAs($this->user);
-        $response = $this->json('GET', $url)
+    	$this->signIn($this->user)
+            ->getJson($url)
     		->assertStatus(200)
     		->assertJsonFragment([$this->contacts[0]->email])
     		->assertJsonFragment([$this->contacts[1]->email])
@@ -61,8 +60,8 @@ class GetContactsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_specific_contact()
     {
-        Passport::actingAs($this->user);
-        $response = $this->json('GET', 'api/contacts/' . $this->contacts[0]->id)
+        $this->signIn($this->user)
+            ->getJson('api/contacts/' . $this->contacts[0]->id)
             ->assertStatus(200)
             ->assertJsonFragment([$this->contacts[0]->name]);
     }
@@ -70,7 +69,7 @@ class GetContactsTest extends TestCase
     /** @test */
     public function an_unauthenticated_user_cannot_get_contacts()
     {
-    	$response = $this->json('GET', 'api/contacts')
+    	$this->getJson('api/contacts')
     		->assertStatus(401);
     }
 }

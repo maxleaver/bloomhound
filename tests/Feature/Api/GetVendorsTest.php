@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -30,8 +29,8 @@ class GetVendorsTest extends TestCase
     {
     	$this->withoutExceptionHandling();
 
-        Passport::actingAs($this->user);
-        $response = $this->json('GET', $this->url)
+        $this->signIn($this->user)
+            ->getJson($this->url)
     		->assertStatus(200)
     		->assertJsonFragment([$this->vendors[0]->name])
     		->assertJsonFragment([$this->vendors[1]->name])
@@ -42,7 +41,7 @@ class GetVendorsTest extends TestCase
     /** @test */
     public function unauthorized_users_cannot_get_vendors()
     {
-    	$response = $this->json('GET', $this->url)
+    	$this->getJson($this->url)
     		->assertStatus(401);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Tests\Api\Feature;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -10,44 +9,48 @@ class GetCustomersTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $customers;
+    protected $user;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->user = create('App\User');
+        $this->customers = create('App\Customer', ['account_id' => $this->user->account->id], 3);
+    }
+
     /** @test */
     public function a_user_can_get_a_list_of_customers_on_their_account()
     {
-        $user = create('App\User');
-        $accountCustomers = create('App\Customer', ['account_id' => $user->account->id], 3);
         $notAccountCustomers = create('App\Customer', [], 3);
 
-        Passport::actingAs($user);
-        $response = $this->json('GET', 'api/customers')
+        $this->signIn($this->user)
+            ->getJson('api/customers')
     		->assertStatus(200)
-    		->assertJsonFragment([$accountCustomers[0]->name])
-    		->assertJsonFragment([$accountCustomers[1]->name])
-    		->assertJsonFragment([$accountCustomers[2]->name])
+    		->assertJsonFragment([$this->customers[0]->name])
+    		->assertJsonFragment([$this->customers[1]->name])
+    		->assertJsonFragment([$this->customers[2]->name])
             ->assertJsonMissing([$notAccountCustomers[0]->name]);
     }
 
 	/** @test */
     public function a_user_can_get_a_specific_customer()
     {
-    	$user = create('App\User');
-    	$customers = create('App\Customer', ['account_id' => $user->account->id], 3);
-
-        Passport::actingAs($user);
-    	$response = $this->json('GET', 'api/customers/' . $customers[0]->id)
+        $this->signIn($this->user)
+    	   ->getJson('api/customers/' . $this->customers[0]->id)
     		->assertStatus(200)
-    		->assertJsonFragment([$customers[0]->name])
-            ->assertJsonMissing([$customers[1]->name]);
+    		->assertJsonFragment([$this->customers[0]->name])
+            ->assertJsonMissing([$this->customers[1]->name]);
     }
 
     /** @test */
     public function a_user_can_only_get_customers_on_their_account()
     {
-    	$user = create('App\User');
-    	$accountCustomers = create('App\Customer', ['account_id' => $user->account->id], 3);
     	$notAccountCustomer = create('App\Customer');
 
-        Passport::actingAs($user);
-    	$response = $this->json('GET', 'api/customers/' . $notAccountCustomer->id, [])
-    		->assertStatus(404);
+        $this->signIn($this->user)
+            ->getJson('api/customers/' . $notAccountCustomer->id, [])
+            ->assertStatus(404);
     }
 }
