@@ -19,6 +19,8 @@ Route::middleware('auth:api')->group(function () {
 	Route::get('invitations', 'InviteController@index');
 	Route::patch('password', 'UpdatePasswordController@update');
 
+	Route::patch('account', 'AccountProfileController@update');
+
 	Route::prefix('profile')->group(function () {
 		Route::get('/', 'ProfileController@index');
 		Route::patch('/', 'ProfileController@update');

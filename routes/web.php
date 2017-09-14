@@ -24,7 +24,10 @@ Route::middleware('auth')->group(function () {
 	// Route::post('users', 'InviteController@store');
 
 	// Route::get('invitations', 'InviteController@index');
+
 	Route::get('my/profile', 'ProfileController@index')->name('my.profile');
+
+	Route::get('account/settings', 'AccountSettingsController@index')->name('account.settings');
 
 	Route::prefix('customers')->group(function () {
 	    Route::get('/', 'CustomerController@index')->name('customers.index');

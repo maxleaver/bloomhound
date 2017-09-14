@@ -24,6 +24,26 @@ class AccountTest extends TestCase
     }
 
     /** @test */
+    public function an_account_has_an_address() {
+        $this->assertNotNull($this->account->address);
+    }
+
+    /** @test */
+    public function an_account_has_a_website() {
+        $this->assertNotNull($this->account->website);
+    }
+
+    /** @test */
+    public function an_account_has_an_email() {
+        $this->assertNotNull($this->account->email);
+    }
+
+    /** @test */
+    public function an_account_has_a_phone_number() {
+        $this->assertNotNull($this->account->phone);
+    }
+
+    /** @test */
     public function an_account_has_users()
     {
         create('App\User', [

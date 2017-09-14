@@ -1,6 +1,6 @@
 <template>
   <form
-    method="POST"
+    method="PATCH"
     action="/api/profile"
     @submit.prevent="onSubmit"
     @keydown="form.errors.clear($event.target.name)"
@@ -60,7 +60,7 @@ export default {
       form: new Form({
         name: '',
         email: '',
-      }, true),
+      }, false),
     };
   },
 

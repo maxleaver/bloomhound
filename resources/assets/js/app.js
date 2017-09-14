@@ -22,6 +22,7 @@ Vue.component('note-list', require('./components/NoteList.vue'));
 Vue.component('vendor-list', require('./components/VendorList.vue'));
 Vue.component('update-password', require('./components/UpdatePassword.vue'));
 Vue.component('update-profile', require('./components/UpdateProfile.vue'));
+Vue.component('account-profile', require('./components/AccountProfile.vue'));
 
 /* eslint-disable no-unused-vars */
 const app = new Vue({

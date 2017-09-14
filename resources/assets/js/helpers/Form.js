@@ -1,10 +1,10 @@
 import Errors from './Errors';
 
 export default class Form {
-  constructor(data, skipReset = false) {
+  constructor(data, resetOnSubmit = true) {
     this.originalData = data;
     this.errors = new Errors();
-    this.skipReset = skipReset;
+    this.resetOnSubmit = resetOnSubmit;
 
     // Convert data fields into properties of the form
     Object.keys(data).forEach((key) => {
@@ -13,15 +13,13 @@ export default class Form {
   }
 
   reset() {
-    if (this.skipReset) {
-      return;
+    if (this.resetOnSubmit) {
+      Object.keys(this.originalData).forEach((key) => {
+        this[key] = '';
+      });
+
+      this.errors.clear();
     }
-
-    Object.keys(this.originalData).forEach((key) => {
-      this[key] = '';
-    });
-
-    this.errors.clear();
   }
 
   data() {

@@ -1,6 +1,6 @@
 <template>
   <form
-    method="POST"
+    method="PATCH"
     action="/api/password"
     @submit.prevent="onSubmit"
     @keydown="form.errors.clear($event.target.name)"
