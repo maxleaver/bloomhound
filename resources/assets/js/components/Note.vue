@@ -25,19 +25,25 @@
       </nav>
 
       <div v-if="isEditing">
-        <b-field>
-          <b-input
-            type="textarea"
-            v-model="updateText"
-            :disabled="isSubmitting"
-          >{{ updateText }}</b-input>
-        </b-field>
+        <form
+          method="POST"
+          @submit.prevent="onSubmit"
+          @keydown="form.errors.clear($event.target.name)"
+        >
+          <b-field>
+            <b-input
+              type="textarea"
+              v-model="form.text"
+              :disabled="isSubmitting"
+            >{{ form.text }}</b-input>
+          </b-field>
 
-        <button
-          v-on:click="onEditSubmit"
-          :disabled="isSubmitting"
-          class="button is-primary"
-        >Save</button>
+          <button
+            v-on:click="onEditSubmit"
+            :disabled="isSubmitting"
+            class="button is-primary"
+          >Save</button>
+        </form>
       </div>
 
       <div v-else>
@@ -48,6 +54,8 @@
 </template>
 
 <script>
+import Form from '../helpers/Form';
+
 export default {
   name: 'note',
   props: {
@@ -62,24 +70,26 @@ export default {
     return {
       isEditing: false,
       isSubmitting: false,
-      updateText: '',
+      form: new Form({
+        text: '',
+      }, false),
     };
   },
 
   created() {
-    this.updateText = this.text;
+    this.form.text = this.text;
   },
 
   methods: {
     onDelete() {
-      window.axios.delete(`/api/notes/${this.id}`)
-        .catch((error) => {
-          window.flash(error.response.data, 'danger');
-        })
+      this.form.delete(`/api/notes/${this.id}`)
         .then(() => {
           window.flash('Note deleted!', 'success');
 
           this.$emit('deleted', this.index);
+        })
+        .catch(() => {
+          window.flash('There was a problem deleting your note!', 'danger');
         });
     },
 
@@ -90,17 +100,17 @@ export default {
     onEditSubmit() {
       this.isSubmitting = true;
 
-      window.axios.put(`/api/notes/${this.id}`, { text: this.updateText })
-        .catch((error) => {
-          window.flash(error.response.data, 'danger');
-
-          this.isSubmitting = false;
-        })
+      this.form.patch(`/api/notes/${this.id}`)
         .then(() => {
           this.isEditing = false;
           this.isSubmitting = false;
 
-          this.$emit('updated', this.index, this.updateText);
+          this.$emit('updated', this.index, this.form.text);
+        })
+        .catch(() => {
+          this.isSubmitting = false;
+
+          window.flash('There was a problem saving your note!', 'danger');
         });
     },
   },

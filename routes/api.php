@@ -19,7 +19,10 @@ Route::middleware('auth:api')->group(function () {
 	Route::get('invitations', 'InviteController@index');
 	Route::patch('password', 'UpdatePasswordController@update');
 
-	Route::patch('account', 'AccountProfileController@update');
+	Route::prefix('account')->group(function () {
+		Route::patch('/', 'AccountProfileController@update');
+		Route::post('logo', 'AccountLogoController@store');
+	});
 
 	Route::prefix('profile')->group(function () {
 		Route::get('/', 'ProfileController@index');
@@ -68,6 +71,6 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::prefix('notes')->group(function () {
 		Route::delete('/{note}', 'NoteController@destroy');
-		Route::put('/{note}', 'NoteController@update');
+		Route::patch('/{note}', 'NoteController@update');
 	});
 });
