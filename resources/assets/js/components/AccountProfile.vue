@@ -90,7 +90,7 @@
 
     <div class="column is-half">
       <account-preview
-        :logoUrl="logo"
+        :logo="account.logo_path"
         :name="form.name"
         :address="form.address"
         :website="form.website"
@@ -116,7 +116,6 @@ export default {
   data() {
     return {
       isSubmitting: false,
-      logo: 'http://via.placeholder.com/128x128',
       form: new Form({
         name: '',
         address: '',

@@ -44,6 +44,12 @@ php artisan passport:install
 
 ```
 
+Creates a symbolic link from storage/app/public to public/storage for dynamic, publicly-facing images (ex. user avatars)
+``` bash
+php artisan storage:link
+
+```
+
 ## Usage
 
 Make an HTTP request to your development server using any route in `routes/api.php`.

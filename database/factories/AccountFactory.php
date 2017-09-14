@@ -9,5 +9,6 @@ $factory->define(App\Account::class, function (Faker $faker) {
         'website' => $faker->url,
         'email' => $faker->email,
         'phone' => $faker->phoneNumber,
+        'logo' => $faker->imageUrl,
     ];
 });

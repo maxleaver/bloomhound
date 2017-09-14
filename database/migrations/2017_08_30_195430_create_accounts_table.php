@@ -20,6 +20,7 @@ class CreateAccountsTable extends Migration
             $table->string('website')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

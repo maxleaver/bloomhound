@@ -5,11 +5,7 @@
 
     <article class="media">
       <figure class="media-left">
-        <p class="image is-128x128">
-          <a href="">
-            <img v-bind:src="logoUrl" v-bind:alt="name">
-          </a>
-        </p>
+        <upload-logo :logo="logo" :name="name"></upload-logo>
       </figure>
 
       <div class="media-content">
@@ -26,16 +22,25 @@
 </template>
 
 <script>
+import UploadLogo from './UploadLogo.vue';
+
 export default {
   name: 'account-preview',
+  components: { UploadLogo },
 
   props: {
-    logoUrl: String,
+    logo: String,
     name: String,
     address: String,
     website: String,
     email: String,
     phone: String,
+  },
+
+  data() {
+    return {
+      logoFile: '',
+    };
   },
 
   computed: {

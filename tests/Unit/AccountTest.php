@@ -43,6 +43,11 @@ class AccountTest extends TestCase
         $this->assertNotNull($this->account->phone);
     }
 
+        /** @test */
+    public function an_account_has_a_logo() {
+        $this->assertNotNull($this->account->logo);
+    }
+
     /** @test */
     public function an_account_has_users()
     {

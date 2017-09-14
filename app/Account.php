@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
     protected $fillable = [
-        'name', 'address', 'website', 'email', 'phone'
+        'name', 'address', 'website', 'email', 'phone', 'logo'
     ];
+    protected $appends = ['logo_path'];
 
     public function users()
     {
@@ -38,5 +39,11 @@ class Account extends Model
     public function vendors()
     {
         return $this->hasMany('App\Vendor');
+    }
+
+    public function getLogoPathAttribute()
+    {
+        // Strip /public from the image path for external consumption
+        return substr($this->logo, 6);
     }
 }
