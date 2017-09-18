@@ -59,7 +59,7 @@ export default {
       this.isSubmitting = true;
 
       this.form.post('/api/customers')
-        .then(({ data }) => {
+        .then((data) => {
           this.isSubmitting = false;
 
           window.flash('Customer successfully added!', 'success');

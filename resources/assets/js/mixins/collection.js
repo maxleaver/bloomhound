@@ -9,7 +9,7 @@ export default {
   methods: {
     refresh({ data }) {
       this.dataSet = data;
-      this.items = data.data;
+      this.items = data;
 
       window.scrollTo(0, 0);
     },

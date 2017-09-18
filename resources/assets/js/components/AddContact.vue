@@ -11,6 +11,25 @@
       </header>
 
       <section class="modal-card-body">
+        <b-field label="Customer" v-if="showCustomerList">
+          <b-select
+            placeholder="Select a customer"
+            icon="person"
+            v-model="form.customer_id"
+            expanded
+            required
+            :disabled="isSubmitting"
+            @input="changeCustomer"
+          >
+            <option
+              v-for="customer in customers"
+              :value="customer.id"
+              :key="customer.id">
+              {{ customer.name }}
+            </option>
+          </b-select>
+        </b-field>
+
         <b-field grouped>
           <b-field
             label="First Name"
@@ -110,13 +129,14 @@ export default {
   name: 'add-contact',
   props: {
     customer_id: Number,
+    customers: Array,
   },
 
   data() {
     return {
       isSubmitting: false,
       form: new Form({
-        customer_id: this.customer_id,
+        customer_id: '',
         first_name: '',
         last_name: '',
         email: '',
@@ -124,7 +144,17 @@ export default {
         relationship: '',
         address: '',
       }),
+      showCustomerList: false,
     };
+  },
+
+  created() {
+    if (this.customer_id) {
+      this.form.customer_id = this.customer_id;
+      return;
+    }
+
+    this.showCustomerList = true;
   },
 
   methods: {
@@ -132,7 +162,7 @@ export default {
       this.isSubmitting = true;
 
       this.form.post('/api/contacts')
-        .then(({ data }) => {
+        .then((data) => {
           this.isSubmitting = false;
 
           window.flash('Contact successfully added!', 'success');
@@ -146,6 +176,10 @@ export default {
 
           window.flash('There was a problem saving your contact!', 'danger');
         });
+    },
+
+    changeCustomer(id) {
+      this.form.customer_id = id;
     },
   },
 };

@@ -68,7 +68,7 @@ export default {
       this.isSubmitting = true;
 
       this.form.post('/api/events')
-        .then(({ data }) => {
+        .then((data) => {
           this.isSubmitting = false;
 
           window.location.href = `/events/${data.id}`;

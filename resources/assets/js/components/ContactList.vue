@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <add-contact @created="add" :customer_id="customer_id"></add-contact>
+      <add-contact @created="add" :customer_id="customer_id" :customers="customers"></add-contact>
     </b-modal>
 
     <b-table
@@ -94,18 +94,43 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
+      customers: [],
     };
   },
 
   created() {
     this.fetch();
+
+    if (!this.customer_id) {
+      // Get a list of customers
+      this.fetchCustomers();
+
+      // this.customers = [
+      //   {
+      //     id: 1,
+      //     name: 'Jane and John Doe',
+      //   },
+      //   {
+      //     id: 2,
+      //     name: 'Jeff Jones',
+      //   },
+      // ];
+    }
   },
 
   methods: {
     fetch() {
       const url = this.customer_id ? `customers/${this.customer_id}/contacts` : 'contacts';
+
       window.axios.get(`/api/${url}`)
         .then(this.refresh);
+    },
+
+    fetchCustomers() {
+      window.axios.get('api/customers')
+        .then(({ data }) => {
+          this.customers = data;
+        });
     },
 
     onClick(data) {

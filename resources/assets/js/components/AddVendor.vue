@@ -58,7 +58,7 @@ export default {
       this.isSubmitting = true;
 
       this.form.post('/api/vendors')
-        .then(({ data }) => {
+        .then((data) => {
           this.isSubmitting = false;
 
           window.flash('Vendor successfully added!', 'success');

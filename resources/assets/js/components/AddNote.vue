@@ -49,7 +49,7 @@ export default {
       this.isSubmitting = true;
 
       this.form.post(this.url)
-        .then(({ data }) => {
+        .then((data) => {
           this.isSubmitting = false;
 
           window.flash('Note added!', 'success');
