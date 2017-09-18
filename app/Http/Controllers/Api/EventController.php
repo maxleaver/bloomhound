@@ -20,7 +20,7 @@ class EventController extends Controller
     public function index()
     {
         $events = Auth::user()->account->events->load('status');
-        return response()->jsend_success($events);
+        return response()->json($events);
     }
 
     /**
@@ -43,7 +43,7 @@ class EventController extends Controller
         $event->status()->associate(EventStatus::whereName('draft')->first());
         $event->save();
 
-        return response()->jsend_success($event);
+        return response()->json($event);
     }
 
     /**

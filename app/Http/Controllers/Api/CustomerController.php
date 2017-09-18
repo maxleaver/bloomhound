@@ -17,7 +17,7 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Auth::user()->account->customers;
-        return response()->jsend_success($customers);
+        return response()->json($customers);
     }
 
     /**
@@ -37,7 +37,7 @@ class CustomerController extends Controller
             'name' => $data['name']
         ]);
 
-        return response()->jsend_success($customers);
+        return response()->json($customers);
     }
 
     /**
@@ -52,7 +52,7 @@ class CustomerController extends Controller
             abort(404);
         }
 
-        return response()->jsend_success($customer);
+        return response()->json($customer);
     }
 
     /**

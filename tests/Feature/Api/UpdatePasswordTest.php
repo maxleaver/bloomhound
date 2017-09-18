@@ -48,7 +48,7 @@ class UpdatePasswordTest extends TestCase
 
         $this->signIn($this->user)
             ->patchJson($this->url, $this->request)
-            ->assertStatus(401);
+            ->assertStatus(422);
     }
 
     /** @test */

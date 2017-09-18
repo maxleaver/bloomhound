@@ -16,7 +16,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return response()->jsend_success(['name' => $user->name, 'email' => $user->email]);
+        return response()->json(['name' => $user->name, 'email' => $user->email]);
     }
 
     /**

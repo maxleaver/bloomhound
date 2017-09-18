@@ -34,15 +34,15 @@ class UploadAccountLogoTest extends TestCase
     /** @test */
     public function a_user_can_upload_a_logo_for_their_account()
     {
-    	Storage::disk('local')->assertExists($this->account->logo);
+    	$this->withoutExceptionHandling();
+
+        Storage::disk('local')->assertExists($this->account->logo);
 
     	$response = $this->signIn($this->user)
     		->postJson($this->url, $this->request)
-    		->assertStatus(200);
+    		->assertSuccessful();
 
-    	$path = $response->getOriginalContent()['data'];
-
-    	Storage::disk('local')->assertExists($path);
+        Storage::disk('local')->assertExists($this->account->fresh()->logo);
     	Storage::disk('local')->assertMissing($this->original);
     }
 

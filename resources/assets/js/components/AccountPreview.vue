@@ -5,7 +5,7 @@
 
     <article class="media">
       <figure class="media-left">
-        <upload-logo :logo="logo" :name="name"></upload-logo>
+        <upload-logo :path="logoPath" :name="name" @uploaded="updateLogo"></upload-logo>
       </figure>
 
       <div class="media-content">
@@ -29,7 +29,7 @@ export default {
   components: { UploadLogo },
 
   props: {
-    logo: String,
+    logo: [String, Boolean],
     name: String,
     address: String,
     website: String,
@@ -39,13 +39,23 @@ export default {
 
   data() {
     return {
-      logoFile: '',
+      logoPath: '',
     };
+  },
+
+  created() {
+    this.logoPath = this.logo;
   },
 
   computed: {
     fullUrl: function () {
       return `http://${this.website}`;
+    },
+  },
+
+  methods: {
+    updateLogo(newPath) {
+      this.logoPath = newPath;
     },
   },
 };

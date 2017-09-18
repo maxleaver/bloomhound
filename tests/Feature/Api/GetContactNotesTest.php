@@ -46,10 +46,7 @@ class GetContactNotesTest extends TestCase
         $this->signIn($this->user)
             ->getJson($this->getUrl($newContact->id))
             ->assertStatus(200)
-            ->assertJson([
-                'data' => [],
-                'status' => 'success'
-            ]);
+            ->assertJson([]);
     }
 
     /** @test */

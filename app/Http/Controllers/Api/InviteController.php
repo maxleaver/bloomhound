@@ -15,7 +15,7 @@ class InviteController extends Controller
 	public function index()
 	{
 		$invites = Invite::where('account_id', Auth::user()->account->id)->get();
-		return response()->jsend_success($invites);
+		return response()->json($invites);
 	}
 
 	public function store()
@@ -53,6 +53,6 @@ class InviteController extends Controller
 		$invite->delete();
 
 		// TODO: This should either be a token, or removed from the API
-		return response()->jsend_success($user);
+		return response()->json($user);
 	}
 }

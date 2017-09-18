@@ -15,7 +15,7 @@ class ContactCustomerController extends Controller
      */
     public function index(Customer $customer)
     {
-        return response()->jsend_success($customer->contacts);
+        return response()->json($customer->contacts);
     }
 
     /**

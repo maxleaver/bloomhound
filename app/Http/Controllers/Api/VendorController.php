@@ -17,7 +17,7 @@ class VendorController extends Controller
     public function index()
     {
         $vendors = Auth::user()->account->vendors;
-        return response()->jsend_success($vendors);
+        return response()->json($vendors);
     }
 
     /**
@@ -36,7 +36,7 @@ class VendorController extends Controller
         $vendor->account()->associate(Auth::user()->account);
         $vendor->save();
 
-        return response()->jsend_success($vendor);
+        return response()->json($vendor);
     }
 
     /**

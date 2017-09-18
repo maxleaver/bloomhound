@@ -18,7 +18,7 @@ class ContactController extends Controller
     public function index()
     {
         $contacts = Auth::user()->account->contacts;
-        return response()->jsend_success($contacts);
+        return response()->json($contacts);
     }
 
     /**
@@ -49,7 +49,7 @@ class ContactController extends Controller
         $contact->customer()->associate($customer);
         $contact->save();
 
-        return response()->jsend_success($contact);
+        return response()->json($contact);
     }
 
     /**
@@ -64,7 +64,7 @@ class ContactController extends Controller
             abort(404);
         }
 
-        return response()->jsend_success($contact);
+        return response()->json($contact);
     }
 
     /**

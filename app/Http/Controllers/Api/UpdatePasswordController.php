@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
+use App\Rules\MatchesPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
@@ -18,13 +19,9 @@ class UpdatePasswordController extends Controller
     public function update(Request $request)
     {
         $data = $this->validate(request(), [
-            'current_password' => 'required|string',
+            'current_password' => ['required', 'string', new MatchesPassword],
             'password' => 'required|string|min:6|confirmed',
         ]);
-
-        if (!Hash::check($data['current_password'], Auth::user()->password)) {
-            return response()->jsend_fail(['current_password' => ['Incorrect password']], 401);
-        }
 
         Auth::user()->update(['password' => Hash::make($data['password'])]);
     }

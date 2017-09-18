@@ -44,7 +44,7 @@ class AccountLogoController extends Controller
         // Add the path to the account record
         $account->update(['logo' => $path_to_file]);
 
-        return response()->jsend_success($path_to_file);
+        return response()->json($account->logo_path);
     }
 
     /**

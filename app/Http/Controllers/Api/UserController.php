@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::where('account_id', Auth::user()->account_id)->get();
-        return response()->jsend_success($users);
+        return response()->json($users);
     }
 
     /**

@@ -18,7 +18,7 @@ class NoteController extends Controller
     public function index(Request $request, $id)
     {
         $class = $this->makeClass($request->segment(2), $id);
-        return response()->jsend_success($class->notes);
+        return response()->json($class->notes);
     }
 
     /**
@@ -41,7 +41,7 @@ class NoteController extends Controller
         $note->user()->associate(Auth::user());
         $note->save();
 
-        return response()->jsend_success($note);
+        return response()->json($note);
     }
 
     /**
@@ -89,7 +89,7 @@ class NoteController extends Controller
 
         $note->delete();
 
-        return response()->jsend_success();
+        return response()->json();
     }
 
     protected function getClassType($string)
