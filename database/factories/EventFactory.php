@@ -6,7 +6,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Event::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'name' => $faker->text(25),
         'date' => Carbon::now(),
         'status_id' => function () {
             return factory('App\EventStatus')->create()->id;

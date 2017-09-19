@@ -11,6 +11,13 @@
 </div>
 
 <section class="section">
+  <div class="container">
+    <h1 class="title">Events</h1>
+    <event-list :customer_id="{{ $customer->id }}"></event-list>
+  </div>
+</section>
+
+<section class="section">
 	<div class="container">
 		<h1 class="title">Contacts</h1>
 		<contact-list :customer_id="{{ $customer->id }}"></contact-list>

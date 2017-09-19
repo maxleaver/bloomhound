@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <add-event @created="add" :customers="customers"></add-event>
+      <add-event @created="add" :customers="customers" :customer_id="customer_id"></add-event>
     </b-modal>
 
     <b-table
@@ -87,7 +87,7 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      customers: {},
+      customers: [],
     };
   },
 
@@ -101,7 +101,13 @@ export default {
 
   methods: {
     fetch() {
-      window.axios.get('api/events')
+      let url = 'api/events';
+
+      if (this.customer_id) {
+        url = `/api/customers/${this.customer_id}/events`;
+      }
+
+      window.axios.get(url)
         .then(this.refresh);
     },
 

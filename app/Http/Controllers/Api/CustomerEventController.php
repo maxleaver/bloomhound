@@ -15,11 +15,16 @@ class CustomerEventController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Customer $customer)
     {
-        //
+        if ($customer->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        return response()->json($customer->events->load('status'));
     }
 
     /**

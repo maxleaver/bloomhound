@@ -40,6 +40,7 @@ Route::middleware('auth:api')->group(function () {
 		Route::get('{customer}/contacts', 'ContactCustomerController@index');
 		Route::post('/', 'CustomerController@store');
 
+		Route::get('{customer}/events', 'CustomerEventController@index');
 		Route::post('{customer}/events', 'CustomerEventController@store');
 
 		Route::get('/{customer}/notes', 'NoteController@index');
