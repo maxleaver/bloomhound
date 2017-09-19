@@ -129,7 +129,7 @@ export default {
   name: 'add-contact',
   props: {
     customer_id: Number,
-    customers: Array,
+    customers: Object,
   },
 
   data() {

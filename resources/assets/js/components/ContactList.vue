@@ -94,7 +94,7 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      customers: [],
+      customers: {},
     };
   },
 
@@ -102,19 +102,7 @@ export default {
     this.fetch();
 
     if (!this.customer_id) {
-      // Get a list of customers
       this.fetchCustomers();
-
-      // this.customers = [
-      //   {
-      //     id: 1,
-      //     name: 'Jane and John Doe',
-      //   },
-      //   {
-      //     id: 2,
-      //     name: 'Jeff Jones',
-      //   },
-      // ];
     }
   },
 

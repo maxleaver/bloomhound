@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <add-event @created="add"></add-event>
+      <add-event @created="add" :customers="customers"></add-event>
     </b-modal>
 
     <b-table
@@ -77,23 +77,39 @@ export default {
   components: { AddEvent },
   mixins: [collection],
 
+  props: {
+    customer_id: Number,
+  },
+
   data() {
     return {
       isModalActive: false,
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
+      customers: {},
     };
   },
 
   created() {
     this.fetch();
+
+    if (!this.customer_id) {
+      this.fetchCustomers();
+    }
   },
 
   methods: {
     fetch() {
-      window.axios.get('/api/events')
+      window.axios.get('api/events')
         .then(this.refresh);
+    },
+
+    fetchCustomers() {
+      window.axios.get('api/customers')
+        .then(({ data }) => {
+          this.customers = data;
+        });
     },
 
     onClick(data) {

@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class EventController extends Controller
+class CustomerEventController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,29 +19,26 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Auth::user()->account->events->load('status');
-        return response()->json($events);
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param  \App\Customer  $customer
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Customer $customer, Request $request)
     {
         $data = $this->validate(request(), [
             'date' => 'required|date',
-            'customer' => 'required|string',
             'name' => 'required|string',
         ]);
 
-        // Create a new customer
-        $customer = new Customer;
-        $customer->name = $data['customer'];
-        $customer->account()->associate(Auth::user()->account);
-        $customer->save();
+        if ($customer->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
 
         // Create event
         $event = new Event;
