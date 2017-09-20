@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Flower;
 use Illuminate\Http\Request;
 
 class FlowerController extends Controller
@@ -29,12 +30,12 @@ class FlowerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Flower  $flower
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Flower $flower)
     {
-        //
+        return view('flowers.show', compact('flower'));
     }
 
     /**

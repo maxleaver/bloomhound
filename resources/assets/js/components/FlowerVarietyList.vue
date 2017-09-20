@@ -8,39 +8,18 @@
           </p>
         </div>
       </div>
-
-      <div class="level-right">
-        <p class="level-item">
-          <button class="button is-success is-pulled-right"
-            @click="isModalActive = true">
-            <span class="icon is-small">
-              <i class="fa fa-plus"></i>
-            </span>
-            <span>Add a Flower</span>
-          </button>
-        </p>
-      </div>
     </nav>
-
-    <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <add-flower @created="add"></add-flower>
-    </b-modal>
 
     <b-table
       :data="items"
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"
       default-sort="date"
-      @click="onClick"
       :loading="isLoading"
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
           {{ props.row.name }}
-        </b-table-column>
-
-        <b-table-column field="varieties" label="Varieties">
-          {{ convertVarietiesToList(props.row.varieties) }}
         </b-table-column>
 
         <b-table-column field="created_at" label="Created" sortable centered>
@@ -66,13 +45,15 @@
 </template>
 
 <script>
-import AddFlower from './AddFlower.vue';
 import collection from '../mixins/collection';
 
 export default {
-  name: 'flower-list',
-  components: { AddFlower },
+  name: 'variety-list',
   mixins: [collection],
+
+  props: {
+    id: Number,
+  },
 
   data() {
     return {
@@ -90,21 +71,11 @@ export default {
 
   methods: {
     fetch() {
-      window.axios.get('/api/flowers?lib=custom')
+      window.axios.get(`/api/flowers/${this.id}/varieties`)
         .then((data) => {
           this.isLoading = false;
           this.refresh(data);
         });
-    },
-
-    onClick(data) {
-      // Redirect to detail page
-      window.location.href = `/flowers/${data.id}`;
-    },
-
-    convertVarietiesToList(varieties) {
-      const list = varieties.map(el => el.name);
-      return list.join();
     },
   },
 };

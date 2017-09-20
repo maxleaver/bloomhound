@@ -60,13 +60,7 @@ export default {
 
       this.form.post('/api/flowers')
         .then((data) => {
-          this.isSubmitting = false;
-
-          window.flash('Flower successfully added!', 'success');
-
-          this.$emit('created', data);
-
-          this.$parent.close();
+          window.location.href = `/flowers/${data.id}`;
         })
         .catch(() => {
           this.isSubmitting = false;
