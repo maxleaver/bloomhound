@@ -5,10 +5,46 @@
   <div class="hero-body">
     <div class="container">
       <h1 class="title">{{ $event->name }}</h1>
-      <h2 class="subtitle">Some subtitle</h2>
+      <h2 class="subtitle">{{ $event->date->toFormattedDateString() }}</h2>
     </div>
   </div>
 </div>
+
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-half">
+        <strong>{{ $event->customer->name }}</strong>
+      </div>
+
+      <div class="column">
+        <strong>{{ $event->account->name }}</strong><br />
+        {{ $event->account->address }}<br />
+        Tel: {{ $event->account->phone }}<br />
+        Email: {{ $event->account->email }}<br />
+        {{ $event->account->website }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    Add a Vendor
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Arrangements</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Payments</h1>
+  </div>
+</section>
 
 <section class="section">
   <div class="container">

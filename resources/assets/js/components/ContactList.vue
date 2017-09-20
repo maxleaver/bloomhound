@@ -94,7 +94,7 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      customers: {},
+      customers: [],
     };
   },
 

@@ -9,4 +9,11 @@
     </div>
   </div>
 </div>
+
+<section class="section">
+	<div class="container">
+		<h1 class="title">Your Upcoming Events</h1>
+		<event-list></event-list>
+	</div>
+</section>
 @endsection
