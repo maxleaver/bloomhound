@@ -41,14 +41,18 @@
         </section>
       </template>
     </b-table>
+
+    <add-flower-varieties @created="add" :id="id"></add-flower-varieties>
   </div>
 </template>
 
 <script>
+import AddFlowerVarieties from './AddFlowerVarieties.vue';
 import collection from '../mixins/collection';
 
 export default {
   name: 'variety-list',
+  components: { AddFlowerVarieties },
   mixins: [collection],
 
   props: {

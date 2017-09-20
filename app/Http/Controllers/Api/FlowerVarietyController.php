@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Flower;
+use App\FlowerVariety;
 use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -35,13 +36,27 @@ class FlowerVarietyController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
+     * @param  \App\Flower  $flower
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Flower $flower, Request $request)
     {
-        //
+        if ($flower->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Create a new flower variety
+        $variety = new FlowerVariety;
+        $variety->name = $data['name'];
+        $variety->flower()->associate($flower);
+        $variety->save();
+
+        return response()->json($variety);
     }
 
     /**

@@ -10,7 +10,6 @@ class GetFlowerVarietiesTest extends TestCase
     use RefreshDatabase;
 
     protected $flower;
-    protected $url;
     protected $user;
     protected $varieties;
 
@@ -21,8 +20,6 @@ class GetFlowerVarietiesTest extends TestCase
         $this->user = create('App\User');
         $this->flower = create('App\Flower', ['account_id' => $this->user->account->id]);
         $this->varieties = create('App\FlowerVariety', ['flower_id' => $this->flower->id], 10);
-
-        $this->url = 'api/flowers/' . $this->flower->id . '/varieties';
     }
 
     protected function getUrl($id)

@@ -56,6 +56,7 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('/', 'FlowerController@store');
 
 		Route::get('{flower}/varieties', 'FlowerVarietyController@index');
+		Route::post('{flower}/varieties', 'FlowerVarietyController@store');
 
 		Route::get('{flower}/notes', 'NoteController@index');
 		Route::post('{flower}/notes', 'NoteController@store');
