@@ -16,22 +16,9 @@ use Illuminate\Http\Request;
 Route::post('invitation/accept/{invite}', 'InviteController@accept')->name('invite');
 
 Route::middleware('auth:api')->group(function () {
-	Route::get('invitations', 'InviteController@index');
-	Route::patch('password', 'UpdatePasswordController@update');
-
 	Route::prefix('account')->group(function () {
 		Route::patch('/', 'AccountProfileController@update');
 		Route::post('logo', 'AccountLogoController@store');
-	});
-
-	Route::prefix('profile')->group(function () {
-		Route::get('/', 'ProfileController@index');
-		Route::patch('/', 'ProfileController@update');
-	});
-
-	Route::prefix('users')->group(function () {
-	    Route::get('/', 'UserController@index');
-		Route::post('/', 'InviteController@store');
 	});
 
 	Route::prefix('customers')->group(function () {
@@ -64,16 +51,34 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('{event}/notes', 'NoteController@store');
 	});
 
+	Route::prefix('flowers')->group(function () {
+		Route::get('/', 'FlowerController@index');
+	});
+
+	Route::get('invitations', 'InviteController@index');
+
+	Route::prefix('notes')->group(function () {
+		Route::delete('/{note}', 'NoteController@destroy');
+		Route::patch('/{note}', 'NoteController@update');
+	});
+
+	Route::patch('password', 'UpdatePasswordController@update');
+
+	Route::prefix('profile')->group(function () {
+		Route::get('/', 'ProfileController@index');
+		Route::patch('/', 'ProfileController@update');
+	});
+
+	Route::prefix('users')->group(function () {
+	    Route::get('/', 'UserController@index');
+		Route::post('/', 'InviteController@store');
+	});
+
 	Route::prefix('vendors')->group(function () {
 		Route::get('/', 'VendorController@index');
 		Route::post('/', 'VendorController@store');
 
 		Route::get('{vendor}/notes', 'NoteController@index');
 		Route::post('{vendor}/notes', 'NoteController@store');
-	});
-
-	Route::prefix('notes')->group(function () {
-		Route::delete('/{note}', 'NoteController@destroy');
-		Route::patch('/{note}', 'NoteController@update');
 	});
 });

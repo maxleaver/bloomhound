@@ -25,13 +25,8 @@ Route::middleware('auth')->group(function () {
 
 	// Route::get('invitations', 'InviteController@index');
 
-	Route::get('my/profile', 'ProfileController@index')->name('my.profile');
-
-	Route::get('account/settings', 'AccountSettingsController@index')->name('account.settings');
-
-	Route::prefix('customers')->group(function () {
-	    Route::get('/', 'CustomerController@index')->name('customers.index');
-		Route::get('{customer}', 'CustomerController@show')->name('customers.show');
+	Route::prefix('account')->group(function () {
+	    Route::get('settings', 'AccountSettingsController@index')->name('account.settings');
 	});
 
 	Route::prefix('contacts')->group(function () {
@@ -39,9 +34,22 @@ Route::middleware('auth')->group(function () {
 	    Route::get('{contact}', 'ContactController@show')->name('contacts.show');
 	});
 
+	Route::prefix('customers')->group(function () {
+	    Route::get('/', 'CustomerController@index')->name('customers.index');
+		Route::get('{customer}', 'CustomerController@show')->name('customers.show');
+	});
+
 	Route::prefix('events')->group(function () {
 	    Route::get('/', 'EventController@index')->name('events.index');
 	    Route::get('{event}', 'EventController@show')->name('events.show');
+	});
+
+	Route::prefix('flowers')->group(function () {
+	    Route::get('/', 'FlowerController@index')->name('flowers.index');
+	});
+
+	Route::prefix('my')->group(function () {
+	    Route::get('profile', 'ProfileController@index')->name('my.profile');
 	});
 
 	Route::prefix('vendors')->group(function () {

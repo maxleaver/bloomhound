@@ -18,7 +18,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\AccountRegistered' => [
             'App\Listeners\SendAccountWelcomeEmail',
-        ]
+        ],
+        'App\Events\FlowerCreated' => [
+            'App\Listeners\CreateDefaultFlowerVariety',
+        ],
     ];
 
     /**

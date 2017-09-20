@@ -1,0 +1,45 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class FlowerTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected $flower;
+
+	protected function setUp()
+    {
+    	parent::setUp();
+
+        $this->flower = create('App\Flower');
+    }
+
+    /** @test */
+    public function a_flower_has_a_name()
+    {
+        $this->assertNotNull($this->flower->name);
+    }
+
+    /** @test */
+    public function a_flower_belongs_to_a_library()
+    {
+        $this->assertInstanceOf('App\FlowerLibrary', $this->flower->library);
+    }
+
+    /** @test */
+    public function a_flower_may_belong_to_an_account()
+    {
+        $this->assertInstanceOf('App\Account', $this->flower->account);
+    }
+
+    /** @test */
+    public function a_flower_creates_a_default_variety_on_creation()
+    {
+        $this->assertInstanceOf('App\FlowerVariety', $this->flower->varieties->first());
+        $this->assertEquals($this->flower->varieties->first()->name, 'Default');
+    }
+}
