@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    use Notable;
+
     protected $dates = [
         'date',
         'created_at',
@@ -27,10 +29,5 @@ class Event extends Model
     public function status()
     {
         return $this->belongsTo('App\EventStatus');
-    }
-
-    public function notes()
-    {
-        return $this->morphMany('App\Note', 'notable');
     }
 }

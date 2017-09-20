@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-	/**
+	use Notable;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -28,10 +30,5 @@ class Customer extends Model
     public function events()
     {
         return $this->hasMany('App\Event');
-    }
-
-    public function notes()
-    {
-        return $this->morphMany('App\Note', 'notable');
     }
 }

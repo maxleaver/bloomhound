@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-	protected $appends = ['name'];
+	use Notable;
+
+    protected $appends = ['name'];
 	protected $guarded = ['account_id', 'customer_id'];
 
 	public function account()
@@ -22,10 +24,5 @@ class Contact extends Model
     public function getNameAttribute()
     {
     	return $this->first_name . ' ' . $this->last_name;
-    }
-
-    public function notes()
-    {
-        return $this->morphMany('App\Note', 'notable');
     }
 }
