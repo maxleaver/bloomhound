@@ -37,7 +37,7 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function a_user_has_an_account()
+    public function a_user_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->user->account);
     }

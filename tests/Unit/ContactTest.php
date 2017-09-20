@@ -19,47 +19,47 @@ class ContactTest extends TestCase
     }
 
     /** @test */
-    public function it_has_a_first_name() {
+    public function a_contact_has_a_first_name() {
         $this->assertNotNull($this->contact->first_name);
     }
 
     /** @test */
-    public function it_has_a_last_name() {
+    public function a_contact_has_a_last_name() {
         $this->assertNotNull($this->contact->last_name);
     }
 
     /** @test */
-    public function it_has_an_email() {
+    public function a_contact_has_an_email() {
         $this->assertNotNull($this->contact->email);
     }
 
     /** @test */
-    public function it_has_a_phone_number() {
+    public function a_contact_has_a_phone_number() {
         $this->assertNotNull($this->contact->phone);
     }
 
     /** @test */
-    public function it_has_an_address() {
+    public function a_contact_has_an_address() {
         $this->assertNotNull($this->contact->address);
     }
 
     /** @test */
-    public function it_has_a_relationship_field() {
+    public function a_contact_has_a_relationship() {
         $this->assertNotNull($this->contact->relationship);
     }
 
     /** @test */
-    public function it_is_assigned_to_an_account() {
+    public function a_contact_belongs_to_an_account() {
         $this->assertInstanceOf('App\Account', $this->contact->account);
     }
 
     /** @test */
-    public function it_is_assigned_to_a_customer() {
+    public function a_contact_belongs_to_a_customer() {
         $this->assertInstanceOf('App\Customer', $this->contact->customer);
     }
 
     /** @test */
-    public function it_has_a_name_attribute()
+    public function a_contact_has_a_name_attribute()
     {
         $this->assertEquals(
             $this->contact->name,

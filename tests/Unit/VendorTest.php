@@ -49,7 +49,7 @@ class VendorTest extends TestCase
     }
 
     /** @test */
-    public function a_vendor_has_an_account()
+    public function a_vendor_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->vendor->account);
     }

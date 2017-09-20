@@ -10,7 +10,7 @@ class NoteTest extends TestCase
 	use RefreshDatabase;
 
     /** @test */
-    public function a_note_has_a_user()
+    public function a_note_belongs_to_a_user()
     {
         $note = create('App\Note');
         $this->assertInstanceOf('App\User', $note->user);

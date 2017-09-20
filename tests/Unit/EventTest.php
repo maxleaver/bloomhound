@@ -31,13 +31,13 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_has_a_status()
+    public function an_event_belongs_to_a_status()
     {
         $this->assertInstanceOf('App\EventStatus', $this->event->status);
     }
 
     /** @test */
-    public function an_event_has_a_customer()
+    public function an_event_belongs_to_a_customer()
     {
         $this->assertInstanceOf('App\Customer', $this->event->customer);
     }

@@ -35,7 +35,7 @@ class InviteTest extends TestCase
     }
 
     /** @test */
-    public function an_invite_has_an_account()
+    public function an_invite_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->invite->account);
     }

@@ -25,7 +25,7 @@ class CustomerTest extends TestCase
     }
 
     /** @test */
-    public function a_customer_has_an_account()
+    public function a_customer_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->customer->account);
     }
