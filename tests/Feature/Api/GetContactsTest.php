@@ -58,6 +58,23 @@ class GetContactsTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_only_get_contacts_for_customers_in_their_account()
+    {
+        $anotherAccount = create('App\Account');
+        $anotherCustomer = create('App\Customer', ['account_id' => $anotherAccount->id]);
+        $otherContacts = create('App\Contact', [
+            'account_id' => $anotherAccount->id,
+            'customer_id' => $anotherCustomer->id,
+        ]);
+
+        $url = 'api/customers/' . $anotherAccount->id . '/contacts';
+
+        $this->signIn($this->user)
+            ->getJson($url)
+            ->assertStatus(403);
+    }
+
+    /** @test */
     public function a_user_can_get_a_specific_contact()
     {
         $this->signIn($this->user)

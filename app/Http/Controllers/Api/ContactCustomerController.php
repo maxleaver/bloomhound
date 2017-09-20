@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Customer;
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,10 @@ class ContactCustomerController extends Controller
      */
     public function index(Customer $customer)
     {
+        if ($customer->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
         return response()->json($customer->contacts);
     }
 

@@ -84,14 +84,14 @@ export default {
 
   data() {
     return {
-      isSubmitting: false,
-      isFullWidth: true,
       form: new Form({
         name: '',
         customer_id: null,
         customer: '',
         date: new Date(),
       }),
+      isFullWidth: true,
+      isSubmitting: false,
       keepFirst: true,
       showCustomerSelect: true,
     };
