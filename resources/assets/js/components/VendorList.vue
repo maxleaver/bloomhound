@@ -32,6 +32,7 @@
       :mobile-cards="hasMobileCards"
       default-sort="name"
       @click="onClick"
+      :loading="isLoading"
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
@@ -71,10 +72,11 @@ export default {
 
   data() {
     return {
-      isModalActive: false,
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
+      isLoading: true,
+      isModalActive: false,
     };
   },
 
@@ -85,7 +87,10 @@ export default {
   methods: {
     fetch() {
       window.axios.get('/api/vendors')
-        .then(this.refresh);
+        .then((data) => {
+          this.isLoading = false;
+          this.refresh(data);
+        });
     },
 
     onClick(data) {

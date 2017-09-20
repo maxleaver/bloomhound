@@ -32,6 +32,7 @@
       :mobile-cards="hasMobileCards"
       default-sort="name"
       @click="onClick"
+      :loading="isLoading"
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
@@ -90,11 +91,12 @@ export default {
 
   data() {
     return {
-      isModalActive: false,
       canCancel: ['escape'],
+      customers: [],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      customers: [],
+      isLoading: true,
+      isModalActive: false,
     };
   },
 
@@ -111,7 +113,10 @@ export default {
       const url = this.customer_id ? `customers/${this.customer_id}/contacts` : 'contacts';
 
       window.axios.get(`/api/${url}`)
-        .then(this.refresh);
+        .then((data) => {
+          this.isLoading = false;
+          this.refresh(data);
+        });
     },
 
     fetchCustomers() {

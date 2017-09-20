@@ -16,6 +16,7 @@
       :mobile-cards="hasMobileCards"
       default-sort="date"
       @click="onClick"
+      :loading="isLoading"
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
@@ -61,6 +62,7 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
+      isLoading: true,
     };
   },
 
@@ -71,7 +73,10 @@ export default {
   methods: {
     fetch() {
       window.axios.get('/api/flowers?lib=custom')
-        .then(this.refresh);
+        .then((data) => {
+          this.isLoading = false;
+          this.refresh(data);
+        });
     },
 
     onClick() {
