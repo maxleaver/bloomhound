@@ -8,7 +8,23 @@
           </p>
         </div>
       </div>
+
+      <div class="level-right">
+        <p class="level-item">
+          <button class="button is-success is-pulled-right"
+            @click="isModalActive = true">
+            <span class="icon is-small">
+              <i class="fa fa-plus"></i>
+            </span>
+            <span>Add a Customer</span>
+          </button>
+        </p>
+      </div>
     </nav>
+
+    <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
+      <add-flower @created="add"></add-flower>
+    </b-modal>
 
     <b-table
       :data="items"
@@ -50,10 +66,12 @@
 </template>
 
 <script>
+import AddFlower from './AddFlower.vue';
 import collection from '../mixins/collection';
 
 export default {
   name: 'flower-list',
+  components: { AddFlower },
   mixins: [collection],
 
   data() {

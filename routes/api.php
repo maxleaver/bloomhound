@@ -53,6 +53,7 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::prefix('flowers')->group(function () {
 		Route::get('/', 'FlowerController@index');
+		Route::post('/', 'FlowerController@store');
 	});
 
 	Route::get('invitations', 'InviteController@index');

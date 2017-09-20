@@ -44,7 +44,18 @@ class FlowerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Create a new flower
+        $flower = new Flower;
+        $flower->name = $data['name'];
+        $flower->account()->associate(Auth::user()->account);
+        $flower->library()->associate(FlowerLibrary::whereType('custom')->first());
+        $flower->save();
+
+        return response()->json($flower->fresh());
     }
 
     /**
