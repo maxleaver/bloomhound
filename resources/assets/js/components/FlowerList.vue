@@ -104,7 +104,7 @@ export default {
 
     convertVarietiesToList(varieties) {
       const list = varieties.map(el => el.name);
-      return list.join();
+      return list.join(', ');
     },
   },
 };

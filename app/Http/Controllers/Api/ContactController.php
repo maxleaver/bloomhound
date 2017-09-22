@@ -30,13 +30,13 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $data = $this->validate(request(), [
+            'customer_id' => 'required|integer',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'email' => 'string|email|max:255',
             'phone' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'relationship' => 'nullable|string|max:255',
-            'customer_id' => 'required|integer'
         ]);
 
         $customer = Customer::findOrFail($data['customer_id']);

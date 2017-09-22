@@ -67,7 +67,6 @@
             type="email"
             v-model="form.email"
             :disabled="isSubmitting"
-            required
           ></b-input>
         </b-field>
 
