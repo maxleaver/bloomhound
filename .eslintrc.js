@@ -29,6 +29,7 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'func-names': ['error', 'as-needed'],
-    'object-shorthand': ['error', 'properties']
+    'object-shorthand': ['error', 'properties'],
+    'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }]
   }
 }

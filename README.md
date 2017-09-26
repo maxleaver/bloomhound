@@ -7,9 +7,6 @@ API example for Bloomhound
 [**Composer**](https://getcomposer.org)
 PHP dependency manager
 
-[**PHPUnit**](https://phpunit.de/manual/current/en/installation.html)
-PHP testing framework
-
 A web server of some kind (see Laravel Valet below if you're on OSX).
 
 ## Installation
@@ -20,31 +17,31 @@ Create a .env file in the root directory, using .env.example as a template. Upda
 
 Install Composer if you haven't already, then run the following in your console:
 
-Installs all dependencies
+Install all dependencies
 ``` bash
 composer install
 
 ```
 
-Generates a unique APP_KEY
+Generate a unique APP_KEY
 ``` bash
 php artisan key:generate
 
 ```
 
-Builds up the database (a sqlite file in the database directory)
+Build the database (a sqlite file in the database directory)
 ``` bash
 php artisan migrate
 
 ```
 
-Creates the encryption keys needed to generate secure access tokens
+Create the encryption keys needed to generate secure access tokens
 ``` bash
 php artisan passport:install
 
 ```
 
-Creates a symbolic link from storage/app/public to public/storage for dynamic, publicly-facing images (ex. user avatars)
+Create a symbolic link from storage/app/public to public/storage for dynamic, publicly-facing images (ex. user avatars)
 ``` bash
 php artisan storage:link
 
@@ -57,11 +54,11 @@ Make an HTTP request to your development server using any route in `routes/api.p
 
 ## Running Tests
 ``` bash
-# runs all tests
-phpunit
+# run all tests
+composer test
 
-# runs a single test class
-phpunit --filter SomeTest
+# run a single test or test class
+vendor/bin/phpunit --filter SomeTest
 
 ```
 
