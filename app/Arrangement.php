@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Arrangement extends Model
 {
+	protected $guarded = [];
+
 	public function account()
     {
         return $this->belongsTo('App\Account');
     }
 
-    public function events()
+    public function event()
     {
-    	return $this->belongsToMany('App\Event')
-    		->withPivot('quantity')
-            ->withTimestamps();
+    	return $this->belongsTo('App\Event');
     }
 }

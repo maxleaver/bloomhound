@@ -16,17 +16,10 @@ class CreateArrangementsTable extends Migration
         Schema::create('arrangements', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('account_id')->unsigned()->index();
+            $table->integer('event_id')->unsigned()->index();
             $table->string('name');
-            $table->timestamps();
-        });
-
-        Schema::create('arrangement_event', function (Blueprint $table) {
-            $table->integer('arrangement_id')->unsigned();
-            $table->integer('event_id')->unsigned();
             $table->integer('quantity')->unsigned();
             $table->timestamps();
-
-            $table->primary(['arrangement_id', 'event_id']);
         });
     }
 
@@ -38,6 +31,5 @@ class CreateArrangementsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('arrangements');
-        Schema::dropIfExists('arrangement_event');
     }
 }

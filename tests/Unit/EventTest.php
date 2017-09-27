@@ -51,8 +51,10 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_may_have_many_arrangements()
     {
-        $arrangement = create('App\Arrangement', ['account_id' => $this->event->account->id]);
-        $this->event->arrangements()->save($arrangement, ['quantity' => 10]);
+        $arrangements = create('App\Arrangement', [
+            'account_id' => $this->event->account->id,
+            'event_id' => $this->event->id,
+        ], 10);
 
         $this->assertInstanceOf('App\Arrangement', $this->event->arrangements->first());
     }

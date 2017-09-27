@@ -18,11 +18,11 @@ class GetEventArrangementsTest extends TestCase
         parent::setUp();
 
         $this->user = create('App\User');
-        $this->arrangements = create('App\Arrangement', [
-			'account_id' => $this->user->account->id
-		], 10);
         $this->event = create('App\Event', ['account_id' => $this->user->account->id]);
-        $this->event->arrangements()->attach($this->arrangements, ['quantity' => 1]);
+        $this->arrangements = create('App\Arrangement', [
+            'account_id' => $this->user->account->id,
+            'event_id' => $this->event->id,
+        ], 10);
     }
 
     /** @test */

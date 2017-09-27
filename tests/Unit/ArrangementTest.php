@@ -24,19 +24,19 @@ class ArrangementTest extends TestCase
     }
 
     /** @test */
+    public function an_arrangement_has_a_quantity() {
+        $this->assertNotNull($this->arrangement->quantity);
+    }
+
+    /** @test */
     public function an_arrangement_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->arrangement->account);
     }
 
     /** @test */
-    public function an_arrangement_can_have_many_events()
+    public function an_arrangement_belongs_to_an_event()
     {
-        create('App\Event', ['account_id' => $this->arrangement->account->id], 5)
-            ->each(function($event) {
-                $event->arrangements()->save($this->arrangement, ['quantity' => 10]);
-            });
-
-        $this->assertInstanceOf('App\Event', $this->arrangement->events->first());
+        $this->assertInstanceOf('App\Event', $this->arrangement->event);
     }
 }

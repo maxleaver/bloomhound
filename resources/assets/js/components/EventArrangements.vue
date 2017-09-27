@@ -15,7 +15,7 @@
         </b-table-column>
 
         <b-table-column field="quantity" label="Quantity" sortable>
-          {{ props.row.pivot.quantity }}
+          {{ props.row.quantity }}
         </b-table-column>
       </template>
 

@@ -38,15 +38,12 @@ class ArrangementEventController extends Controller
 
         $this->eventIsValid($event);
 
-        $arrangement = new Arrangement();
-        $arrangement->name = $request['name'];
+        $arrangement = new Arrangement($data);
         $arrangement->account()->associate(Auth::user()->account);
+        $arrangement->event()->associate($event);
         $arrangement->save();
 
-        $arrangement->events()->save($event, ['quantity' => $request['quantity']]);
-
-        // Find the arrangement via the event, so it includes the quantity
-        return response()->json($event->arrangements()->find($arrangement->id));
+        return response()->json($arrangement);
     }
 
     /**
