@@ -16,15 +16,24 @@
       :mobile-cards="hasMobileCards"
       default-sort="date"
       :loading="isLoading"
+      detailed
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
           {{ props.row.name }}
         </b-table-column>
 
-        <b-table-column field="created_at" label="Created" sortable centered>
+        <b-table-column field="created_at" label="Created" sortable numeric>
           {{ new Date(props.row.created_at).toLocaleDateString() }}
         </b-table-column>
+      </template>
+
+      <template slot="detail" scope="props">
+        <flower-variety-source-list
+          :id="props.row.id"
+          :vendors="vendors"
+          :sources="props.row.sources"
+        ></flower-variety-source-list>
       </template>
 
       <template slot="empty">
@@ -42,17 +51,20 @@
       </template>
     </b-table>
 
-    <add-flower-varieties @created="add" :id="id"></add-flower-varieties>
+    <section class="section">
+      <add-flower-varieties @created="add" :id="id"></add-flower-varieties>
+    </section>
   </div>
 </template>
 
 <script>
 import AddFlowerVarieties from './AddFlowerVarieties.vue';
+import FlowerVarietySourceList from './FlowerVarietySourceList.vue';
 import collection from '../mixins/collection';
 
 export default {
   name: 'variety-list',
-  components: { AddFlowerVarieties },
+  components: { AddFlowerVarieties, FlowerVarietySourceList },
   mixins: [collection],
 
   props: {
@@ -61,16 +73,16 @@ export default {
 
   data() {
     return {
-      isModalActive: false,
-      canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
       isLoading: true,
+      vendors: [],
     };
   },
 
   created() {
     this.fetch();
+    this.fetchVendors();
   },
 
   methods: {
@@ -79,6 +91,13 @@ export default {
         .then((data) => {
           this.isLoading = false;
           this.refresh(data);
+        });
+    },
+
+    fetchVendors() {
+      window.axios.get('/api/vendors')
+        .then((data) => {
+          this.vendors = data.data;
         });
     },
   },

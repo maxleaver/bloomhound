@@ -32,6 +32,19 @@ export default class Form {
     return data;
   }
 
+  empty() {
+    const data = this.data();
+    let isEmpty = true;
+
+    Object.values(data).forEach((value) => {
+      if (value) {
+        isEmpty = false;
+      }
+    });
+
+    return isEmpty;
+  }
+
   submit(requestType, url) {
     return new Promise((resolve, reject) => {
       window.axios[requestType](url, this.data())

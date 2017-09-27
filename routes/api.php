@@ -81,6 +81,11 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('/', 'InviteController@store');
 	});
 
+	Route::prefix('varieties')->group(function () {
+	    Route::get('{flower_variety}/sources', 'FlowerVarietySourceController@index');
+	    Route::post('{flower_variety}/sources', 'FlowerVarietySourceController@store');
+	});
+
 	Route::prefix('vendors')->group(function () {
 		Route::get('/', 'VendorController@index');
 		Route::post('/', 'VendorController@store');

@@ -21,17 +21,7 @@ class FlowerVarietyController extends Controller
             abort(403);
         }
 
-        return response()->json($flower->varieties);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json($flower->varieties->load('sources', 'sources.vendor'));
     }
 
     /**
@@ -52,7 +42,7 @@ class FlowerVarietyController extends Controller
 
         // Create a new flower variety
         $variety = new FlowerVariety;
-        $variety->name = $data['name'];
+        $variety->name = $request->name;
         $variety->flower()->associate($flower);
         $variety->save();
 
@@ -66,17 +56,6 @@ class FlowerVarietyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

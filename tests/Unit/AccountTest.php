@@ -117,4 +117,14 @@ class AccountTest extends TestCase
 
         $this->assertInstanceOf('App\Flower', $this->account->flowers->first());
     }
+
+    /** @test */
+    public function an_account_has_flower_variety_sources()
+    {
+        create('App\FlowerVarietySource', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\FlowerVarietySource', $this->account->flower_variety_sources->first());
+    }
 }

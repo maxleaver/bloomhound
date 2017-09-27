@@ -19,4 +19,9 @@ class FlowerVariety extends Model
     {
         return $this->belongsTo('App\Flower');
     }
+
+    public function sources()
+    {
+        return $this->hasMany('App\FlowerVarietySource');
+    }
 }
