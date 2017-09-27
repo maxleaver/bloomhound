@@ -85,6 +85,10 @@ export default {
     toCurrency(num) {
       return num.toFixed(2);
     },
+
+    toggleForm() {
+      this.showForm = !this.showForm;
+    },
   },
 };
 </script>
