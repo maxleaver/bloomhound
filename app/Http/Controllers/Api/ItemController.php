@@ -41,12 +41,16 @@ class ItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Item $item)
     {
-        //
+        if ($item->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        return response()->json($item);
     }
 
     /**

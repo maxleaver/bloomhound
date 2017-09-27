@@ -31,6 +31,7 @@
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"
       default-sort="name"
+      @click="onClick"
       :loading="isLoading"
     >
       <template scope="props">
@@ -91,6 +92,10 @@ export default {
           this.isLoading = false;
           this.refresh(data);
         });
+    },
+
+    onClick(data) {
+      window.location.href = `/items/${data.id}`;
     },
   },
 };

@@ -37,6 +37,26 @@ class GetItemsTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_get_a_specific_item()
+    {
+        $this->signIn($this->user)
+            ->getJson($this->url . '/' . $this->items[0]->id)
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->items[0]->name])
+            ->assertJsonMissing([$this->items[1]->name]);
+    }
+
+    /** @test */
+    public function a_user_can_only_get_an_item_in_their_account()
+    {
+        $someOtherItem = create('App\Item');
+
+        $this->signIn($this->user)
+            ->getJson($this->url . '/' . $someOtherItem->id)
+            ->assertStatus(403);
+    }
+
+    /** @test */
     public function unauthenticated_users_cannot_get_items()
     {
         $this->getJson($this->url)

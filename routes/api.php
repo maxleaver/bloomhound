@@ -70,6 +70,11 @@ Route::middleware('auth:api')->group(function () {
 	Route::prefix('items')->group(function () {
 		Route::get('/', 'ItemController@index');
 		Route::post('/', 'ItemController@store');
+
+		Route::get('/{item}', 'ItemController@show');
+
+		Route::get('{item}/notes', 'NoteController@index');
+		Route::post('{item}/notes', 'NoteController@store');
 	});
 
 	Route::prefix('notes')->group(function () {

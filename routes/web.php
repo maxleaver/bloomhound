@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
 	Route::prefix('items')->group(function () {
 	    Route::get('/', 'ItemController@index')->name('items.index');
+	    Route::get('{item}', 'ItemController@show')->name('items.show');
 	});
 
 	Route::prefix('my')->group(function () {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Item;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -29,12 +30,12 @@ class ItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Item $item)
     {
-        //
+        return view('items.show', compact('item'));
     }
 
     /**
