@@ -36,7 +36,7 @@
 
 <section class="section">
   <div class="container">
-    <h1 class="title">Arrangements</h1>
+    <event-arrangements :event-id="{{ $event->id }}"></event-arrangements>
   </div>
 </section>
 

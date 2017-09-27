@@ -47,6 +47,9 @@ Route::middleware('auth:api')->group(function () {
 		Route::get('/', 'EventController@index');
 		Route::post('/', 'EventController@store');
 
+		Route::get('{event}/arrangements', 'ArrangementEventController@index');
+		Route::post('{event}/arrangements', 'ArrangementEventController@store');
+
 		Route::get('{event}/notes', 'NoteController@index');
 		Route::post('{event}/notes', 'NoteController@store');
 	});

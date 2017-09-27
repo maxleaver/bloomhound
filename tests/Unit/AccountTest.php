@@ -119,6 +119,16 @@ class AccountTest extends TestCase
     }
 
     /** @test */
+    public function an_account_has_arrangements()
+    {
+        create('App\Arrangement', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\Arrangement', $this->account->arrangements->first());
+    }
+
+    /** @test */
     public function an_account_has_flower_variety_sources()
     {
         create('App\FlowerVarietySource', [

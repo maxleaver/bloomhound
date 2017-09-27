@@ -30,4 +30,11 @@ class Event extends Model
     {
         return $this->belongsTo('App\EventStatus');
     }
+
+    public function arrangements()
+    {
+        return $this->belongsToMany('App\Arrangement')
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 }
