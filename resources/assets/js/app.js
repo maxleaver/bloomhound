@@ -20,6 +20,7 @@ Vue.component('customer-list', require('./components/CustomerList.vue'));
 Vue.component('contact-list', require('./components/ContactList.vue'));
 Vue.component('event-list', require('./components/EventList.vue'));
 Vue.component('flower-list', require('./components/FlowerList.vue'));
+Vue.component('item-list', require('./components/ItemList.vue'));
 Vue.component('note-list', require('./components/NoteList.vue'));
 Vue.component('variety-list', require('./components/FlowerVarietyList.vue'));
 Vue.component('vendor-list', require('./components/VendorList.vue'));

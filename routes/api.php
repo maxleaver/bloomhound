@@ -67,6 +67,11 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::get('invitations', 'InviteController@index');
 
+	Route::prefix('items')->group(function () {
+		Route::get('/', 'ItemController@index');
+		Route::post('/', 'ItemController@store');
+	});
+
 	Route::prefix('notes')->group(function () {
 		Route::delete('/{note}', 'NoteController@destroy');
 		Route::patch('/{note}', 'NoteController@update');

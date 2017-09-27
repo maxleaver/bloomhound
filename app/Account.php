@@ -56,6 +56,11 @@ class Account extends Model
         return $this->hasMany('App\FlowerVarietySource');
     }
 
+    public function items()
+    {
+        return $this->hasMany('App\Item');
+    }
+
     public function getLogoPathAttribute()
     {
         // Strip /public from the image path for external consumption

@@ -49,6 +49,10 @@ Route::middleware('auth')->group(function () {
 	    Route::get('{flower}', 'FlowerController@show')->name('flowers.show');
 	});
 
+	Route::prefix('items')->group(function () {
+	    Route::get('/', 'ItemController@index')->name('items.index');
+	});
+
 	Route::prefix('my')->group(function () {
 	    Route::get('profile', 'ProfileController@index')->name('my.profile');
 	});
