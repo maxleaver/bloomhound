@@ -12,7 +12,7 @@
       <div class="level-right">
         <p class="level-item">
           <button class="button is-success is-pulled-right"
-            @click="isModalActive = true">
+            @click="isAddModalActive = true">
             <span class="icon is-small">
               <i class="fa fa-plus"></i>
             </span>
@@ -22,8 +22,16 @@
       </div>
     </nav>
 
-    <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
+    <b-modal :active.sync="isAddModalActive" :canCancel="canCancel" has-modal-card>
       <add-event-arrangement @created="add" :eventId="eventId"></add-event-arrangement>
+    </b-modal>
+
+    <b-modal
+      :active.sync="isDeleteModalActive"
+      :canCancel="canCancel"
+      has-modal-card
+    >
+      <delete-arrangement-modal v-bind="deleteModalProps" @deleted="removeById"></delete-arrangement-modal>
     </b-modal>
 
     <b-table
@@ -41,6 +49,12 @@
 
         <b-table-column field="quantity" label="Quantity" sortable>
           {{ props.row.quantity }}
+        </b-table-column>
+
+        <b-table-column centered>
+          <span @click="showDeleteModal(props.row)">
+            <b-icon icon="delete"></b-icon>
+          </span>
         </b-table-column>
       </template>
 
@@ -72,12 +86,13 @@
 
 <script>
 import AddEventArrangement from './AddEventArrangement.vue';
+import DeleteArrangementModal from './DeleteArrangementModal.vue';
 import IngredientList from './IngredientList.vue';
 import collection from '../mixins/collection';
 
 export default {
   name: 'event-arrangements',
-  components: { AddEventArrangement, IngredientList },
+  components: { AddEventArrangement, DeleteArrangementModal, IngredientList },
   mixins: [collection],
   props: {
     eventId: Number,
@@ -88,9 +103,14 @@ export default {
       arrangeables: [],
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
+      deleteModalProps: {
+        id: '',
+        name: '',
+      },
       hasMobileCards: true,
       isLoading: true,
-      isModalActive: false,
+      isDeleteModalActive: false,
+      isAddModalActive: false,
     };
   },
 
@@ -113,6 +133,13 @@ export default {
         .then((data) => {
           this.arrangeables = data.data;
         });
+    },
+
+    showDeleteModal(row) {
+      this.deleteModalProps.id = row.id;
+      this.deleteModalProps.name = row.name;
+
+      this.isDeleteModalActive = true;
     },
   },
 };

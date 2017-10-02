@@ -20,6 +20,10 @@ class CreateArrangementIngredientsTable extends Migration
             $table->string('arrangeable_type');
             $table->integer('quantity')->unsigned();
             $table->timestamps();
+
+            $table->foreign('arrangement_id')
+                ->references('id')->on('arrangements')
+                ->onDelete('cascade');
         });
     }
 

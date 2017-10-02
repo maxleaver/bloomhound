@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Note;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

@@ -24,12 +24,13 @@ Route::middleware('auth:api')->group(function () {
 	Route::get('/arrangeables', 'ArrangeableController@index');
 
 	Route::prefix('arrangements')->group(function () {
-	    Route::get('{arrangement}/ingredients', 'ArrangementIngredientController@index');
-	    Route::post('{arrangement}/ingredients', 'ArrangementIngredientController@store');
-	    Route::delete(
-	    	'{arrangement}/ingredients/{ingredient}',
-	    	'ArrangementIngredientController@destroy'
-	   	);
+		Route::prefix('{arrangement}')->group(function () {
+			Route::delete('/', 'ArrangementEventController@destroy');
+
+			Route::get('ingredients', 'ArrangementIngredientController@index');
+		    Route::post('ingredients', 'ArrangementIngredientController@store');
+		    Route::delete('{ingredient}', 'ArrangementIngredientController@destroy');
+		});
 	});
 
 	Route::prefix('customers')->group(function () {

@@ -17,6 +17,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // Reduces default string length for databases like MariaDB
         Schema::defaultStringLength(191);
+
+        // Enables foreign keys for SQLite databases
+        if (\DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
+            \DB::statement(\DB::raw('PRAGMA foreign_keys=1'));
+        }
     }
 
     /**
