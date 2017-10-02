@@ -78,8 +78,13 @@ class ArrangementIngredientController extends Controller
         foreach ($idsByModel as $model => $idArray) {
             $arrangeables = $model::whereIn('id', $idArray)->get();
 
-            // Check the number of records matches our passed IDs
-            if (count($arrangeables) !== count($idArray)) {
+            // Compare the IDs we got back against our ID array
+            $invalidIds = array_values(
+                array_diff($idArray, $arrangeables->pluck('id')->toArray())
+            );
+
+            // If any IDs didn't match existing entries, cancel the request
+            if ($invalidIds) {
                 abort(403);
             }
 
@@ -150,11 +155,16 @@ class ArrangementIngredientController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  App\Arrangement              $arrangement
+     * @param  App\ArrangementIngredient    $ingredient
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Arrangement $arrangement, ArrangementIngredient $ingredient)
     {
-        //
+        if ($arrangement->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $ingredient->delete();
     }
 }

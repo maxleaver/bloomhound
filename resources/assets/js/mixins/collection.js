@@ -23,5 +23,10 @@ export default {
 
       this.$emit('removed');
     },
+
+    removeById(id) {
+      const index = this.items.findIndex(i => i.id === id);
+      this.remove(index);
+    },
   },
 };

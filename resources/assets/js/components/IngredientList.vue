@@ -15,6 +15,12 @@
         <b-table-column field="quantity" label="Quantity" sortable>
           {{ props.row.quantity }}
         </b-table-column>
+
+        <b-table-column centered>
+          <span @click="deleteRow(props.row.id)">
+            <b-icon icon="delete"></b-icon>
+          </span>
+        </b-table-column>
       </template>
 
       <template slot="empty">
@@ -70,6 +76,13 @@ export default {
       data.forEach((item) => {
         this.add(item);
       });
+    },
+
+    deleteRow(id) {
+      window.axios.delete(`/api/arrangements/${this.arrangementId}/ingredients/${id}`)
+        .then(() => {
+          this.removeById(id);
+        });
     },
 
     fetch() {

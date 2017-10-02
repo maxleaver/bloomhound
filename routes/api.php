@@ -26,6 +26,10 @@ Route::middleware('auth:api')->group(function () {
 	Route::prefix('arrangements')->group(function () {
 	    Route::get('{arrangement}/ingredients', 'ArrangementIngredientController@index');
 	    Route::post('{arrangement}/ingredients', 'ArrangementIngredientController@store');
+	    Route::delete(
+	    	'{arrangement}/ingredients/{ingredient}',
+	    	'ArrangementIngredientController@destroy'
+	   	);
 	});
 
 	Route::prefix('customers')->group(function () {

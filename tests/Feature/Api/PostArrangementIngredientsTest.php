@@ -9,7 +9,7 @@ class PostArrangementIngredientsTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $accountId;
+    protected $account;
     protected $arrangement;
     protected $request;
     protected $user;
@@ -19,17 +19,17 @@ class PostArrangementIngredientsTest extends TestCase
         parent::setUp();
 
         $this->user = create('App\User');
-        $accountId = $this->user->account->id;
+        $this->account = $this->user->account;
 
-        $this->arrangement = create('App\Arrangement', ['account_id' => $accountId]);
+        $this->arrangement = create('App\Arrangement', ['account_id' => $this->account->id]);
 
         $flowerVariety = create('App\FlowerVariety', [
-        	'account_id' => $accountId,
-        	'flower_id' => create('App\Flower', ['account_id' => $accountId])->id
+        	'account_id' => $this->account->id,
+        	'flower_id' => create('App\Flower', ['account_id' => $this->account->id])->id
         ]);
         $this->request = [
     		[
-        		'id' => create('App\Item', ['account_id' => $accountId])->id,
+        		'id' => create('App\Item', ['account_id' => $this->account->id])->id,
         		'type' => 'item',
         		'quantity' => 5,
         	],
@@ -49,14 +49,38 @@ class PostArrangementIngredientsTest extends TestCase
     /** @test */
     public function a_user_can_add_ingredients_to_an_arrangement()
     {
-        $this->withoutExceptionHandling();
-
         $this->assertEquals($this->arrangement->ingredients()->count(), 0);
 
         $this->signIn($this->user)
             ->postJson($this->getUrl($this->arrangement->id), $this->request)
-    		->assertStatus(200)
-            ->dump();
+    		->assertStatus(200);
+
+        $this->assertEquals($this->arrangement->ingredients()->count(), 2);
+    }
+
+    /** @test */
+    public function users_can_add_multiple_entries_of_the_same_item()
+    {
+        $item = create('App\Item', ['account_id' => $this->account->id]);
+
+        $request = [
+            [
+                'id' => $item->id,
+                'type' => $item->arrangeableType,
+                'quantity' => 10,
+            ],
+            [
+                'id' => $item->id,
+                'type' => $item->arrangeableType,
+                'quantity' => 7,
+            ],
+        ];
+
+        $this->assertEquals($this->arrangement->ingredients()->count(), 0);
+
+        $this->signIn($this->user)
+            ->postJson($this->getUrl($this->arrangement->id), $request)
+            ->assertStatus(200);
 
         $this->assertEquals($this->arrangement->ingredients()->count(), 2);
     }
@@ -106,7 +130,7 @@ class PostArrangementIngredientsTest extends TestCase
     /** @test */
     public function users_can_only_add_existing_ingredients_to_arrangements()
     {
-    	$clearlyInvalidId = 123;
+        $clearlyInvalidId = 123;
     	$badRequest = [
     		[
     			'id' => $clearlyInvalidId,
