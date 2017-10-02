@@ -35,4 +35,9 @@ class Event extends Model
     {
         return $this->hasMany('App\Arrangement');
     }
+
+    public function vendors()
+    {
+        return $this->belongsToMany('App\Vendor');
+    }
 }

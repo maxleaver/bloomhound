@@ -64,6 +64,9 @@ Route::middleware('auth:api')->group(function () {
 
 		Route::get('{event}/notes', 'NoteController@index');
 		Route::post('{event}/notes', 'NoteController@store');
+
+		Route::get('{event}/vendors', 'EventVendorController@index');
+		Route::post('{event}/vendors', 'EventVendorController@store');
 	});
 
 	Route::prefix('flowers')->group(function () {

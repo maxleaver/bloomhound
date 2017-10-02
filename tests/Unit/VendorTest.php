@@ -55,7 +55,16 @@ class VendorTest extends TestCase
     }
 
     /** @test */
-    public function a_vendor_has_notes()
+    public function a_vendor_can_have_many_events()
+    {
+        $events = create('App\Event', [], 10);
+        $this->vendor->events()->attach($events);
+
+        $this->assertInstanceOf('App\Event', $this->vendor->events->first());
+    }
+
+    /** @test */
+    public function a_vendor_can_have_many_notes()
     {
         create('App\Note', [
             'user_id' => create('App\User', ['account_id' => $this->vendor->account->id]),

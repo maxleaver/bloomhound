@@ -43,13 +43,13 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_has_an_account()
+    public function an_event_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->event->account);
     }
 
     /** @test */
-    public function an_event_may_have_many_arrangements()
+    public function an_event_can_have_many_arrangements()
     {
         $arrangements = create('App\Arrangement', [
             'account_id' => $this->event->account->id,
@@ -60,7 +60,16 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_has_notes()
+    public function an_event_can_have_many_vendors()
+    {
+        $vendors = create('App\Vendor', [], 10);
+        $this->event->vendors()->attach($vendors);
+
+        $this->assertInstanceOf('App\Vendor', $this->event->vendors->first());
+    }
+
+    /** @test */
+    public function an_event_can_have_many_notes()
     {
         create('App\Note', [
             'user_id' => create('App\User', ['account_id' => $this->event->account->id]),

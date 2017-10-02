@@ -30,7 +30,7 @@
 
 <section class="section">
   <div class="container">
-    Add a Vendor
+    <event-vendor-list :event-id="{{ $event->id }}"></event-vendor-list>
   </div>
 </section>
 
