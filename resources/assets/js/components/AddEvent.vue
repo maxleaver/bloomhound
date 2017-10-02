@@ -146,9 +146,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-  .modal-card {
-    width: auto;
-  }
-</style>

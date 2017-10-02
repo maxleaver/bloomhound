@@ -60,9 +60,3 @@ export default {
   },
 };
 </script>
-
-<style>
-  .address {
-    white-space: pre-wrap;
-  }
-</style>
