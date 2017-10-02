@@ -21,6 +21,13 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('logo', 'AccountLogoController@store');
 	});
 
+	Route::get('/arrangeables', 'ArrangeableController@index');
+
+	Route::prefix('arrangements')->group(function () {
+	    Route::get('{arrangement}/ingredients', 'ArrangementIngredientController@index');
+	    Route::post('{arrangement}/ingredients', 'ArrangementIngredientController@store');
+	});
+
 	Route::prefix('customers')->group(function () {
 	    Route::get('/', 'CustomerController@index');
 		Route::get('{customer}', 'CustomerController@show');

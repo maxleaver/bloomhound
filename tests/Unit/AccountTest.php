@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -119,13 +119,13 @@ class AccountTest extends TestCase
     }
 
     /** @test */
-    public function an_account_has_arrangements()
+    public function an_account_has_flower_varieties()
     {
-        create('App\Arrangement', [
+        create('App\FlowerVariety', [
             'account_id' => $this->account->id
         ]);
 
-        $this->assertInstanceOf('App\Arrangement', $this->account->arrangements->first());
+        $this->assertInstanceOf('App\FlowerVariety', $this->account->flower_varieties->first());
     }
 
     /** @test */
@@ -136,6 +136,16 @@ class AccountTest extends TestCase
         ]);
 
         $this->assertInstanceOf('App\FlowerVarietySource', $this->account->flower_variety_sources->first());
+    }
+
+    /** @test */
+    public function an_account_has_arrangements()
+    {
+        create('App\Arrangement', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\Arrangement', $this->account->arrangements->first());
     }
 
     /** @test */

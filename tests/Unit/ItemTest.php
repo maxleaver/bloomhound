@@ -25,6 +25,13 @@ class ItemTest extends TestCase
     }
 
     /** @test */
+    public function an_item_has_an_arrangeable_type()
+    {
+        $this->assertNotNull($this->item->arrangeable_type);
+        $this->assertEquals($this->item->arrangeable_type, 'item');
+    }
+
+    /** @test */
     public function an_item_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->item->account);
@@ -41,5 +48,16 @@ class ItemTest extends TestCase
         ]);
 
         $this->assertInstanceOf('App\Note', $this->item->notes->first());
+    }
+
+    /** @test */
+    public function an_item_can_be_used_as_an_arrangement_ingredient()
+    {
+        create('App\ArrangementIngredient', [
+            'arrangeable_id' => $this->item->id,
+            'arrangeable_type' => 'App\Item',
+        ]);
+
+        $this->assertInstanceOf('App\ArrangementIngredient', $this->item->used->first());
     }
 }

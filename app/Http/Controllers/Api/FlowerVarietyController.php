@@ -43,6 +43,7 @@ class FlowerVarietyController extends Controller
         // Create a new flower variety
         $variety = new FlowerVariety;
         $variety->name = $request->name;
+        $variety->account()->associate(Auth::user()->account);
         $variety->flower()->associate($flower);
         $variety->save();
 

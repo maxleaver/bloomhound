@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class FlowerVariety extends Model
 {
-	/**
+	use Arrangeable;
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -15,13 +17,18 @@ class FlowerVariety extends Model
         'flower_id'
     ];
 
+    public function sources()
+    {
+        return $this->hasMany('App\FlowerVarietySource');
+    }
+
 	public function flower()
     {
         return $this->belongsTo('App\Flower');
     }
 
-    public function sources()
+    public function account()
     {
-        return $this->hasMany('App\FlowerVarietySource');
+        return $this->belongsTo('App\Account');
     }
 }

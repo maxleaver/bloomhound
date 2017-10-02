@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,5 +38,20 @@ class ArrangementTest extends TestCase
     public function an_arrangement_belongs_to_an_event()
     {
         $this->assertInstanceOf('App\Event', $this->arrangement->event);
+    }
+
+    /** @test */
+    public function an_arrangement_can_have_ingredients()
+    {
+        create('App\ArrangementIngredient', [
+            'arrangement_id' => $this->arrangement->id,
+            'arrangeable_id' => create('App\Item')->id,
+            'arrangeable_type' => 'App\Item',
+        ]);
+
+        $this->assertInstanceOf(
+            'App\ArrangementIngredient',
+            $this->arrangement->ingredients->first()
+        );
     }
 }

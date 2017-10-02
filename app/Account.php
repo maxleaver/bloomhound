@@ -46,14 +46,19 @@ class Account extends Model
         return $this->hasMany('App\Flower');
     }
 
-    public function arrangements()
+    public function flower_varieties()
     {
-        return $this->hasMany('App\Arrangement');
+        return $this->hasMany('App\FlowerVariety');
     }
 
     public function flower_variety_sources()
     {
         return $this->hasMany('App\FlowerVarietySource');
+    }
+
+    public function arrangements()
+    {
+        return $this->hasMany('App\Arrangement');
     }
 
     public function items()

@@ -17,4 +17,9 @@ class Arrangement extends Model
     {
     	return $this->belongsTo('App\Event');
     }
+
+    public function ingredients()
+    {
+        return $this->hasMany('App\ArrangementIngredient');
+    }
 }

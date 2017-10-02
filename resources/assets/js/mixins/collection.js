@@ -10,8 +10,6 @@ export default {
     refresh({ data }) {
       this.dataSet = data;
       this.items = data;
-
-      window.scrollTo(0, 0);
     },
 
     add(item) {

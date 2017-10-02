@@ -4,50 +4,54 @@
     @submit.prevent="onSubmit"
     @keydown="form.errors.clear($event.target.name)"
   >
-    <b-field grouped>
-      <b-field
-        label="Name"
-        :type="form.errors.has('name') ? 'is-danger' : ''"
-        :message="form.errors.has('name') ? form.errors.get('name') : ''"
-      >
-        <b-input
-          type="text"
-          v-model="form.name"
-          placeholder="ex. Bridal Bouquet"
-          :disabled="isSubmitting"
-          required
-        ></b-input>
-      </b-field>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Add an Arrangement</p>
+      </header>
 
-      <b-field
-        label="Quantity"
-        :type="form.errors.has('quantity') ? 'is-danger' : ''"
-        :message="form.errors.has('quantity') ? form.errors.get('quantity') : ''"
-      >
-        <b-input
-          type="number"
-          v-model="form.quantity"
-          :disabled="isSubmitting"
-          required
-        ></b-input>
-      </b-field>
-    </b-field>
+      <section class="modal-card-body">
+        <b-field
+          label="Name"
+          :type="form.errors.has('name') ? 'is-danger' : ''"
+          :message="form.errors.has('name') ? form.errors.get('name') : ''"
+        >
+          <b-input
+            type="text"
+            v-model="form.name"
+            placeholder="ex. Bridal Bouquet"
+            :disabled="isSubmitting"
+            required
+          ></b-input>
+        </b-field>
 
-    <div class="field is-grouped">
-      <div class="control">
+        <b-field
+          label="Quantity"
+          :type="form.errors.has('quantity') ? 'is-danger' : ''"
+          :message="form.errors.has('quantity') ? form.errors.get('quantity') : ''"
+        >
+          <b-input
+            type="number"
+            v-model="form.quantity"
+            :disabled="isSubmitting"
+            required
+          ></b-input>
+        </b-field>
+      </section>
+
+      <footer class="modal-card-foot">
         <button
           class="button is-primary"
           type="submit"
           v-bind:class="{'is-loading' : isSubmitting}"
-          :disabled="isSubmitting"
+          :disabled="isSubmitting || form.errors.any()"
         >Add Arrangement</button>
-      </div>
-
-      <div class="control">
-        <button class="button" @click.prevent="toggleForm">
-          Nevermind
-        </button>
-      </div>
+        <button
+          class="button"
+          type="button"
+          @click="$parent.close()"
+          :disabled="isSubmitting"
+        >Nevermind</button>
+      </footer>
     </div>
   </form>
 </template>
@@ -59,7 +63,6 @@ export default {
   name: 'add-event-arrangement',
   props: {
     eventId: Number,
-    toggleForm: Function,
   },
 
   data() {
@@ -83,6 +86,8 @@ export default {
           window.flash('Arrangement added successfully!', 'success');
 
           this.$emit('created', data);
+
+          this.$parent.close();
         })
         .catch(() => {
           this.isSubmitting = false;
