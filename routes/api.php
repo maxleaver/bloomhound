@@ -29,7 +29,7 @@ Route::middleware('auth:api')->group(function () {
 
 			Route::get('ingredients', 'ArrangementIngredientController@index');
 		    Route::post('ingredients', 'ArrangementIngredientController@store');
-		    Route::delete('{ingredient}', 'ArrangementIngredientController@destroy');
+		    Route::delete('ingredients/{ingredient}', 'ArrangementIngredientController@destroy');
 		});
 	});
 
