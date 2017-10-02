@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="hero is-primary">
+<div class="hero is-dark">
   <div class="hero-body">
     <div class="container">
       <h1 class="title">Home</h1>

@@ -11,19 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
-	Route::get('home', 'HomeController@index')->name('home');
-
-	// Route::get('users', 'UserController@index');
-	// Route::post('users', 'InviteController@store');
-
-	// Route::get('invitations', 'InviteController@index');
+	Route::get('/', 'HomeController@index')->name('home');
 
 	Route::prefix('account')->group(function () {
 	    Route::get('settings', 'AccountSettingsController@index')->name('account.settings');

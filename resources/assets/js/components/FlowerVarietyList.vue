@@ -4,7 +4,7 @@
       <div class="level-left">
         <div class="level-item">
           <p class="subtitle is-5">
-            <strong>{{ items.length }}</strong> flowers
+            <strong>{{ items.length }}</strong> flower varieties
           </p>
         </div>
       </div>
