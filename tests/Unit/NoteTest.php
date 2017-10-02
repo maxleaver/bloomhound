@@ -17,7 +17,7 @@ class NoteTest extends TestCase
     }
 
 	/** @test */
-    public function a_note_has_notables()
+    public function a_note_has_a_notable()
     {
         $customer = create('App\Customer');
         $note = create('App\Note', [

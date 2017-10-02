@@ -15,12 +15,10 @@ class CreateFlowersTable extends Migration
     {
         Schema::create('flowers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('flower_library_id')->unsigned();
+            $table->integer('flower_library_id')->unsigned()->index();
             $table->integer('account_id')->unsigned()->nullable();
             $table->string('name');
             $table->timestamps();
-
-            $table->index('flower_library_id');
         });
     }
 
