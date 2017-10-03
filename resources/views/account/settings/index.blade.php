@@ -10,6 +10,10 @@
   </div>
 </div>
 
+<div class="container">
+  {{ Breadcrumbs::render('account_settings') }}
+</div>
+
 <section class="section">
 	<div class="container">
 		<account-profile :account="{{ $account }}"></account-profile>

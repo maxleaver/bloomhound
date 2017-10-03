@@ -10,6 +10,10 @@
   </div>
 </div>
 
+<div class="container">
+  {{ Breadcrumbs::render('contact', $contact) }}
+</div>
+
 <section class="section">
   <div class="container">
     <h1 class="title">Notes</h1>

@@ -10,6 +10,10 @@
   </div>
 </div>
 
+<div class="container">
+  {{ Breadcrumbs::render('home') }}
+</div>
+
 <section class="section">
 	<div class="container">
 		<h1 class="title">Your Upcoming Events</h1>

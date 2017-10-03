@@ -10,6 +10,10 @@
   </div>
 </div>
 
+<div class="container">
+  {{ Breadcrumbs::render('events') }}
+</div>
+
 <section class="section">
 	<div class="container">
 		<event-list></event-list>
