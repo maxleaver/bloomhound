@@ -67,6 +67,7 @@ Route::middleware('auth:api')->group(function () {
 
 		Route::get('{event}/vendors', 'EventVendorController@index');
 		Route::post('{event}/vendors', 'EventVendorController@store');
+		Route::delete('{event}/vendors/{vendor}', 'EventVendorController@destroy');
 	});
 
 	Route::prefix('flowers')->group(function () {

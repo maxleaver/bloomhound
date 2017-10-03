@@ -90,11 +90,20 @@ class EventVendorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Event  $event
+     * @param  \App\Vendor $vendor
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Event $event, Vendor $vendor)
     {
-        //
+        if ($event->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        if (!$vendor->events->contains($event)) {
+            abort(404);
+        }
+
+        $event->vendors()->detach($vendor);
     }
 }

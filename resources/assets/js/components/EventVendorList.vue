@@ -41,6 +41,12 @@
         <b-table-column field="created_at" label="Created On" sortable centered>
           {{ new Date(props.row.created_at).toLocaleDateString() }}
         </b-table-column>
+
+        <b-table-column centered>
+          <span @click="deleteRow(props.row.id)">
+            <b-icon icon="delete"></b-icon>
+          </span>
+        </b-table-column>
       </template>
 
       <template slot="empty">
@@ -90,6 +96,13 @@ export default {
   },
 
   methods: {
+    deleteRow(id) {
+      window.axios.delete(`/api/events/${this.eventId}/vendors/${id}`)
+        .then(() => {
+          this.removeById(id);
+        });
+    },
+
     fetch() {
       window.axios.get(`/api/events/${this.eventId}/vendors`)
         .then((data) => {
