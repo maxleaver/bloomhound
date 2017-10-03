@@ -108,26 +108,17 @@ export default {
         name: '',
       },
       hasMobileCards: true,
-      isLoading: true,
       isDeleteModalActive: false,
       isAddModalActive: false,
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch(`/api/events/${this.eventId}/arrangements`);
     this.fetchArrangeables();
   },
 
   methods: {
-    fetch() {
-      window.axios.get(`/api/events/${this.eventId}/arrangements`)
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     fetchArrangeables() {
       window.axios.get('/api/arrangeables')
         .then((data) => {

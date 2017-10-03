@@ -63,12 +63,11 @@ export default {
     return {
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch(`/api/arrangements/${this.arrangementId}/ingredients`);
   },
 
   methods: {
@@ -82,14 +81,6 @@ export default {
       window.axios.delete(`/api/arrangements/${this.arrangementId}/ingredients/${id}`)
         .then(() => {
           this.removeById(id);
-        });
-    },
-
-    fetch() {
-      window.axios.get(`/api/arrangements/${this.arrangementId}/ingredients`)
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
         });
     },
   },

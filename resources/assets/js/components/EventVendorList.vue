@@ -84,14 +84,13 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
       isModalActive: false,
       vendors: [],
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch(`/api/events/${this.eventId}/vendors`);
     this.fetchVendors();
   },
 
@@ -100,14 +99,6 @@ export default {
       window.axios.delete(`/api/events/${this.eventId}/vendors/${id}`)
         .then(() => {
           this.removeById(id);
-        });
-    },
-
-    fetch() {
-      window.axios.get(`/api/events/${this.eventId}/vendors`)
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
         });
     },
 

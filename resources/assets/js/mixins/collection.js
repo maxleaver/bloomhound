@@ -2,6 +2,7 @@ export default {
   data() {
     return {
       dataSet: false,
+      isLoading: true,
       items: [],
     };
   },
@@ -16,6 +17,14 @@ export default {
       this.items.unshift(item);
 
       this.$emit('added');
+    },
+
+    fetch(url) {
+      window.axios.get(url)
+        .then((data) => {
+          this.isLoading = false;
+          this.refresh(data);
+        });
     },
 
     remove(index) {

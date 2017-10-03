@@ -95,13 +95,18 @@ export default {
       customers: [],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
       isModalActive: false,
     };
   },
 
   created() {
-    this.fetch();
+    let url = '/api/contacts';
+
+    if (this.customer_id) {
+      url = `/api/customers/${this.customer_id}/contacts`;
+    }
+
+    this.fetch(url);
 
     if (!this.customer_id) {
       this.fetchCustomers();
@@ -109,16 +114,6 @@ export default {
   },
 
   methods: {
-    fetch() {
-      const url = this.customer_id ? `customers/${this.customer_id}/contacts` : 'contacts';
-
-      window.axios.get(`/api/${url}`)
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     fetchCustomers() {
       window.axios.get('api/customers')
         .then(({ data }) => {

@@ -76,27 +76,18 @@ export default {
 
   data() {
     return {
-      isModalActive: false,
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
+      isModalActive: false,
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch('/api/flowers');
   },
 
   methods: {
-    fetch() {
-      window.axios.get('/api/flowers?lib=custom')
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     onClick(data) {
       // Redirect to detail page
       window.location.href = `/flowers/${data.id}`;

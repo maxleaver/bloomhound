@@ -75,24 +75,15 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
       isModalActive: false,
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch('/api/vendors');
   },
 
   methods: {
-    fetch() {
-      window.axios.get('/api/vendors')
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     onClick(data) {
       // Redirect to detail page
       window.location.href = `/vendors/${data.id}`;

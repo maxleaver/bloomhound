@@ -35,17 +35,12 @@ export default {
   },
 
   created() {
-    this.fetch();
+    this.setPath();
+
+    this.fetch(this.path);
   },
 
   methods: {
-    fetch() {
-      this.setPath();
-
-      window.axios.get(this.path)
-        .then(this.refresh);
-    },
-
     setPath() {
       this.path = `/api${window.location.pathname}/notes`;
     },

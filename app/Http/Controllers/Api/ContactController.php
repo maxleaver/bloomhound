@@ -33,7 +33,7 @@ class ContactController extends Controller
             'customer_id' => 'required|integer',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'string|email|max:255',
+            'email' => 'nullable|string|email|max:255',
             'phone' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'relationship' => 'nullable|string|max:255',

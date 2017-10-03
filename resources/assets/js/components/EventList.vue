@@ -88,13 +88,18 @@ export default {
       customers: [],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
       isModalActive: false,
     };
   },
 
   created() {
-    this.fetch();
+    let url = 'api/events';
+
+    if (this.customer_id) {
+      url = `/api/customers/${this.customer_id}/events`;
+    }
+
+    this.fetch(url);
 
     if (!this.customer_id) {
       this.fetchCustomers();
@@ -102,20 +107,6 @@ export default {
   },
 
   methods: {
-    fetch() {
-      let url = 'api/events';
-
-      if (this.customer_id) {
-        url = `/api/customers/${this.customer_id}/events`;
-      }
-
-      window.axios.get(url)
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     fetchCustomers() {
       window.axios.get('api/customers')
         .then(({ data }) => {

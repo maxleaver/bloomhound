@@ -76,24 +76,15 @@ export default {
       customers: [],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
       isModalActive: false,
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch('api/items');
   },
 
   methods: {
-    fetch() {
-      window.axios.get('api/items')
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     onClick(data) {
       window.location.href = `/items/${data.id}`;
     },

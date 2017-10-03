@@ -75,24 +75,15 @@ export default {
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
       isModalActive: false,
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch('/api/customers');
   },
 
   methods: {
-    fetch() {
-      window.axios.get('api/customers')
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     onClick(data) {
       // Redirect to detail page
       window.location.href = `/customers/${data.id}`;

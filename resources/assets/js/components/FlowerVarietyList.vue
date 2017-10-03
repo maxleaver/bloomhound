@@ -75,25 +75,16 @@ export default {
     return {
       defaultSortDirection: 'asc',
       hasMobileCards: true,
-      isLoading: true,
       vendors: [],
     };
   },
 
   created() {
-    this.fetch();
+    this.fetch(`/api/flowers/${this.id}/varieties`);
     this.fetchVendors();
   },
 
   methods: {
-    fetch() {
-      window.axios.get(`/api/flowers/${this.id}/varieties`)
-        .then((data) => {
-          this.isLoading = false;
-          this.refresh(data);
-        });
-    },
-
     fetchVendors() {
       window.axios.get('/api/vendors')
         .then((data) => {
