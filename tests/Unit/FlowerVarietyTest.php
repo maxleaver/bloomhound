@@ -25,6 +25,13 @@ class FlowerVarietyTest extends TestCase
     }
 
     /** @test */
+    public function an_item_has_an_ingredient_name()
+    {
+        $this->assertNotNull($this->variety->ingredient_name);
+        $this->assertEquals($this->variety->ingredient_name, $this->variety->flower->name . ' - ' . $this->variety->name);
+    }
+
+    /** @test */
     public function a_flower_variety_has_an_arrangeable_type()
     {
         $this->assertNotNull($this->variety->arrangeable_type);

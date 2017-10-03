@@ -6,7 +6,7 @@
       :type="form.errors.has('id') || form.errors.has('type') ? 'is-danger' : ''"
     >
       <b-autocomplete
-        field="name"
+        field="ingredient_name"
         name="ingredient"
         v-model="ingredient"
         :data="filteredDataObj"
@@ -58,7 +58,7 @@ export default {
   computed: {
     filteredDataObj() {
       return this.arrangeables.filter(option =>
-        option.name
+        option.ingredient_name
           .toString()
           .toLowerCase()
           .indexOf(this.ingredient.toLowerCase()) >= 0);

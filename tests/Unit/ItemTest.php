@@ -25,6 +25,13 @@ class ItemTest extends TestCase
     }
 
     /** @test */
+    public function an_item_has_an_ingredient_name()
+    {
+        $this->assertNotNull($this->item->ingredient_name);
+        $this->assertEquals($this->item->ingredient_name, $this->item->name);
+    }
+
+    /** @test */
     public function an_item_has_an_arrangeable_type()
     {
         $this->assertNotNull($this->item->arrangeable_type);

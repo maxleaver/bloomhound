@@ -9,7 +9,7 @@
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
-          {{ props.row.arrangeable.name }}
+          {{ props.row.arrangeable.ingredient_name }}
         </b-table-column>
 
         <b-table-column field="quantity" label="Quantity" sortable>

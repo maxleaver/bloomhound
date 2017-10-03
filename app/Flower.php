@@ -18,8 +18,6 @@ class Flower extends Model
         'flower_library_id', 'account_id',
     ];
 
-    protected $with = ['varieties'];
-
     protected $dispatchesEvents = [
         'created' => FlowerCreated::class,
     ];
@@ -27,11 +25,6 @@ class Flower extends Model
 	public function varieties()
     {
         return $this->hasMany('App\FlowerVariety');
-    }
-
-    public function library()
-    {
-    	return $this->belongsTo('App\FlowerLibrary', 'flower_library_id');
     }
 
     public function account()

@@ -16,6 +16,7 @@ class FlowerVariety extends Model
     protected $hidden = [
         'flower_id'
     ];
+    protected $appends = ['ingredient_name'];
 
     public function sources()
     {
@@ -30,5 +31,10 @@ class FlowerVariety extends Model
     public function account()
     {
         return $this->belongsTo('App\Account');
+    }
+
+    public function getIngredientNameAttribute()
+    {
+        return $this->flower->name . ' - ' . $this->name;
     }
 }

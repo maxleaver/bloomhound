@@ -18,22 +18,7 @@ class FlowerController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->input('lib')) {
-            $library = FlowerLibrary::whereType($request->input('lib'))->first();
-
-            if (!$library) {
-                abort(404);
-            }
-
-            if ($library->type === 'custom') {
-                // Get flowers that match the account ID
-                return response()->json(Auth::user()->account->flowers);
-            }
-
-            return response()->json($library->flowers);
-        }
-
-        return response()->json(Flower::all());
+        return response()->json(Auth::user()->account->flowers->load('varieties'));
     }
 
     /**
@@ -52,7 +37,6 @@ class FlowerController extends Controller
         $flower = new Flower;
         $flower->name = $data['name'];
         $flower->account()->associate(Auth::user()->account);
-        $flower->library()->associate(FlowerLibrary::whereType('custom')->first());
         $flower->save();
 
         return response()->json($flower->fresh());

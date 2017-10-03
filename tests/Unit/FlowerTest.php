@@ -25,13 +25,7 @@ class FlowerTest extends TestCase
     }
 
     /** @test */
-    public function a_flower_belongs_to_a_library()
-    {
-        $this->assertInstanceOf('App\FlowerLibrary', $this->flower->library);
-    }
-
-    /** @test */
-    public function a_flower_may_belong_to_an_account()
+    public function a_flower_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->flower->account);
     }
