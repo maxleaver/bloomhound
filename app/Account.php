@@ -68,7 +68,8 @@ class Account extends Model
 
     public function getLogoPathAttribute()
     {
-        // Strip /public from the image path for external consumption
-        return substr($this->logo, 6);
+        // Strip /public and append /storage to the image path
+        // for external consumption
+        return '/storage' . substr($this->logo, 6);
     }
 }
