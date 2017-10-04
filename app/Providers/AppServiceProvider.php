@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\FlowerVarietySource;
+use App\Observers\FlowerVarietySourceObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
@@ -22,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
         if (\DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
             \DB::statement(\DB::raw('PRAGMA foreign_keys=1'));
         }
+
+        // Register model observers
+        FlowerVarietySource::observe(FlowerVarietySourceObserver::class);
     }
 
     /**

@@ -33,9 +33,40 @@ class FlowerVarietySourceTest extends TestCase
     }
 
     /** @test */
+    public function it_has_a_cost_per_stem()
+    {
+        $this->assertNotNull($this->source->cost_per_stem);
+        $this->assertInternalType('float', $this->source->cost_per_stem);
+        $this->assertEquals($this->source->cost_per_stem, $this->source->cost / $this->source->stems_per_bunch);
+    }
+
+    /** @test */
     public function a_flower_variety_source_belongs_to_a_vendor()
     {
         $this->assertInstanceOf('App\Vendor', $this->source->vendor);
+    }
+
+    /** @test */
+    public function a_flower_variety_source_knows_if_it_is_the_best_price()
+    {
+        $variety = create('App\FlowerVariety');
+
+        $highSource = create('App\FlowerVarietySource', [
+            'flower_variety_id' => $variety->id,
+            'cost' => 100,
+            'stems_per_bunch' => 10,
+        ]);
+
+        $this->assertTrue($highSource->isBestPrice);
+
+        $lowSource = create('App\FlowerVarietySource', [
+            'flower_variety_id' => $variety->id,
+            'cost' => 10,
+            'stems_per_bunch' => 10,
+        ]);
+
+        $this->assertFalse($highSource->isBestPrice);
+        $this->assertTrue($lowSource->isBestPrice);
     }
 
     /** @test */

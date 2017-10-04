@@ -18,8 +18,9 @@ class CreateFlowerVarietySourcesTable extends Migration
             $table->integer('account_id')->unsigned()->index();
             $table->integer('flower_variety_id')->unsigned()->index();
             $table->integer('vendor_id')->unsigned()->index();
-            $table->decimal('cost', 15, 2)->unsigned()->nullable();
-            $table->integer('stems_per_bunch')->unsigned()->nullable();
+            $table->decimal('cost', 15, 2)->unsigned();
+            $table->integer('stems_per_bunch')->unsigned();
+            $table->double('cost_per_stem')->unsigned();
             $table->timestamps();
         });
     }

@@ -27,6 +27,10 @@ export default {
         });
     },
 
+    findById(id) {
+      return this.items.find(item => item.id === id);
+    },
+
     remove(index) {
       this.items.splice(index, 1);
 

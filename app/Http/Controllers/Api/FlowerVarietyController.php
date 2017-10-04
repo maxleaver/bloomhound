@@ -21,7 +21,8 @@ class FlowerVarietyController extends Controller
             abort(403);
         }
 
-        return response()->json($flower->varieties->load('sources', 'sources.vendor'));
+        $varieties = $flower->varieties->load('sources', 'sources.vendor', 'best_source');
+        return response()->json($varieties);
     }
 
     /**

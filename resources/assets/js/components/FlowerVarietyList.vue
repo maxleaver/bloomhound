@@ -26,6 +26,12 @@
         <b-table-column field="created_at" label="Created" sortable numeric>
           {{ new Date(props.row.created_at).toLocaleDateString() }}
         </b-table-column>
+
+        <b-table-column field="best_price_id" label="Best Price" sortable numeric>
+          <span v-if="props.row.best_source">
+            {{ (props.row.best_source.cost_per_stem).toFixed(2) }}
+          </span>
+        </b-table-column>
       </template>
 
       <template slot="detail" scope="props">
@@ -33,6 +39,7 @@
           :id="props.row.id"
           :vendors="vendors"
           :sources="props.row.sources"
+          @bestPriceUpdated="updateBestPrice"
         ></flower-variety-source-list>
       </template>
 
@@ -90,6 +97,13 @@ export default {
         .then((data) => {
           this.vendors = data.data;
         });
+    },
+
+    updateBestPrice(args) {
+      const [id, newPrice] = args;
+      const affectedRow = this.findById(id);
+
+      affectedRow.best_source.cost_per_stem = newPrice;
     },
   },
 };

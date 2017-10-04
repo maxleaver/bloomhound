@@ -14,9 +14,11 @@ class FlowerVariety extends Model
      * @var array
      */
     protected $hidden = [
+        'account_id',
         'flower_id'
     ];
     protected $appends = ['ingredient_name'];
+    protected $guarded = [];
 
     public function sources()
     {
@@ -36,5 +38,20 @@ class FlowerVariety extends Model
     public function getIngredientNameAttribute()
     {
         return $this->flower->name . ' - ' . $this->name;
+    }
+
+    public function best_source()
+    {
+        return $this->belongsTo('App\FlowerVarietySource', 'best_price_id');
+    }
+
+    public function getBestPrice()
+    {
+        return $this->sources->sortBy('cost_per_stem')->first();
+    }
+
+    public function markBestPrice(FlowerVarietySource $source)
+    {
+        $this->update(['best_price_id' => $source->id]);
     }
 }

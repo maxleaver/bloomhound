@@ -17,6 +17,7 @@ class CreateFlowerVarietiesTable extends Migration
             $table->increments('id');
             $table->integer('account_id')->unsigned()->index();
             $table->integer('flower_id')->unsigned()->index();
+            $table->integer('best_price_id')->unsigned()->nullable();
             $table->string('name');
             $table->timestamps();
         });
