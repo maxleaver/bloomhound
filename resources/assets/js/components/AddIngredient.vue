@@ -12,6 +12,7 @@
         :data="filteredDataObj"
         :disabled="isSubmitting"
         :keep-first="keepFirst"
+        @focus="handleFocus"
         @select="onSelect"
       ></b-autocomplete>
     </b-field>

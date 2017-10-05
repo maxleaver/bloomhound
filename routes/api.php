@@ -118,6 +118,7 @@ Route::middleware('auth:api')->group(function () {
 	Route::prefix('vendors')->group(function () {
 		Route::get('/', 'VendorController@index');
 		Route::post('/', 'VendorController@store');
+		Route::patch('{vendor}', 'VendorController@update');
 
 		Route::get('{vendor}/notes', 'NoteController@index');
 		Route::post('{vendor}/notes', 'NoteController@store');

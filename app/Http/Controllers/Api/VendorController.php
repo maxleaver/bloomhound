@@ -54,12 +54,30 @@ class VendorController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Vendor               $vendor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Vendor $vendor)
     {
-        //
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'website' => 'nullable|string|max:255',
+        ]);
+
+        if ($vendor->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $vendor->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'address' => $data['address'],
+            'phone' => $data['phone'],
+            'website' => $data['website'],
+        ]);
     }
 
     /**
