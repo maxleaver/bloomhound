@@ -28,7 +28,7 @@ class UpdateNotesTest extends TestCase
     public function a_user_can_update_a_note()
     {
     	$this->signIn($this->user)
-            ->patchJson($this->getUrl($this->note->id), $this->request)
+            ->patchJson($this->url($this->note->id), $this->request)
     		->assertStatus(200);
 
     	$this->assertEquals($this->note->fresh()->text, $this->updateText);
@@ -40,18 +40,28 @@ class UpdateNotesTest extends TestCase
     	$otherAccountNote = create('App\Note');
 
     	$this->signIn($this->user)
-            ->patchJson($this->getUrl($otherAccountNote->id), $this->request)
+            ->patchJson($this->url($otherAccountNote->id), $this->request)
     		->assertStatus(404);
+    }
+
+    /** @test */
+    public function users_can_only_update_notes_that_exist()
+    {
+        $badId = 123;
+
+        $this->signIn($this->user)
+            ->patchJson($this->url($badId), $this->request)
+            ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_update_notes()
     {
-    	$this->patchJson($this->getUrl($this->note->id), $this->request)
+    	$this->patchJson($this->url($this->note->id), $this->request)
     		->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function url($id)
     {
     	return '/api/notes/' . $id;
     }

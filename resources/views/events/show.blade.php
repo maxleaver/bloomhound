@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="hero is-dark">
+<div class="hero is-light">
   <div class="hero-body">
     <div class="container">
-      <h1 class="title">{{ $event->name }}</h1>
-      <h2 class="subtitle">{{ $event->date->toFormattedDateString() }}</h2>
+      <event-profile :event="{{ $event }}"></event-profile>
     </div>
   </div>
 </div>

@@ -30,6 +30,7 @@ Vue.component('update-profile', require('./components/UpdateProfile.vue'));
 Vue.component('account-profile', require('./components/AccountProfile.vue'));
 Vue.component('contact-profile', require('./components/ContactProfile.vue'));
 Vue.component('customer-profile', require('./components/CustomerProfile.vue'));
+Vue.component('event-profile', require('./components/EventProfile.vue'));
 Vue.component('vendor-profile', require('./components/VendorProfile.vue'));
 
 /* eslint-disable no-unused-vars */

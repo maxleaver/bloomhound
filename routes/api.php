@@ -63,6 +63,7 @@ Route::middleware('auth:api')->group(function () {
 	Route::prefix('events')->group(function () {
 		Route::get('/', 'EventController@index');
 		Route::post('/', 'EventController@store');
+		Route::patch('{event}', 'EventController@update');
 
 		Route::get('{event}/arrangements', 'ArrangementEventController@index');
 		Route::post('{event}/arrangements', 'ArrangementEventController@store');

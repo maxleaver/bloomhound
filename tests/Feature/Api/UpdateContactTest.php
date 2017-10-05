@@ -61,6 +61,17 @@ class UpdateContactTest extends TestCase
     }
 
     /** @test */
+    public function users_can_only_update_contacts_that_exist()
+    {
+        $badId = 123;
+        $request = ['first_name' => 'Julie', 'last_name' => 'Doe'];
+
+        $this->signIn($this->user)
+            ->patchJson($this->url($badId), $request)
+            ->assertStatus(404);
+    }
+
+    /** @test */
     public function unauthenticated_users_cannot_update_contacts()
     {
         $request = ['first_name' => 'Julie', 'last_name' => 'Doe'];

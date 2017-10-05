@@ -58,6 +58,16 @@ class UpdateVendorTest extends TestCase
     }
 
     /** @test */
+    public function users_can_only_update_vendors_that_exist()
+    {
+        $badId = 123;
+
+        $this->signIn($this->user)
+            ->patchJson($this->url($badId), ['name' => 'a name'])
+            ->assertStatus(404);
+    }
+
+    /** @test */
     public function unauthenticated_users_cannot_update_vendor_profiles()
     {
         $this->patchJson($this->url($this->vendor->id), ['name' => 'a name'])

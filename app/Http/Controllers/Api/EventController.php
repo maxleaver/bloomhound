@@ -70,12 +70,24 @@ class EventController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Event $event)
     {
-        //
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255',
+            'date' => 'required|date',
+        ]);
+
+        if ($event->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $event->update([
+            'name' => $data['name'],
+            'date' => Carbon::parse($data['date']),
+        ]);
     }
 
     /**

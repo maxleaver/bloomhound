@@ -56,6 +56,17 @@ class UpdateCustomerTest extends TestCase
     }
 
     /** @test */
+    public function users_can_only_update_customers_that_exist()
+    {
+        $badId = 123;
+        $name = 'some customer';
+
+        $this->signIn($this->user)
+            ->patchJson($this->url($badId), compact('name'))
+            ->assertStatus(404);
+    }
+
+    /** @test */
     public function unauthenticated_users_cannot_update_customers()
     {
         $this->patchJson($this->url($this->customer->id), ['name' => 'a name'])

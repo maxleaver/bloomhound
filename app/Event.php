@@ -15,6 +15,7 @@ class Event extends Model
         'deleted_at'
     ];
     protected $hidden = ['account_id'];
+    protected $guarded = ['id', 'account_id', 'created_at', 'updated_at'];
 
 	public function account()
     {
