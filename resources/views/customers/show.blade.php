@@ -16,6 +16,16 @@
 
 <section class="section">
   <div class="container">
+    <div class="columns">
+      <div class="column is-half">
+        <customer-profile :customer="{{ $customer }}"></customer-profile>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
     <event-list :customer_id="{{ $customer->id }}"></event-list>
   </div>
 </section>

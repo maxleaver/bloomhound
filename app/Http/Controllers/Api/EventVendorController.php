@@ -55,7 +55,7 @@ class EventVendorController extends Controller
         }
 
         // Make a new vendor
-        $vendor = new Vendor($data);
+        $vendor = new Vendor();
         $vendor->name = $data['vendor_name'];
         $vendor->account()->associate(Auth::user()->account);
         $vendor->save();

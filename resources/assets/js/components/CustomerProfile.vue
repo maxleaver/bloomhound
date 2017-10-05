@@ -67,19 +67,6 @@
           ></b-input>
         </b-field>
 
-        <b-field
-          label="Website"
-          :type="form.errors.has('website') ? 'is-danger' : ''"
-          :message="form.errors.has('website') ? form.errors.get('website') : ''"
-        >
-          <b-input
-            type="text"
-            v-model="form.website"
-            :disabled="isSubmitting"
-            name="website"
-          ></b-input>
-        </b-field>
-
         <div class="field is-grouped">
           <div class="control">
             <button
@@ -87,7 +74,7 @@
               type="submit"
               v-bind:class="{'is-loading' : isSubmitting}"
               :disabled="isSubmitting"
-            >Update Vendor Profile</button>
+            >Update Customer Profile</button>
           </div>
 
           <div class="control">
@@ -107,7 +94,6 @@
 
       <span v-if="email">Email: <a :href="`mailto:${email}`">{{ email }}</a><br /></span>
       <span v-if="phone">Tel: {{ phone }}<br /></span>
-      <a v-if="website" v-bind:href="website">{{ website }}</a>
     </div>
   </div>
 </template>
@@ -116,28 +102,26 @@
 import Form from '../helpers/Form';
 
 export default {
-  name: 'vendor-profile',
+  name: 'customer-profile',
 
   props: {
-    vendor: Object,
+    customer: Object,
   },
 
   data() {
     return {
-      address: this.vendor.address,
-      email: this.vendor.email,
+      address: this.customer.address,
+      email: this.customer.email,
       form: new Form({
-        address: this.vendor.address,
-        email: this.vendor.email,
-        name: this.vendor.name,
-        phone: this.vendor.phone,
-        website: this.vendor.website,
+        name: this.customer.name,
+        email: this.customer.email,
+        phone: this.customer.phone,
+        address: this.customer.address,
       }, false),
       isSubmitting: false,
-      name: this.vendor.name,
-      phone: this.vendor.phone,
+      name: this.customer.name,
+      phone: this.customer.phone,
       showForm: false,
-      website: this.vendor.website,
     };
   },
 
@@ -151,7 +135,7 @@ export default {
     onSubmit() {
       this.isSubmitting = true;
 
-      this.form.patch(`/api/vendors/${this.vendor.id}`)
+      this.form.patch(`/api/customers/${this.customer.id}`)
         .then((data) => {
           this.isSubmitting = false;
 
@@ -173,9 +157,8 @@ export default {
     updateData() {
       this.address = this.form.address;
       this.email = this.form.email;
-      this.name = this.form.name;
       this.phone = this.form.phone;
-      this.website = this.form.website;
+      this.name = this.form.name;
     },
   },
 };

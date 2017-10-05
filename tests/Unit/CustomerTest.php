@@ -25,6 +25,24 @@ class CustomerTest extends TestCase
     }
 
     /** @test */
+    public function a_customer_has_an_email_address()
+    {
+        $this->assertNotNull($this->customer->email);
+    }
+
+    /** @test */
+    public function a_customer_has_an_address()
+    {
+        $this->assertNotNull($this->customer->address);
+    }
+
+    /** @test */
+    public function a_customer_has_a_phone_number()
+    {
+        $this->assertNotNull($this->customer->phone);
+    }
+
+    /** @test */
     public function a_customer_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->customer->account);

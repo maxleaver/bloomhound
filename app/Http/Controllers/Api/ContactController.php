@@ -71,12 +71,32 @@ class ContactController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Contact              $contact
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Contact $contact)
     {
-        //
+        $data = $this->validate(request(), [
+            'address' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'relationship' => 'nullable|string|max:255',
+        ]);
+
+        if ($contact->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $contact->update([
+            'address' => $data['address'],
+            'email' => $data['email'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'phone' => $data['phone'],
+            'relationship' => $data['relationship'],
+        ]);
     }
 
     /**

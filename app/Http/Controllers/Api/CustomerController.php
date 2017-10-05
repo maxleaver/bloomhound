@@ -59,12 +59,28 @@ class CustomerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Customer             $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Customer $customer)
     {
-        //
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
+        ]);
+
+        if ($customer->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $customer->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'address' => $data['address'],
+            'phone' => $data['phone'],
+        ]);
     }
 
     /**
