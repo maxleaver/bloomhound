@@ -99,6 +99,10 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('{item}/notes', 'NoteController@store');
 	});
 
+	Route::prefix('item_types')->group(function () {
+		Route::get('/', 'ItemTypeController@index');
+	});
+
 	Route::prefix('notes')->group(function () {
 		Route::delete('/{note}', 'NoteController@destroy');
 		Route::patch('/{note}', 'NoteController@update');

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
-use App\Item;
+use App\ItemType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ItemController extends Controller
+class ItemTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return response()->json(Auth::user()->account->items->load('type'));
+        return response()->json(ItemType::all());
     }
 
     /**
@@ -27,33 +26,18 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validate(request(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
-            'inventory' => 'nullable|integer',
-            'item_type_id' => 'required|integer|exists:item_types,id',
-        ]);
-
-        $item = new Item($data);
-        $item->account()->associate(Auth::user()->account);
-        $item->save();
-
-        return response()->json($item->load('type'));
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Item  $item
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public function show($id)
     {
-        if ($item->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
-        return response()->json($item);
+        //
     }
 
     /**

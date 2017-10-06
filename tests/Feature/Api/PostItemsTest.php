@@ -18,9 +18,14 @@ class PostItemsTest extends TestCase
     {
         parent::setUp();
 
-        $this->request = ['name' => 'My Item'];
         $this->user = create('App\User');
         $this->url = 'api/items';
+        $this->request = [
+            'name' => 'My Item',
+            'description' => 'Some description',
+            'inventory' => 10,
+            'item_type_id' => create('App\ItemType')->id,
+        ];
     }
 
     /** @test */
@@ -33,6 +38,16 @@ class PostItemsTest extends TestCase
             ->assertStatus(200);
 
         $this->assertEquals(Item::count(), 1);
+    }
+
+    /** @test */
+    public function a_user_cannot_add_items_with_an_invalid_type()
+    {
+        $this->request['item_type_id'] = 123;
+
+        $this->signIn($this->user)
+            ->postJson($this->url, $this->request)
+            ->assertStatus(422);
     }
 
     /** @test */

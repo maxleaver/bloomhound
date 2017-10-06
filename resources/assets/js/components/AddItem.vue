@@ -11,6 +11,23 @@
       </header>
 
       <section class="modal-card-body">
+        <b-field label="Item Type">
+          <b-select
+            :disabled="isSubmitting"
+            expanded
+            placeholder="Select a type"
+            required
+            v-model="form.item_type_id"
+          >
+            <option
+              v-for="type in types"
+              :value="type.id"
+              :key="type.id">
+              {{ type.title }}
+            </option>
+          </b-select>
+        </b-field>
+
         <b-field
           label="Item Name"
           :type="form.errors.has('name') ? 'is-danger' : ''"
@@ -22,6 +39,30 @@
             placeholder="ex. Glass Vase"
             :disabled="isSubmitting"
             required
+          ></b-input>
+        </b-field>
+
+        <b-field
+          label="Description"
+          :type="form.errors.has('description') ? 'is-danger' : ''"
+          :message="form.errors.has('description') ? form.errors.get('description') : ''"
+        >
+          <b-input
+            type="text"
+            v-model="form.description"
+            :disabled="isSubmitting"
+          ></b-input>
+        </b-field>
+
+        <b-field
+          label="Inventory"
+          :type="form.errors.has('inventory') ? 'is-danger' : ''"
+          :message="form.errors.has('inventory') ? form.errors.get('inventory') : ''"
+        >
+          <b-input
+            type="number"
+            v-model="form.inventory"
+            :disabled="isSubmitting"
           ></b-input>
         </b-field>
       </section>
@@ -45,10 +86,17 @@ import Form from '../helpers/Form';
 export default {
   name: 'add-item',
 
+  props: {
+    types: Array,
+  },
+
   data() {
     return {
       isSubmitting: false,
       form: new Form({
+        description: '',
+        inventory: '',
+        item_type_id: null,
         name: '',
       }),
     };

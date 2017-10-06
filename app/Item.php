@@ -16,6 +16,11 @@ class Item extends Model
         return $this->belongsTo('App\Account');
     }
 
+    public function type()
+    {
+        return $this->belongsTo('App\ItemType', 'item_type_id');
+    }
+
     public function getIngredientNameAttribute()
     {
         return $this->name;

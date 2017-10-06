@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateItemsTable extends Migration
+class CreateItemTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('item_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('account_id')->unsigned()->index();
-            $table->integer('item_type_id')->unsigned()->index();
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->integer('inventory')->unsigned()->nullable();
-            $table->timestamps();
+            $table->string('title');
         });
+
+        Artisan::call('db:seed', [
+            '--class' => 'ItemTypeSeeder',
+            '--force' => true
+        ]);
     }
 
     /**
@@ -31,6 +32,6 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('item_types');
     }
 }

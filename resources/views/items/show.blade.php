@@ -5,7 +5,7 @@
   <div class="hero-body">
     <div class="container">
       <h1 class="title">{{ $item->name }}</h1>
-      <h2 class="subtitle">Last updated {{ $item->updated_at->diffForHumans() }}</h2>
+      <h2 class="subtitle">{{ $item->description }}</h2>
     </div>
   </div>
 </div>

@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <add-item @created="add"></add-item>
+      <add-item @created="add" :types="types"></add-item>
     </b-modal>
 
     <b-table
@@ -39,8 +39,16 @@
           {{ props.row.name }}
         </b-table-column>
 
-        <b-table-column field="created_at" label="Created" sortable centered>
-          {{ new Date(props.row.created_at).toLocaleDateString() }}
+        <b-table-column field="description" label="Description" sortable>
+          {{ props.row.description }}
+        </b-table-column>
+
+        <b-table-column field="type" label="Type" sortable>
+          <b-tag>{{ props.row.type.title }}</b-tag>
+        </b-table-column>
+
+        <b-table-column field="inventory" label="Inventory" sortable numeric>
+          {{ props.row.inventory }}
         </b-table-column>
       </template>
 
@@ -77,16 +85,25 @@ export default {
       defaultSortDirection: 'asc',
       hasMobileCards: true,
       isModalActive: false,
+      types: [],
     };
   },
 
   created() {
     this.fetch('api/items');
+    this.fetchTypes();
   },
 
   methods: {
     onClick(data) {
       window.location.href = `/items/${data.id}`;
+    },
+
+    fetchTypes() {
+      window.axios.get('api/item_types')
+        .then(({ data }) => {
+          this.types = data;
+        });
     },
   },
 };

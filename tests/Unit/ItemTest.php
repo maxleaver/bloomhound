@@ -32,10 +32,28 @@ class ItemTest extends TestCase
     }
 
     /** @test */
+    public function an_item_has_a_description()
+    {
+        $this->assertNotNull($this->item->description);
+    }
+
+    /** @test */
+    public function an_item_has_an_inventory_count()
+    {
+        $this->assertNotNull($this->item->inventory);
+    }
+
+    /** @test */
     public function an_item_has_an_arrangeable_type()
     {
         $this->assertNotNull($this->item->arrangeable_type);
         $this->assertEquals($this->item->arrangeable_type, 'item');
+    }
+
+    /** @test */
+    public function an_item_belongs_to_an_item_type()
+    {
+        $this->assertInstanceOf('App\ItemType', $this->item->type);
     }
 
     /** @test */
