@@ -103,7 +103,14 @@ export default {
       const [id, newPrice] = args;
       const affectedRow = this.findById(id);
 
-      affectedRow.best_source.cost_per_stem = newPrice;
+      if (typeof affectedRow !== 'undefined' &&
+        Object.prototype.hasOwnProperty.call(affectedRow, 'best_source') &&
+        Object.prototype.hasOwnProperty.call(affectedRow.best_source, 'cost_per_stem')) {
+        affectedRow.best_source.cost_per_stem = newPrice;
+        return;
+      }
+
+      affectedRow.best_source = { cost_per_stem: newPrice };
     },
   },
 };

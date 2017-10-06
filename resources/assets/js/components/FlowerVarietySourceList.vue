@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-table
-      :data="this.sources"
+      :data="this.sourceList"
       :mobile-cards="hasMobileCards"
     >
       <template scope="props">
@@ -73,7 +73,9 @@ export default {
   },
 
   created() {
-    this.sourceList = this.sources;
+    if (typeof this.sources !== 'undefined') {
+      this.sourceList = this.sources;
+    }
   },
 
   methods: {
