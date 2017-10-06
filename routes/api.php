@@ -21,7 +21,11 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('logo', 'AccountLogoController@store');
 	});
 
-	Route::get('/arrangeables', 'ArrangeableController@index');
+	Route::get('arrangeables', 'ArrangeableController@index');
+
+	Route::prefix('arrangeable_types')->group(function () {
+		Route::get('/', 'ArrangeableTypeController@index');
+	});
 
 	Route::prefix('arrangements')->group(function () {
 		Route::prefix('{arrangement}')->group(function () {
@@ -97,10 +101,6 @@ Route::middleware('auth:api')->group(function () {
 
 		Route::get('{item}/notes', 'NoteController@index');
 		Route::post('{item}/notes', 'NoteController@store');
-	});
-
-	Route::prefix('item_types')->group(function () {
-		Route::get('/', 'ItemTypeController@index');
 	});
 
 	Route::prefix('notes')->group(function () {

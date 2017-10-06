@@ -18,7 +18,7 @@ class Item extends Model
 
     public function type()
     {
-        return $this->belongsTo('App\ItemType', 'item_type_id');
+        return $this->belongsTo('App\ArrangeableType', 'arrangeable_type_id', 'id');
     }
 
     public function getIngredientNameAttribute()

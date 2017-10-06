@@ -16,6 +16,7 @@ class CreateFlowerVarietiesTable extends Migration
         Schema::create('flower_varieties', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('account_id')->unsigned()->index();
+            $table->integer('arrangeable_type_id')->unsigned()->index();
             $table->integer('flower_id')->unsigned()->index();
             $table->integer('best_price_id')->unsigned()->nullable();
             $table->string('name');

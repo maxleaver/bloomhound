@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Flower;
 use App\FlowerVariety;
+use App\Services\CreateFlowerVarietyService;
 use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -41,13 +42,7 @@ class FlowerVarietyController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        // Create a new flower variety
-        $variety = new FlowerVariety;
-        $variety->name = $request->name;
-        $variety->account()->associate(Auth::user()->account);
-        $variety->flower()->associate($flower);
-        $variety->save();
-
+        $variety = (new CreateFlowerVarietyService($request->name, $flower))->make();
         return response()->json($variety);
     }
 

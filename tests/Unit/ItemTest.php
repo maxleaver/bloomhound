@@ -51,12 +51,6 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    public function an_item_belongs_to_an_item_type()
-    {
-        $this->assertInstanceOf('App\ItemType', $this->item->type);
-    }
-
-    /** @test */
     public function an_item_belongs_to_an_account()
     {
         $this->assertInstanceOf('App\Account', $this->item->account);

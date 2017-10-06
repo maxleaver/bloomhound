@@ -31,7 +31,7 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
             'inventory' => 'nullable|integer',
-            'item_type_id' => 'required|integer|exists:item_types,id',
+            'arrangeable_type_id' => 'required|integer|exists:arrangeable_types,id',
         ]);
 
         $item = new Item($data);

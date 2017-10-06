@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class ItemTypeSeeder extends Seeder
+class ArrangeableTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,19 +14,27 @@ class ItemTypeSeeder extends Seeder
     {
         $data = [
 	    	[
+	    		'name' => 'flower',
+	            'title' => 'Flower',
+	            'model' => 'flowervariety',
+	    	],
+	    	[
 	    		'name' => 'consummable',
 	            'title' => 'Consummable',
+	            'model' => 'item',
 	    	],
 	    	[
 	    		'name' => 'hardgood',
 	            'title' => 'Hardgood',
+	            'model' => 'item',
 	    	],
 	    	[
 	    		'name' => 'rental',
 	            'title' => 'Rental',
+	            'model' => 'item',
 	    	],
 	    ];
 
-	    DB::table('item_types')->insert($data);
+	    DB::table('arrangeable_types')->insert($data);
     }
 }

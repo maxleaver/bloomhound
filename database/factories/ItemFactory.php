@@ -7,8 +7,8 @@ $factory->define(App\Item::class, function (Faker $faker) {
         'account_id' => function () {
             return factory('App\Account')->create()->id;
         },
-        'item_type_id' => function () {
-        	return factory('App\ItemType')->create()->id;
+        'arrangeable_type_id' => function () {
+        	return factory('App\ArrangeableType')->create()->id;
         },
     	'name' => $faker->text(25),
     	'description' => $faker->sentence,

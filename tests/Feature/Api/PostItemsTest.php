@@ -24,13 +24,15 @@ class PostItemsTest extends TestCase
             'name' => 'My Item',
             'description' => 'Some description',
             'inventory' => 10,
-            'item_type_id' => create('App\ItemType')->id,
+            'arrangeable_type_id' => create('App\ArrangeableType')->id,
         ];
     }
 
     /** @test */
     public function a_user_can_add_items()
     {
+        $this->withoutExceptionHandling();
+
         $this->assertEquals(Item::count(), 0);
 
         $this->signIn($this->user)
@@ -43,7 +45,7 @@ class PostItemsTest extends TestCase
     /** @test */
     public function a_user_cannot_add_items_with_an_invalid_type()
     {
-        $this->request['item_type_id'] = 123;
+        $this->request['arrangeable_type_id'] = 123;
 
         $this->signIn($this->user)
             ->postJson($this->url, $this->request)

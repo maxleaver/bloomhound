@@ -100,7 +100,7 @@ export default {
     },
 
     fetchTypes() {
-      window.axios.get('api/item_types')
+      window.axios.get('api/arrangeable_types?type=item')
         .then(({ data }) => {
           this.types = data;
         });

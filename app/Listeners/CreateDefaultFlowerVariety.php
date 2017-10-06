@@ -2,11 +2,8 @@
 
 namespace App\Listeners;
 
-use App\FlowerVariety;
 use App\Events\FlowerCreated;
-use Auth;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Services\CreateFlowerVarietyService;
 
 class CreateDefaultFlowerVariety
 {
@@ -28,10 +25,6 @@ class CreateDefaultFlowerVariety
      */
     public function handle(FlowerCreated $event)
     {
-        $variety = new FlowerVariety;
-        $variety->name = 'Default';
-        $variety->account()->associate($event->flower->account);
-        $variety->flower()->associate($event->flower);
-        $variety->save();
+        (new CreateFlowerVarietyService('Default', $event->flower))->make();
     }
 }

@@ -17,7 +17,7 @@
             expanded
             placeholder="Select a type"
             required
-            v-model="form.item_type_id"
+            v-model="form.arrangeable_type_id"
           >
             <option
               v-for="type in types"
@@ -96,7 +96,7 @@ export default {
       form: new Form({
         description: '',
         inventory: '',
-        item_type_id: null,
+        arrangeable_type_id: null,
         name: '',
       }),
     };

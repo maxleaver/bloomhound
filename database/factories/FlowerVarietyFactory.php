@@ -7,6 +7,9 @@ $factory->define(App\FlowerVariety::class, function (Faker $faker) {
         'account_id' => function () {
             return factory('App\Account')->create()->id;
         },
+        'arrangeable_type_id' => function () {
+            return factory('App\ArrangeableType')->create()->id;
+        },
         'flower_id' => function () {
             return factory('App\Flower')->create()->id;
         },

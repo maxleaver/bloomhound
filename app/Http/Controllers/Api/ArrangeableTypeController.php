@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\ItemType;
+use App\ArrangeableType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ItemTypeController extends Controller
+class ArrangeableTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(ItemType::all());
+        if ($request->type) {
+            return response()->json(ArrangeableType::whereModel($request->type)->get());
+        }
+
+        return response()->json(ArrangeableType::all());
     }
 
     /**

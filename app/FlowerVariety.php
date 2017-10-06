@@ -18,7 +18,7 @@ class FlowerVariety extends Model
         'flower_id'
     ];
     protected $appends = ['ingredient_name'];
-    protected $guarded = [];
+    protected $fillable = ['name', 'best_price_id'];
 
     public function sources()
     {
@@ -43,6 +43,11 @@ class FlowerVariety extends Model
     public function best_source()
     {
         return $this->belongsTo('App\FlowerVarietySource', 'best_price_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo('App\ArrangeableType', 'arrangeable_type_id', 'id');
     }
 
     public function getBestPrice()
