@@ -66,10 +66,19 @@ class Account extends Model
         return $this->hasMany('App\Item');
     }
 
+    public function arrangeable_type_settings()
+    {
+        return $this->hasMany('App\ArrangeableTypeSetting');
+    }
+
     public function getLogoPathAttribute()
     {
-        // Strip /public and append /storage to the image path
-        // for external consumption
-        return '/storage' . substr($this->logo, 6);
+        if ($this->logo) {
+            // Strip /public and append /storage to the image path
+            // for external consumption
+            return '/storage' . substr($this->logo, 6);
+        }
+
+        return null;
     }
 }
