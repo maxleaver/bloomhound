@@ -50,16 +50,15 @@ export default {
 
       this.form.post(this.url)
         .then((data) => {
-          this.isSubmitting = false;
-
           window.flash('Note added!', 'success');
 
           this.$emit('created', data);
         })
         .catch(() => {
-          this.isSubmitting = false;
-
           window.flash('There was a problem saving your note!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

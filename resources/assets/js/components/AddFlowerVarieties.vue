@@ -53,16 +53,15 @@ export default {
 
       this.form.post(`/api/flowers/${this.id}/varieties`)
         .then((data) => {
-          this.isSubmitting = false;
-
           window.flash('Flower variety added!', 'success');
 
           this.$emit('created', data);
         })
         .catch(() => {
-          this.isSubmitting = false;
-
           window.flash('There was a problem saving your flower variety!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

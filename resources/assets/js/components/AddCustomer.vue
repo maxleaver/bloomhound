@@ -60,8 +60,6 @@ export default {
 
       this.form.post('/api/customers')
         .then((data) => {
-          this.isSubmitting = false;
-
           window.flash('Customer successfully added!', 'success');
 
           this.$emit('created', data);
@@ -69,8 +67,10 @@ export default {
           this.$parent.close();
         })
         .catch(() => {
-          this.isSubmitting = false;
           window.flash('There was a problem saving your customer!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

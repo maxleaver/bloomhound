@@ -63,8 +63,10 @@ export default {
           window.location.href = `/flowers/${data.id}`;
         })
         .catch(() => {
-          this.isSubmitting = false;
           window.flash('There was a problem saving your flower!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

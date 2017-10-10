@@ -129,9 +129,10 @@ export default {
           window.location.href = `/events/${data.id}`;
         })
         .catch(() => {
-          this.isSubmitting = false;
-
           window.flash('There was a problem saving your event!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
 

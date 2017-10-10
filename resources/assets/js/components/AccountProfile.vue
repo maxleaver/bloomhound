@@ -138,10 +138,12 @@ export default {
 
       this.form.patch('/api/account')
         .then(() => {
-          this.isSubmitting = false;
           window.flash('Account updated!', 'success');
         })
         .catch(() => {
+          window.flash('There was a problem updating your account.', 'danger');
+        })
+        .then(() => {
           this.isSubmitting = false;
         });
     },

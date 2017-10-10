@@ -83,10 +83,12 @@ export default {
 
       this.form.patch('/api/password')
         .then(() => {
-          this.isSubmitting = false;
           window.flash('Password updated!', 'success');
         })
         .catch(() => {
+          window.flash('There was a problem updating your password.', 'danger');
+        })
+        .then(() => {
           this.isSubmitting = false;
         });
     },

@@ -81,8 +81,6 @@ export default {
 
       this.form.post(`/api/events/${this.eventId}/arrangements`)
         .then((data) => {
-          this.isSubmitting = false;
-
           window.flash('Arrangement added successfully!', 'success');
 
           this.$emit('created', data);
@@ -90,9 +88,10 @@ export default {
           this.$parent.close();
         })
         .catch(() => {
-          this.isSubmitting = false;
-
           window.flash('There was a problem saving your arrangement!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

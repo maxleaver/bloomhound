@@ -162,8 +162,6 @@ export default {
 
       this.form.post('/api/contacts')
         .then((data) => {
-          this.isSubmitting = false;
-
           window.flash('Contact successfully added!', 'success');
 
           this.$emit('created', data);
@@ -171,9 +169,10 @@ export default {
           this.$parent.close();
         })
         .catch(() => {
-          this.isSubmitting = false;
-
           window.flash('There was a problem saving your contact!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
 

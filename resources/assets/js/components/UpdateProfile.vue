@@ -75,10 +75,12 @@ export default {
 
       this.form.patch('/api/profile')
         .then(() => {
-          this.isSubmitting = false;
           window.flash('Your profile has been updated!', 'success');
         })
         .catch(() => {
+          window.flash('There was a problem updating your profile', 'danger');
+        })
+        .then(() => {
           this.isSubmitting = false;
         });
     },
