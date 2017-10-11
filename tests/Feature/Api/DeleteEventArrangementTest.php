@@ -22,13 +22,23 @@ class DeleteEventArrangementTest extends TestCase
         $this->arrangement = create('App\Arrangement', ['account_id' => $this->user->account->id]);
     }
 
+    protected function makeRequest($arrangementId, $signIn = true)
+    {
+        $url = 'api/arrangements/' . $arrangementId;
+
+        if ($signIn) {
+            return $this->signIn($this->user)->deleteJson($url);
+        }
+
+        return $this->deleteJson($url);
+    }
+
     /** @test */
     public function a_user_can_delete_an_arrangement()
     {
         $this->assertEquals(Arrangement::count(), 1);
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($this->arrangement->id))
+        $this->makeRequest($this->arrangement->id)
             ->assertStatus(200);
 
         $this->assertEquals(Arrangement::count(), 0);
@@ -46,8 +56,7 @@ class DeleteEventArrangementTest extends TestCase
             10
         );
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($this->arrangement->id))
+        $this->makeRequest($this->arrangement->id)
             ->assertStatus(200);
 
         $this->assertEquals(
@@ -61,8 +70,7 @@ class DeleteEventArrangementTest extends TestCase
     {
         $someWrongId = 123;
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($someWrongId))
+        $this->makeRequest($someWrongId)
             ->assertStatus(404);
     }
 
@@ -71,20 +79,14 @@ class DeleteEventArrangementTest extends TestCase
     {
         $arrangementInAnotherAccount = create('App\Arrangement');
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($arrangementInAnotherAccount->id))
+        $this->makeRequest($arrangementInAnotherAccount->id)
             ->assertStatus(403);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_delete_arrangements()
     {
-        $this->deleteJson($this->url($this->arrangement->id))
+        $this->makeRequest($this->arrangement->id, false)
             ->assertStatus(401);
-    }
-
-    protected function url($id)
-    {
-    	return 'api/arrangements/' . $id;
     }
 }

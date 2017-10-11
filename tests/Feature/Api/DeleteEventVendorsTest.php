@@ -21,13 +21,23 @@ class DeleteEventVendorsTest extends TestCase
         $this->vendor->events()->attach($this->event);
     }
 
+    protected function makeRequest($eventId, $vendorId, $signIn = true)
+    {
+        $url = 'api/events/' . $eventId . '/vendors/' . $vendorId;
+
+        if ($signIn) {
+            return $this->signIn($this->user)->deleteJson($url);
+        }
+
+        return $this->deleteJson($url);
+    }
+
     /** @test */
     public function a_user_can_remove_a_vendor_from_an_event()
     {
         $this->assertEquals($this->event->vendors()->count(), 1);
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($this->event->id, $this->vendor->id))
+        $this->makeRequest($this->event->id, $this->vendor->id)
             ->assertStatus(200);
 
         $this->assertEquals($this->event->fresh()->vendors()->count(), 0);
@@ -40,8 +50,7 @@ class DeleteEventVendorsTest extends TestCase
         $vendor = create('App\Vendor');
         $eventInAnotherAccount->vendors()->attach($vendor);
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($eventInAnotherAccount->id, $vendor->id))
+        $this->makeRequest($eventInAnotherAccount->id, $vendor->id)
             ->assertStatus(403);
     }
 
@@ -50,8 +59,7 @@ class DeleteEventVendorsTest extends TestCase
     {
         $unattachedVendor = create('App\Vendor', ['account_id' => $this->user->account->id]);
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($this->event->id, $unattachedVendor->id))
+        $this->makeRequest($this->event->id, $unattachedVendor->id)
             ->assertStatus(404);
     }
 
@@ -60,20 +68,14 @@ class DeleteEventVendorsTest extends TestCase
     {
         $badEventId = 123;
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($badEventId, $this->vendor->id))
+        $this->makeRequest($badEventId, $this->vendor->id)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_remove_vendors_from_events()
     {
-        $this->deleteJson($this->url($this->event->id, $this->vendor->id))
+        $this->makeRequest($this->event->id, $this->vendor->id, false)
             ->assertStatus(401);
-    }
-
-    protected function url($event, $vendor)
-    {
-    	return 'api/events/' . $event . '/vendors/' . $vendor;
     }
 }

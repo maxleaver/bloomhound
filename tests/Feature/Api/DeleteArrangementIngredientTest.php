@@ -24,20 +24,29 @@ class DeleteArrangementIngredientTest extends TestCase
         ], 3);
     }
 
+    protected function makeRequest($arrangementId, $ingredientId, $signIn = true)
+    {
+        $url = '/api/arrangements/' . $arrangementId . '/ingredients/' . $ingredientId;
+
+        if ($signIn) {
+            return $this->signIn($this->user)->deleteJson($url);
+        }
+
+        return $this->deleteJson($url);
+    }
+
     /** @test */
     public function a_user_can_delete_an_ingredient_from_an_arrangement()
     {
     	$this->assertEquals($this->arrangement->ingredients->count(), 3);
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($this->arrangement->id, $this->ingredients[0]->id))
-    		->assertStatus(200);
+        $this->makeRequest($this->arrangement->id, $this->ingredients[0]->id)
+            ->assertStatus(200);
 
     	$this->assertEquals($this->arrangement->fresh()->ingredients->count(), 2);
 
-    	$this->signIn($this->user)
-            ->deleteJson($this->url($this->arrangement->id, $this->ingredients[1]->id))
-    		->assertStatus(200);
+        $this->makeRequest($this->arrangement->id, $this->ingredients[1]->id)
+            ->assertStatus(200);
 
     	$this->assertEquals($this->arrangement->fresh()->ingredients->count(), 1);
     }
@@ -48,20 +57,14 @@ class DeleteArrangementIngredientTest extends TestCase
     	$someOtherArrangement = create('App\Arrangement');
     	$someOtherIngredient = create('App\ArrangementIngredient', ['arrangement_id' => $someOtherArrangement->id]);
 
-    	$this->signIn($this->user)
-            ->deleteJson($this->url($someOtherArrangement->id, $someOtherIngredient->id))
-    		->assertStatus(403);
+        $this->makeRequest($someOtherArrangement->id, $someOtherIngredient->id)
+            ->assertStatus(403);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_delete_ingredients()
     {
-        $this->deleteJson($this->url($this->arrangement->id, $this->ingredients[0]->id))
-    		->assertStatus(401);
-    }
-
-    protected function url($arrangement, $ingredient)
-    {
-    	return '/api/arrangements/' . $arrangement . '/ingredients/' . $ingredient;
+        $this->makeRequest($this->arrangement->id, $this->ingredients[0]->id, false)
+            ->assertStatus(401);
     }
 }

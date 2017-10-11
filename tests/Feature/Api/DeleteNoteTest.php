@@ -21,14 +21,24 @@ class DeleteNoteTest extends TestCase
         $this->notes = create('App\Note', ['user_id' => $this->user->id], 3);
     }
 
+    protected function makeRequest($noteId, $signIn = true)
+    {
+        $url = '/api/notes/' . $id;
+
+        if ($signIn) {
+            return $this->signIn($this->user)->deleteJson($url);
+        }
+
+        return $this->deleteJson($url);
+    }
+
     /** @test */
     public function a_user_can_delete_a_note()
     {
     	$this->assertEquals(Note::count(), 3);
 
-        $this->signIn($this->user)
-            ->deleteJson($this->url($this->notes[0]->id))
-    		->assertStatus(200);
+        $this->makeRequest($this->notes[0]->id)
+            ->assertStatus(200);
 
     	$this->assertEquals(Note::count(), 2);
     }
@@ -39,20 +49,14 @@ class DeleteNoteTest extends TestCase
     	$userOnAnotherAccount = create('App\User');
     	$noteOnAnotherAccount = create('App\Note', ['user_id' => $userOnAnotherAccount->id]);
 
-    	$this->signIn($this->user)
-            ->deleteJson($this->url($noteOnAnotherAccount->id))
-    		->assertStatus(404);
+        $this->makeRequest($noteOnAnotherAccount->id)
+            ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_delete_notes()
     {
-        $this->deleteJson($this->url($this->notes[0]->id))
-    		->assertStatus(401);
-    }
-
-    protected function url($id)
-    {
-    	return '/api/notes/' . $id;
+        $this->makeRequest($this->notes[0]->id, false)
+            ->assertStatus(401);
     }
 }
