@@ -13,6 +13,11 @@ $factory->define(App\FlowerVariety::class, function (Faker $faker) {
         'flower_id' => function () {
             return factory('App\Flower')->create()->id;
         },
+        'markup_id' => function () {
+            return \App\Markup::whereName('cost_plus_amount')->first()->id;
+        },
+        'markup_value' => $faker->randomDigitNotNull,
+        'use_default_markup' => true,
         'name' => $faker->word(),
     ];
 });

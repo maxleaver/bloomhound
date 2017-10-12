@@ -23,7 +23,7 @@ class DeleteNoteTest extends TestCase
 
     protected function makeRequest($noteId, $signIn = true)
     {
-        $url = '/api/notes/' . $id;
+        $url = '/api/notes/' . $noteId;
 
         if ($signIn) {
             return $this->signIn($this->user)->deleteJson($url);

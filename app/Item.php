@@ -2,11 +2,12 @@
 
 namespace App;
 
+use App\AbstractArrangeable;
 use Illuminate\Database\Eloquent\Model;
 
-class Item extends Model
+class Item extends AbstractArrangeable
 {
-	use Notable, Arrangeable;
+	use Notable;
 
 	protected $guarded = [];
 	protected $appends = ['ingredient_name'];
@@ -14,11 +15,6 @@ class Item extends Model
 	public function account()
     {
         return $this->belongsTo('App\Account');
-    }
-
-    public function type()
-    {
-        return $this->belongsTo('App\ArrangeableType', 'arrangeable_type_id', 'id');
     }
 
     public function getIngredientNameAttribute()

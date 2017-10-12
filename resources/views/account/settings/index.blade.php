@@ -16,7 +16,11 @@
 
 <section class="section">
 	<div class="container">
-		<account-profile :account="{{ $account }}"></account-profile>
+		<account-settings-tabs
+      :account="{{ $account }}"
+      :markups="{{ $markups }}"
+      :settings="{{ $account->arrangeable_type_settings->load('type', 'markup') }}"
+    ></account-settings-tabs>
 	</div>
 </section>
 @endsection

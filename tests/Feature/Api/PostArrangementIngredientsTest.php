@@ -23,13 +23,18 @@ class PostArrangementIngredientsTest extends TestCase
 
         $this->arrangement = create('App\Arrangement', ['account_id' => $this->account->id]);
 
+        $item = create('App\Item', [
+            'account_id' => $this->account->id,
+            'use_default_markup' => false,
+        ]);
         $flowerVariety = create('App\FlowerVariety', [
         	'account_id' => $this->account->id,
-        	'flower_id' => create('App\Flower', ['account_id' => $this->account->id])->id
+        	'flower_id' => create('App\Flower', ['account_id' => $this->account->id])->id,
+            'use_default_markup' => false,
         ]);
         $this->request = [
     		[
-        		'id' => create('App\Item', ['account_id' => $this->account->id])->id,
+        		'id' => $item->id,
         		'type' => 'item',
         		'quantity' => 5,
         	],

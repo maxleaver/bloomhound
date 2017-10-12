@@ -1,11 +1,12 @@
 import Form from './Form';
 
 export default class FormContainer {
-  constructor(fields, defaultRows) {
+  constructor(fields, defaultRows, resetOnSuccess = true) {
     this.fields = fields;
     this.errors = {};
     this.forms = [];
     this.defaultRows = defaultRows;
+    this.resetOnSuccess = resetOnSuccess;
 
     this.makeRows();
   }
@@ -52,7 +53,9 @@ export default class FormContainer {
   }
 
   onSuccess() {
-    this.reset();
+    if (this.resetOnSuccess) {
+      this.reset();
+    }
   }
 
   onFail(errors) {

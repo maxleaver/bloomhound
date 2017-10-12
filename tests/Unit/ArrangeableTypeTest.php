@@ -37,6 +37,12 @@ class ArrangeableTypeTest extends TestCase
     }
 
     /** @test */
+    public function an_arrangeable_type_belongs_to_a_default_markup()
+    {
+        $this->assertInstanceOf('App\Markup', $this->type->markup);
+    }
+
+    /** @test */
     public function an_arrangeable_type_can_have_many_items()
     {
         create('App\Item', [

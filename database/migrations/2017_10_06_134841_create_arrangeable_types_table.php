@@ -15,6 +15,7 @@ class CreateArrangeableTypesTable extends Migration
     {
         Schema::create('arrangeable_types', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('default_markup_id');
             $table->string('name');
             $table->string('title');
             $table->string('model');

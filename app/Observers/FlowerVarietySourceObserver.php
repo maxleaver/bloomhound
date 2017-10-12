@@ -25,8 +25,7 @@ class FlowerVarietySourceObserver
      */
     public function saved(FlowerVarietySource $source)
     {
-        $bestPrice = $source->variety->getBestPrice();
-        $source->variety->markBestPrice($bestPrice);
+        $source->variety->setBestPrice();
     }
 
     /**
@@ -37,7 +36,6 @@ class FlowerVarietySourceObserver
      */
     public function deleted(FlowerVarietySource $source)
     {
-        $bestPrice = $source->variety->fresh()->getBestPrice();
-        $source->variety->markBestPrice($bestPrice);
+        $source->variety->fresh()->setBestPrice();
     }
 }

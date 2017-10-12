@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\AccountCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
@@ -10,6 +11,9 @@ class Account extends Model
         'name', 'address', 'website', 'email', 'phone', 'logo'
     ];
     protected $appends = ['logo_path'];
+    protected $dispatchesEvents = [
+        'created' => AccountCreated::class,
+    ];
 
     public function users()
     {

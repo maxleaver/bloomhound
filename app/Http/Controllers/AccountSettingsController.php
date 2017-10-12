@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\Markup;
 use Illuminate\Http\Request;
 
 class AccountSettingsController extends Controller
@@ -15,6 +16,7 @@ class AccountSettingsController extends Controller
     public function index()
     {
         $account = Auth::user()->account;
-        return view('account.settings.index', compact('account'));
+        $markups = Markup::all();
+        return view('account.settings.index', compact('account', 'markups'));
     }
 }

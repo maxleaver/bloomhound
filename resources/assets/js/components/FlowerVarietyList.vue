@@ -29,8 +29,12 @@
 
         <b-table-column field="best_price_id" label="Best Price" sortable numeric>
           <span v-if="props.row.best_source">
-            {{ (props.row.best_source.cost_per_stem).toFixed(2) }}
+            {{ Number(props.row.best_source.cost_per_stem).toFixed(2) }}
           </span>
+        </b-table-column>
+
+        <b-table-column field="price" label="Retail Price" sortable numeric>
+          {{ Number(props.row.price).toFixed(2) }}
         </b-table-column>
       </template>
 
@@ -100,17 +104,19 @@ export default {
     },
 
     updateBestPrice(args) {
-      const [id, newPrice] = args;
+      const [id, newCost, newPrice] = args;
       const affectedRow = this.findById(id);
+
+      affectedRow.price = newPrice;
 
       if (typeof affectedRow !== 'undefined' &&
         Object.prototype.hasOwnProperty.call(affectedRow, 'best_source') &&
         Object.prototype.hasOwnProperty.call(affectedRow.best_source, 'cost_per_stem')) {
-        affectedRow.best_source.cost_per_stem = newPrice;
+        affectedRow.best_source.cost_per_stem = newCost;
         return;
       }
 
-      affectedRow.best_source = { cost_per_stem: newPrice };
+      affectedRow.best_source = { cost_per_stem: newCost };
     },
   },
 };

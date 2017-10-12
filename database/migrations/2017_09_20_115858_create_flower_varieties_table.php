@@ -19,6 +19,9 @@ class CreateFlowerVarietiesTable extends Migration
             $table->integer('arrangeable_type_id')->unsigned()->index();
             $table->integer('flower_id')->unsigned()->index();
             $table->integer('best_price_id')->unsigned()->nullable();
+            $table->integer('markup_id')->unsigned();
+            $table->decimal('markup_value', 15, 2)->unsigned()->nullable();
+            $table->boolean('use_default_markup')->default(true);
             $table->string('name');
             $table->timestamps();
         });

@@ -86,7 +86,7 @@ export default {
           this.unsetBestPrice();
 
           // Trigger parent event to update price
-          this.$emit('bestPriceUpdated', [this.id, row.cost_per_stem]);
+          this.$emit('bestPriceUpdated', [this.id, row.cost_per_stem, row.variety.price]);
         }
 
         this.sourceList.push(row);

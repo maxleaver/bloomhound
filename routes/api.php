@@ -21,10 +21,13 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('logo', 'AccountLogoController@store');
 	});
 
-	Route::get('arrangeables', 'ArrangeableController@index');
+	Route::prefix('arrangeables')->group(function () {
+		Route::get('/', 'ArrangeableController@index');
 
-	Route::prefix('arrangeable_types')->group(function () {
-		Route::get('/', 'ArrangeableTypeController@index');
+		Route::get('settings', 'ArrangeableTypeSettingController@index');
+		Route::patch('settings', 'ArrangeableTypeSettingController@update');
+
+		Route::get('types', 'ArrangeableTypeController@index');
 	});
 
 	Route::prefix('arrangements')->group(function () {
@@ -101,6 +104,10 @@ Route::middleware('auth:api')->group(function () {
 
 		Route::get('{item}/notes', 'NoteController@index');
 		Route::post('{item}/notes', 'NoteController@store');
+	});
+
+	Route::prefix('markups')->group(function () {
+		Route::get('/', 'MarkupController@index');
 	});
 
 	Route::prefix('notes')->group(function () {

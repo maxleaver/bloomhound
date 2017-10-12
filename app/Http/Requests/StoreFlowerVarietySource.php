@@ -24,7 +24,7 @@ class StoreFlowerVarietySource extends FormRequest
     public function rules()
     {
         return [
-            '*.vendor_id' => 'nullable|required_without:*.vendor_name||integer',
+            '*.vendor_id' => 'nullable|required_without:*.vendor_name|integer',
             '*.vendor_name' => 'nullable|required_without:*.vendor_id|string',
             '*.cost' => 'required|numeric',
             '*.stems_per_bunch' => 'required|integer',

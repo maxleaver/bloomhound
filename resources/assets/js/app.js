@@ -27,7 +27,7 @@ Vue.component('variety-list', require('./components/FlowerVarietyList.vue'));
 Vue.component('vendor-list', require('./components/VendorList.vue'));
 Vue.component('update-password', require('./components/UpdatePassword.vue'));
 Vue.component('update-profile', require('./components/UpdateProfile.vue'));
-Vue.component('account-profile', require('./components/AccountProfile.vue'));
+Vue.component('account-settings-tabs', require('./components/AccountSettingsTabs.vue'));
 Vue.component('contact-profile', require('./components/ContactProfile.vue'));
 Vue.component('customer-profile', require('./components/CustomerProfile.vue'));
 Vue.component('event-profile', require('./components/EventProfile.vue'));

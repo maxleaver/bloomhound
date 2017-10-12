@@ -65,6 +65,20 @@
             :disabled="isSubmitting"
           ></b-input>
         </b-field>
+
+        <b-field
+          label="Cost"
+          :type="form.errors.has('cost') ? 'is-danger' : ''"
+          :message="form.errors.has('cost') ? form.errors.get('cost') : ''"
+        >
+          <b-input
+            placeholder="9.95"
+            step="0.01"
+            type="number"
+            v-model="form.cost"
+            :disabled="isSubmitting"
+          ></b-input>
+        </b-field>
       </section>
 
       <footer class="modal-card-foot">
@@ -94,10 +108,11 @@ export default {
     return {
       isSubmitting: false,
       form: new Form({
-        description: '',
-        inventory: '',
         arrangeable_type_id: null,
-        name: '',
+        cost: null,
+        description: null,
+        inventory: null,
+        name: null,
       }),
     };
   },
@@ -108,8 +123,6 @@ export default {
 
       this.form.post('/api/items')
         .then((data) => {
-          this.isSubmitting = false;
-
           window.flash('Item successfully added!', 'success');
 
           this.$emit('created', data);
@@ -117,8 +130,10 @@ export default {
           this.$parent.close();
         })
         .catch(() => {
-          this.isSubmitting = false;
           window.flash('There was a problem saving your item!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

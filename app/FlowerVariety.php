@@ -2,12 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\AbstractArrangeable;
 
-class FlowerVariety extends Model
+class FlowerVariety extends AbstractArrangeable
 {
-	use Arrangeable;
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -35,6 +33,15 @@ class FlowerVariety extends Model
         return $this->belongsTo('App\Account');
     }
 
+    public function getCostAttribute()
+    {
+        if (count($this->best_source()->first()) > 0) {
+            return $this->best_source()->first()->cost_per_stem;
+        }
+
+        return 0;
+    }
+
     public function getIngredientNameAttribute()
     {
         return $this->flower->name . ' - ' . $this->name;
@@ -45,18 +52,14 @@ class FlowerVariety extends Model
         return $this->belongsTo('App\FlowerVarietySource', 'best_price_id');
     }
 
-    public function type()
-    {
-        return $this->belongsTo('App\ArrangeableType', 'arrangeable_type_id', 'id');
-    }
-
     public function getBestPrice()
     {
         return $this->sources->sortBy('cost_per_stem')->first();
     }
 
-    public function markBestPrice(FlowerVarietySource $source)
+    public function setBestPrice()
     {
-        $this->update(['best_price_id' => $source->id]);
+        $bestSource = $this->getBestPrice();
+        $this->update(['best_price_id' => $bestSource->id]);
     }
 }

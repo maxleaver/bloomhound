@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
+use App\ArrangeableTypeSetting;
 use App\Item;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -28,14 +29,24 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $data = $this->validate(request(), [
-            'name' => 'required|string|max:255',
+            'arrangeable_type_id' => 'required|integer|exists:arrangeable_types,id',
+            'cost' => 'nullable|numeric',
             'description' => 'nullable|string|max:255',
             'inventory' => 'nullable|integer',
-            'arrangeable_type_id' => 'required|integer|exists:arrangeable_types,id',
+            'name' => 'required|string|max:255',
         ]);
 
+        $account = Auth::user()->account;
+
+        // Look up default markup for the item type
+        $setting = ArrangeableTypeSetting::whereAccountId($account->id)
+            ->whereArrangeableTypeId($request->arrangeable_type_id)
+            ->first();
+
         $item = new Item($data);
-        $item->account()->associate(Auth::user()->account);
+        $item->markup()->associate($setting->markup);
+        $item->markup_value = $setting->markup_value;
+        $item->account()->associate($account);
         $item->save();
 
         return response()->json($item->load('type'));

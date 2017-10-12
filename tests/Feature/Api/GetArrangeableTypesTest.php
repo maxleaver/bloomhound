@@ -19,7 +19,7 @@ class GetArrangeableTypesTest extends TestCase
 
         $this->types = create('App\ArrangeableType', ['model' => 'item'], 3);
         $this->user = create('App\User');
-        $this->url = 'api/arrangeable_types';
+        $this->url = 'api/arrangeables/types';
     }
 
     /** @test */

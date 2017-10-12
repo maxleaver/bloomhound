@@ -50,6 +50,14 @@
         <b-table-column field="inventory" label="Inventory" sortable numeric>
           {{ props.row.inventory }}
         </b-table-column>
+
+        <b-table-column field="cost" label="Cost" sortable numeric>
+          {{ Number(props.row.cost).toFixed(2) }}
+        </b-table-column>
+
+        <b-table-column field="price" label="Retail Price" sortable numeric>
+          {{ Number(props.row.price).toFixed(2) }}
+        </b-table-column>
       </template>
 
       <template slot="empty">
@@ -100,7 +108,7 @@ export default {
     },
 
     fetchTypes() {
-      window.axios.get('api/arrangeable_types?type=item')
+      window.axios.get('api/arrangeables/types?type=item')
         .then(({ data }) => {
           this.types = data;
         });

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\ArrangeableTypeSetting;
 use App\FlowerVariety;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,7 +24,7 @@ class PostFlowerVarietiesTest extends TestCase
         $this->request = ['name' => 'Some Variety'];
     }
 
-    protected function getUrl($id)
+    protected function url($id)
     {
         return 'api/flowers/' . $id . '/varieties';
     }
@@ -34,10 +35,32 @@ class PostFlowerVarietiesTest extends TestCase
         $this->assertEquals(FlowerVariety::count(), 1);
 
         $this->signIn($this->user)
-            ->postJson($this->getUrl($this->flower->id), $this->request)
+            ->postJson($this->url($this->flower->id), $this->request)
             ->assertStatus(200);
 
         $this->assertEquals(FlowerVariety::count(), 2);
+    }
+
+    /** @test */
+    public function when_a_user_creates_a_variety_the_default_markup_is_set()
+    {
+        $defaultSetting = ArrangeableTypeSetting::whereAccountId($this->flower->account->id)
+            ->whereHas('type', function($query) {
+                return $query->whereName('flower');
+            })
+            ->first();
+        $defaultSetting->markup_value = 10;
+        $defaultSetting->save();
+
+        $this->signIn($this->user)
+            ->postJson($this->url($this->flower->id), $this->request)
+            ->assertStatus(200);
+
+        $variety = FlowerVariety::whereName($this->request['name'])->first();
+
+        $this->assertInstanceOf('App\Markup', $variety->markup);
+        $this->assertEquals($variety->markup->id, $defaultSetting->markup->id);
+        $this->assertEquals($variety->markup_value, $defaultSetting->markup_value);
     }
 
     /** @test */
@@ -46,14 +69,14 @@ class PostFlowerVarietiesTest extends TestCase
         $someOtherFlower = create('App\Flower');
 
         $this->signIn($this->user)
-            ->postJson($this->getUrl($someOtherFlower->id), $this->request)
+            ->postJson($this->url($someOtherFlower->id), $this->request)
             ->assertStatus(403);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_add_varieties()
     {
-        $this->postJson($this->getUrl($this->flower->id), $this->request)
+        $this->postJson($this->url($this->flower->id), $this->request)
             ->assertStatus(401);
     }
 }
