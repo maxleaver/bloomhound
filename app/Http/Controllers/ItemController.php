@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\ArrangeableType;
 use App\Item;
+use App\Markup;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -35,7 +37,11 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        return view('items.show', compact('item'));
+        $markups = Markup::all();
+        $types = ArrangeableType::whereModel('item')->get();
+
+        $item = $item->load('type');
+        return view('items.show', compact('item', 'markups', 'types'));
     }
 
     /**

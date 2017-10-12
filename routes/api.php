@@ -101,6 +101,7 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('/', 'ItemController@store');
 
 		Route::get('/{item}', 'ItemController@show');
+		Route::patch('/{item}', 'ItemController@update');
 
 		Route::get('{item}/notes', 'NoteController@index');
 		Route::post('{item}/notes', 'NoteController@store');

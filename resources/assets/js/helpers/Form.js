@@ -13,13 +13,11 @@ export default class Form {
   }
 
   reset() {
-    if (this.resetOnSubmit) {
-      Object.keys(this.originalData).forEach((key) => {
-        this[key] = '';
-      });
+    Object.keys(this.originalData).forEach((key) => {
+      this[key] = this.originalData[key];
+    });
 
-      this.errors.clear();
-    }
+    this.errors.clear();
   }
 
   data() {
@@ -60,7 +58,9 @@ export default class Form {
   }
 
   onSuccess() {
-    this.reset();
+    if (this.resetOnSubmit) {
+      this.reset();
+    }
   }
 
   onFail(errors) {

@@ -71,12 +71,29 @@ class ItemController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Item $item)
     {
-        //
+        if ($item->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'inventory' => 'nullable|integer',
+            'cost' => 'nullable|numeric',
+            'arrangeable_type_id' => 'integer|exists:arrangeable_types,id',
+            'markup_id' => 'nullable|integer|exists:markups,id',
+            'markup_value' => 'nullable|numeric',
+            'use_default_markup' => 'nullable|boolean',
+        ]);
+
+        $item->update($data);
+
+        return response()->json($item->fresh());
     }
 
     /**

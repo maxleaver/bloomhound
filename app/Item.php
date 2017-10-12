@@ -11,6 +11,9 @@ class Item extends AbstractArrangeable
 
 	protected $guarded = [];
 	protected $appends = ['ingredient_name'];
+    protected $casts = [
+        'use_default_markup' => 'boolean',
+    ];
 
 	public function account()
     {
