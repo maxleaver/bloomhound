@@ -75,12 +75,7 @@ class CustomerController extends Controller
             abort(403);
         }
 
-        $customer->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'address' => $data['address'],
-            'phone' => $data['phone'],
-        ]);
+        $customer->update($data);
     }
 
     /**

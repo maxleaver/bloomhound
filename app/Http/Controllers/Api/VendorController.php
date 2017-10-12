@@ -71,13 +71,7 @@ class VendorController extends Controller
             abort(403);
         }
 
-        $vendor->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'address' => $data['address'],
-            'phone' => $data['phone'],
-            'website' => $data['website'],
-        ]);
+        $vendor->update($data);
     }
 
     /**

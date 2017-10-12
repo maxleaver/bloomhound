@@ -72,7 +72,7 @@ class NoteController extends Controller
             abort(404);
         }
 
-        $note->update(['text' => $data['text']]);
+        $note->update($data);
     }
 
     /**

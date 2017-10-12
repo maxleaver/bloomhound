@@ -89,14 +89,7 @@ class ContactController extends Controller
             abort(403);
         }
 
-        $contact->update([
-            'address' => $data['address'],
-            'email' => $data['email'],
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'],
-            'relationship' => $data['relationship'],
-        ]);
+        $contact->update($data);
     }
 
     /**
