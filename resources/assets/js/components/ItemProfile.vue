@@ -193,16 +193,27 @@ export default {
   },
 
   created() {
+    let markup;
+
     if (!this.item.use_default_markup &&
       Object.prototype.hasOwnProperty.call(this.item, 'markup')) {
       this.markupValueLabel = this.item.markup.field_label;
       this.showMarkupValue = this.item.markup.allow_entry;
+    } else {
+      // get markup by id
+      markup = this.getMarkupById(this.item.markup_id);
+      this.markupValueLabel = markup.field_label;
+      this.showMarkupValue = markup.allow_entry;
     }
   },
 
   methods: {
+    getMarkupById(id) {
+      return this.markups.find(markup => markup.id === id);
+    },
+
     onMarkupChange(option) {
-      const record = this.markups.find(markup => markup.id === option);
+      const record = this.getMarkupById(option);
 
       this.form.markup_id = option;
 

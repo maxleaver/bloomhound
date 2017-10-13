@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Flower;
+use App\Markup;
 use Illuminate\Http\Request;
 
 class FlowerController extends Controller
@@ -35,7 +36,8 @@ class FlowerController extends Controller
      */
     public function show(Flower $flower)
     {
-        return view('flowers.show', compact('flower'));
+        $markups = Markup::all();
+        return view('flowers.show', compact('flower', 'markups'));
     }
 
     /**

@@ -39,6 +39,12 @@
       </template>
 
       <template slot="detail" scope="props">
+        <update-flower-variety
+          :markups="markups"
+          :variety="props.row"
+          @updated="updateRow"
+        ></update-flower-variety>
+
         <flower-variety-source-list
           :id="props.row.id"
           :vendors="vendors"
@@ -71,15 +77,17 @@
 <script>
 import AddFlowerVarieties from './AddFlowerVarieties.vue';
 import FlowerVarietySourceList from './FlowerVarietySourceList.vue';
+import UpdateFlowerVariety from './UpdateFlowerVariety.vue';
 import collection from '../mixins/collection';
 
 export default {
   name: 'variety-list',
-  components: { AddFlowerVarieties, FlowerVarietySourceList },
+  components: { AddFlowerVarieties, FlowerVarietySourceList, UpdateFlowerVariety },
   mixins: [collection],
 
   props: {
     id: Number,
+    markups: Array,
   },
 
   data() {
@@ -117,6 +125,13 @@ export default {
       }
 
       affectedRow.best_source = { cost_per_stem: newCost };
+    },
+
+    updateRow(data) {
+      const updatedRow = this.items.find(item => item.id === data.id);
+
+      updatedRow.name = data.name;
+      updatedRow.price = data.price;
     },
   },
 };

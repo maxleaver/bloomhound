@@ -17,7 +17,7 @@
 <section class="section">
   <div class="container">
     <h1 class="title">Varieties</h1>
-    <variety-list :id="{{ $flower->id }}"></variety-list>
+    <variety-list :id="{{ $flower->id }}" :markups="{{ $markups }}"></variety-list>
   </div>
 </section>
 

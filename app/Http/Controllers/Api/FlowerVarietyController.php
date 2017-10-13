@@ -61,12 +61,25 @@ class FlowerVarietyController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\FlowerVariety  $flower_variety
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, FlowerVariety $flower_variety)
     {
-        //
+        if ($flower_variety->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $data = $this->validate(request(), [
+            'name' => 'required|string|max:255',
+            'markup_id' => 'nullable|integer|exists:markups,id',
+            'markup_value' => 'nullable|numeric',
+            'use_default_markup' => 'nullable|boolean',
+        ]);
+
+        $flower_variety->update($data);
+
+        return response()->json($flower_variety->fresh());
     }
 
     /**

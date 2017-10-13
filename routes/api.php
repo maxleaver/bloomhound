@@ -129,6 +129,8 @@ Route::middleware('auth:api')->group(function () {
 	});
 
 	Route::prefix('varieties')->group(function () {
+		Route::patch('{flower_variety}', 'FlowerVarietyController@update');
+
 	    Route::get('{flower_variety}/sources', 'FlowerVarietySourceController@index');
 	    Route::post('{flower_variety}/sources', 'FlowerVarietySourceController@store');
 	});
