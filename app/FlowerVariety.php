@@ -15,7 +15,7 @@ class FlowerVariety extends AbstractArrangeable
         'account_id',
         'flower_id'
     ];
-    protected $appends = ['ingredient_name'];
+    protected $appends = ['cost', 'ingredient_name'];
     protected $guarded = ['account_id', 'arrangeable_type_id'];
     protected $casts = [
         'use_default_markup' => 'boolean',

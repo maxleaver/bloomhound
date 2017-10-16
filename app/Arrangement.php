@@ -7,6 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Arrangement extends Model
 {
 	protected $guarded = [];
+    protected $appends = ['cost', 'default_price'];
+
+    public function getCostAttribute()
+    {
+        return $this->ingredients->sum('cost');
+    }
+
+    public function getDefaultPriceAttribute()
+    {
+        return $this->ingredients->sum('price');
+    }
 
 	public function account()
     {

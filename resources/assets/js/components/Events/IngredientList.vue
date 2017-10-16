@@ -16,6 +16,18 @@
           {{ props.row.quantity }}
         </b-table-column>
 
+        <b-table-column field="cost" label="Cost" sortable>
+          {{ Number(props.row.arrangeable.cost * props.row.quantity).toFixed(2) }}
+        </b-table-column>
+
+        <b-table-column field="price" label="Price/Unit" sortable>
+          {{ props.row.arrangeable.price }}
+        </b-table-column>
+
+        <b-table-column label="Total Price" sortable>
+          {{ Number(props.row.arrangeable.price * props.row.quantity).toFixed(2) }}
+        </b-table-column>
+
         <b-table-column centered>
           <span @click="deleteRow(props.row.id)">
             <b-icon icon="delete"></b-icon>
@@ -80,6 +92,8 @@ export default {
     deleteRow(id) {
       window.axios.delete(`/api/arrangements/${this.arrangementId}/ingredients/${id}`)
         .then(() => {
+          this.$emit('deleted', this.findById(id));
+
           this.removeById(id);
         });
     },

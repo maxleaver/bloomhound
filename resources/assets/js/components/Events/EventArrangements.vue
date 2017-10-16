@@ -51,6 +51,22 @@
           {{ props.row.quantity }}
         </b-table-column>
 
+        <b-table-column field="cost" label="Cost per Unit" sortable>
+          {{ Number(props.row.cost).toFixed(2) }}
+        </b-table-column>
+
+        <b-table-column field="default_price" label="Price per Unit" sortable>
+          {{ Number(props.row.default_price).toFixed(2) }}
+        </b-table-column>
+
+        <b-table-column label="Total Cost" sortable>
+          {{ Number(props.row.cost * props.row.quantity).toFixed(2) }}
+        </b-table-column>
+
+        <b-table-column label="Total Price" sortable>
+          {{ Number(props.row.default_price * props.row.quantity).toFixed(2) }}
+        </b-table-column>
+
         <b-table-column centered>
           <span @click="showDeleteModal(props.row)">
             <b-icon icon="delete"></b-icon>
@@ -63,6 +79,8 @@
           <ingredient-list
             :arrangementId="props.row.id"
             :arrangeables="arrangeables"
+            @added="increaseTotals"
+            @deleted="decreaseTotals"
           ></ingredient-list>
         </div>
       </template>
@@ -131,6 +149,28 @@ export default {
       this.deleteModalProps.name = row.name;
 
       this.isDeleteModalActive = true;
+    },
+
+    decreaseTotals(data) {
+      this.updateTotals('subtract', data);
+    },
+
+    increaseTotals(data) {
+      this.updateTotals('add', data);
+    },
+
+    updateTotals(action, data) {
+      const arrangement = this.findById(data.arrangement_id);
+
+      if (action === 'add') {
+        arrangement.cost += data.cost;
+        arrangement.default_price += data.price;
+      }
+
+      if (action === 'subtract') {
+        arrangement.cost -= data.cost;
+        arrangement.default_price -= data.price;
+      }
     },
   },
 };

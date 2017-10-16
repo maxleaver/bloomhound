@@ -11,7 +11,7 @@
 
       <section class="modal-card-body">
         <b-field
-          label="Select or add a vendor"
+          label="Type the name of a new or existing vendor"
           :type="form.errors.has('vendor_id') || form.errors.has('vendor_name') ? 'is-danger' : ''"
         >
           <b-autocomplete

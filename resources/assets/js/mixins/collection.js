@@ -16,7 +16,7 @@ export default {
     add(item) {
       this.items.unshift(item);
 
-      this.$emit('added');
+      this.$emit('added', item);
     },
 
     fetch(url) {
@@ -34,7 +34,7 @@ export default {
     remove(index) {
       this.items.splice(index, 1);
 
-      this.$emit('removed');
+      this.$emit('removed', index);
     },
 
     removeById(id) {
