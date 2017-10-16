@@ -1,7 +1,7 @@
 <nav class="navbar">
   <div class="navbar-brand">
     <a class="navbar-item" href="{{ route('home') }}">
-      Logo
+      <strong>Bloomhound</strong>
     </a>
 
     <div class="navbar-burger burger" data-target="navMenubd-example">

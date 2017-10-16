@@ -30,6 +30,13 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'func-names': ['error', 'as-needed'],
     'object-shorthand': ['error', 'properties'],
-    'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }]
-  }
+    'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
+  },
+  settings: {
+    'import/resolver': {
+      'webpack': {
+        'config': './node_modules/laravel-mix/setup/webpack.config.js',
+      },
+    },
+  },
 }

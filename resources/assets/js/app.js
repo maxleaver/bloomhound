@@ -14,25 +14,25 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('flash', require('./components/Flash.vue'));
-Vue.component('account-settings-tabs', require('./components/AccountSettingsTabs.vue'));
-Vue.component('contact-list', require('./components/ContactList.vue'));
-Vue.component('customer-list', require('./components/CustomerList.vue'));
-Vue.component('event-arrangements', require('./components/EventArrangements.vue'));
-Vue.component('event-list', require('./components/EventList.vue'));
-Vue.component('event-vendor-list', require('./components/EventVendorList.vue'));
-Vue.component('flower-list', require('./components/FlowerList.vue'));
-Vue.component('item-list', require('./components/ItemList.vue'));
-Vue.component('note-list', require('./components/NoteList.vue'));
-Vue.component('variety-list', require('./components/FlowerVarietyList.vue'));
-Vue.component('vendor-list', require('./components/VendorList.vue'));
-Vue.component('update-password', require('./components/UpdatePassword.vue'));
-Vue.component('contact-profile', require('./components/ContactProfile.vue'));
-Vue.component('customer-profile', require('./components/CustomerProfile.vue'));
-Vue.component('event-profile', require('./components/EventProfile.vue'));
-Vue.component('item-profile', require('./components/ItemProfile.vue'));
-Vue.component('update-profile', require('./components/UpdateProfile.vue'));
-Vue.component('vendor-profile', require('./components/VendorProfile.vue'));
+Vue.component('flash', require('components/Flash.vue'));
+Vue.component('account-settings-tabs', require('components/Account/AccountSettingsTabs.vue'));
+Vue.component('contact-list', require('components/Contacts/ContactList.vue'));
+Vue.component('contact-profile', require('components/Contacts/ContactProfile.vue'));
+Vue.component('customer-list', require('components/Customers/CustomerList.vue'));
+Vue.component('customer-profile', require('components/Customers/CustomerProfile.vue'));
+Vue.component('event-arrangements', require('components/Events/EventArrangements.vue'));
+Vue.component('event-list', require('components/Events/EventList.vue'));
+Vue.component('event-profile', require('components/Events/EventProfile.vue'));
+Vue.component('event-vendor-list', require('components/Events/EventVendorList.vue'));
+Vue.component('flower-list', require('components/Flowers/FlowerList.vue'));
+Vue.component('variety-list', require('components/Flowers/FlowerVarietyList.vue'));
+Vue.component('item-list', require('components/Items/ItemList.vue'));
+Vue.component('item-profile', require('components/Items/ItemProfile.vue'));
+Vue.component('note-list', require('components/Notes/NoteList.vue'));
+Vue.component('update-password', require('components/Profile/UpdatePassword.vue'));
+Vue.component('update-profile', require('components/Profile/UpdateProfile.vue'));
+Vue.component('vendor-list', require('components/Vendors/VendorList.vue'));
+Vue.component('vendor-profile', require('components/Vendors/VendorProfile.vue'));
 
 /* eslint-disable no-unused-vars */
 const app = new Vue({

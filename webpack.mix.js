@@ -22,6 +22,14 @@ if (mix.config.inProduction) {
 
 if (process.env.NODE_ENV === 'development') {
   mix.webpackConfig({
+    resolve: {
+      alias:{
+        components: path.resolve(__dirname, 'resources/assets/js/components/'),
+        helpers: path.resolve(__dirname, 'resources/assets/js/helpers/'),
+        mixins: path.resolve(__dirname, 'resources/assets/js/mixins/'),
+      },
+      extensions: ['*', '.js', '.vue']
+    },
     module: {
       rules: [
         {
