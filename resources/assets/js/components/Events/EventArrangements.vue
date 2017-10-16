@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isAddModalActive" :canCancel="canCancel" has-modal-card>
-      <add-event-arrangement @created="add" :eventId="eventId"></add-event-arrangement>
+      <add-event-arrangement @created="add" :eventId="event.id"></add-event-arrangement>
     </b-modal>
 
     <b-modal
@@ -55,15 +55,15 @@
           {{ Number(props.row.cost).toFixed(2) }}
         </b-table-column>
 
-        <b-table-column field="default_price" label="Price per Unit" sortable>
-          {{ Number(props.row.default_price).toFixed(2) }}
-        </b-table-column>
-
         <b-table-column label="Total Cost" sortable>
           {{ Number(props.row.cost * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
-        <b-table-column label="Total Price" sortable>
+        <b-table-column field="default_price" label="Price" sortable>
+          {{ Number(props.row.default_price).toFixed(2) }}
+        </b-table-column>
+
+        <b-table-column label="Subtotal" sortable>
           {{ Number(props.row.default_price * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
@@ -98,6 +98,14 @@
           </div>
         </section>
       </template>
+
+      <template slot="footer">
+        <div class="has-text-right content">
+          <strong>Subtotal:</strong> ${{ subtotal }}<br />
+          <strong>Tax:</strong> $0.00<br />
+          <strong>Total: $0.00</strong>
+        </div>
+      </template>
     </b-table>
   </div>
 </template>
@@ -113,7 +121,8 @@ export default {
   components: { AddEventArrangement, DeleteArrangementModal, IngredientList },
   mixins: [collection],
   props: {
-    eventId: Number,
+    event: Object,
+    taxPercent: Number,
   },
 
   data() {
@@ -131,8 +140,21 @@ export default {
     };
   },
 
+  computed: {
+    subtotal: function () {
+      let sum;
+
+      if (this.items.length > 0) {
+        sum = this.items.reduce((total, item) => total + item.default_price, 0);
+        return Number(sum).toFixed(2);
+      }
+
+      return 0.00;
+    },
+  },
+
   created() {
-    this.fetch(`/api/events/${this.eventId}/arrangements`);
+    this.fetch(`/api/events/${this.event.id}/arrangements`);
     this.fetchArrangeables();
   },
 

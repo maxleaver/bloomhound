@@ -1,76 +1,61 @@
 <template>
   <div>
-    <div v-if="showForm">
-      <form
-        method="POST"
-        @submit.prevent="onSubmit"
-      >
-        <div class="columns">
-          <div class="column">
-            <b-field
-              label="Name"
-              :type="form.errors.has('name') ? 'is-danger' : ''"
-              :message="form.errors.has('name') ? form.errors.get('name') : ''"
-            >
-              <b-input
-                type="text"
-                v-model="form.name"
-                :disabled="isSubmitting"
-                name="name"
-                required
-              ></b-input>
-            </b-field>
-          </div>
+    <event-header :event="event"></event-header>
 
-          <div class="column">
-            <b-field label="Select a Date">
-              <b-datepicker
-                v-model="form.date"
-                icon="today"
-              ></b-datepicker>
-            </b-field>
-          </div>
-        </div>
-
-        <div class="field is-grouped">
-          <div class="control">
-            <button
-              class="button is-primary"
-              type="submit"
-              v-bind:class="{'is-loading' : isSubmitting}"
-              :disabled="isSubmitting"
-            >Update Event</button>
-          </div>
-
-          <div class="control">
-            <button
-              class="button"
-              @click.prevent="showForm = !showForm"
-              :disabled="isSubmitting"
-            >Nevermind</button>
-          </div>
-        </div>
-      </form>
+    <div class="container">
+      <slot></slot>
     </div>
 
-    <div v-else>
-      <button
-        class="button is-pulled-right"
-        @click="showForm = !showForm"
-      >Edit</button>
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Event Proposal for {{ event.customer.name }}</h1>
+      </div>
+    </section>
 
-      <h1 class="title">{{ name }}</h1>
-      <h2 class="subtitle">{{ date.format('MMMM Do YYYY') }} ({{ date.fromNow() }})</h2>
+    <div class="container">
+      <card-collapse title="Vendors">
+        <event-vendor-list :event="event"></event-vendor-list>
+      </card-collapse>
+
+      <card-collapse title="Arrangements">
+        <event-arrangements :event="event"></event-arrangements>
+      </card-collapse>
+
+      <card-collapse title="Deliveries">
+        <h1 class="title">Delivery schedule/fees will go here...</h1>
+      </card-collapse>
+
+      <card-collapse title="Setups">
+        <h1 class="title">Setup schedule/fees will go here...</h1>
+      </card-collapse>
+
+      <card-collapse title="Payment History">
+        <h1 class="title">Payment history will go here...</h1>
+      </card-collapse>
     </div>
+
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Event Totals</h1>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
-import Form from 'helpers/Form';
+import CardCollapse from 'components/CardCollapse';
+import EventArrangements from 'components/Events/EventArrangements';
+import EventHeader from 'components/Events/EventHeader';
+import EventVendorList from 'components/Events/EventVendorList';
 
 export default {
   name: 'event-profile',
+  components: {
+    CardCollapse,
+    EventArrangements,
+    EventHeader,
+    EventVendorList,
+  },
 
   props: {
     event: Object,
@@ -78,44 +63,13 @@ export default {
 
   data() {
     return {
-      date: moment(this.event.date),
-      form: new Form({
-        date: new Date(this.event.date),
-        name: this.event.name,
-      }, false),
-      isSubmitting: false,
-      name: this.event.name,
-      showForm: false,
+      isArrangementsOpen: false,
+      isVendorListOpen: false,
     };
   },
 
   methods: {
-    onSubmit() {
-      this.isSubmitting = true;
 
-      this.form.patch(`/api/events/${this.event.id}`)
-        .then((data) => {
-          this.isSubmitting = false;
-
-          this.updateData();
-
-          window.flash(`${this.form.name} updated successfully!`, 'success');
-
-          this.$emit('updated', data);
-
-          this.showForm = false;
-        })
-        .catch(() => {
-          this.isSubmitting = false;
-
-          window.flash(`There was a problem updating ${this.form.name}!`, 'danger');
-        });
-    },
-
-    updateData() {
-      this.date = moment(this.form.date);
-      this.name = this.form.name;
-    },
   },
 };
 </script>

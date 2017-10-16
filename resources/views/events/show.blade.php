@@ -1,53 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="hero is-light">
-  <div class="hero-body">
-    <div class="container">
-      <event-profile :event="{{ $event }}"></event-profile>
-    </div>
-  </div>
-</div>
-
-<div class="container">
+<event-profile :event="{{ $event }}">
   {{ Breadcrumbs::render('event', $event) }}
-</div>
-
-<section class="section">
-  <div class="container">
-    <div class="columns">
-      <div class="column is-half">
-        <strong>{{ $event->customer->name }}</strong>
-      </div>
-
-      <div class="column">
-        <strong>{{ $event->account->name }}</strong><br />
-        {{ $event->account->address }}<br />
-        Tel: {{ $event->account->phone }}<br />
-        Email: {{ $event->account->email }}<br />
-        {{ $event->account->website }}
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <event-vendor-list :event-id="{{ $event->id }}"></event-vendor-list>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <event-arrangements :event-id="{{ $event->id }}"></event-arrangements>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <h1 class="title">Payments</h1>
-  </div>
-</section>
+</event-profile>
 
 <section class="section">
   <div class="container">

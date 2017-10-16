@@ -35,6 +35,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
+        $event = $event->load('customer');
         return view('events.show', compact('event'));
     }
 

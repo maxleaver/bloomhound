@@ -24,7 +24,7 @@
           {{ props.row.arrangeable.price }}
         </b-table-column>
 
-        <b-table-column label="Total Price" sortable>
+        <b-table-column label="Subtotal" sortable>
           {{ Number(props.row.arrangeable.price * props.row.quantity).toFixed(2) }}
         </b-table-column>
 

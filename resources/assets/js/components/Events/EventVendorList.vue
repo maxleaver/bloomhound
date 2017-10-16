@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isModalActive" :canCancel="canCancel" has-modal-card>
-      <select-vendor @created="add" :eventId="eventId" :vendors="vendors"></select-vendor>
+      <select-vendor @created="add" :eventId="event.id" :vendors="vendors"></select-vendor>
     </b-modal>
 
     <b-table
@@ -76,7 +76,7 @@ export default {
   mixins: [collection],
 
   props: {
-    eventId: Number,
+    event: Object,
   },
 
   data() {
@@ -90,13 +90,13 @@ export default {
   },
 
   created() {
-    this.fetch(`/api/events/${this.eventId}/vendors`);
+    this.fetch(`/api/events/${this.event.id}/vendors`);
     this.fetchVendors();
   },
 
   methods: {
     deleteRow(id) {
-      window.axios.delete(`/api/events/${this.eventId}/vendors/${id}`)
+      window.axios.delete(`/api/events/${this.event.id}/vendors/${id}`)
         .then(() => {
           this.removeById(id);
         });
