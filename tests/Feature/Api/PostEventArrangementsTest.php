@@ -17,7 +17,11 @@ class PostEventArrangementsTest extends TestCase
     {
         parent::setUp();
 
-        $this->request = ['name' => 'Some arrangement name', 'quantity' => 10];
+        $this->request = [
+            'name' => 'Some arrangement name',
+            'description' => 'this is a description',
+            'quantity' => 10
+        ];
         $this->user = create('App\User');
         $this->event = create('App\Event', ['account_id' => $this->user->account->id]);
     }
@@ -36,7 +40,12 @@ class PostEventArrangementsTest extends TestCase
             ->postJson($this->getUrl($this->event->id), $this->request)
     		->assertStatus(200);
 
+        $arrangement = $this->event->arrangements()->first();
+
         $this->assertEquals($this->event->arrangements()->count(), 1);
+        $this->assertEquals($arrangement->name, $this->request['name']);
+        $this->assertEquals($arrangement->description, $this->request['description']);
+        $this->assertEquals($arrangement->quantity, $this->request['quantity']);
     }
 
     /** @test */

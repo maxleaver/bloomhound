@@ -29,29 +29,24 @@ class UpdateEventArrangementTest extends TestCase
     }
 
     /** @test */
-    public function users_can_update_an_arrangement_name()
+    public function users_can_update_an_arrangement()
     {
-        $newName = 'new name';
-        $request = ['name' => $newName];
+        $name = 'new name';
+        $description = 'new description';
+        $quantity = 55;
+        $request = [
+            'name' => $name,
+            'description' => $description,
+            'quantity' => $quantity
+        ];
 
         $this->signIn($this->user)
             ->patchJson($this->url($this->arrangement->id), $request)
             ->assertStatus(200);
 
-        $this->assertEquals($this->arrangement->fresh()->name, $newName);
-    }
-
-    /** @test */
-    public function users_can_update_an_arrangement_quantity()
-    {
-        $newQuantity = 55;
-        $request = ['quantity' => $newQuantity];
-
-        $this->signIn($this->user)
-            ->patchJson($this->url($this->arrangement->id), $request)
-            ->assertStatus(200);
-
-        $this->assertEquals($this->arrangement->fresh()->quantity, $newQuantity);
+        $this->assertEquals($this->arrangement->fresh()->name, $name);
+        $this->assertEquals($this->arrangement->fresh()->description, $description);
+        $this->assertEquals($this->arrangement->fresh()->quantity, $quantity);
     }
 
     /** @test */

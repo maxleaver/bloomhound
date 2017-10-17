@@ -18,6 +18,7 @@ class CreateArrangementsTable extends Migration
             $table->integer('account_id')->unsigned()->index();
             $table->integer('event_id')->unsigned()->index();
             $table->string('name');
+            $table->string('description')->nullable();
             $table->integer('quantity')->unsigned();
             $table->timestamps();
         });

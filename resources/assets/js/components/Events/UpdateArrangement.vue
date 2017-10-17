@@ -5,6 +5,7 @@
   >
     <b-field grouped>
       <b-field
+        expanded
         label="Name"
         :type="form.errors.has('name') ? 'is-danger' : ''"
         :message="form.errors.has('name') ? form.errors.get('name') : ''"
@@ -18,6 +19,21 @@
       </b-field>
 
       <b-field
+        expanded
+        label="Description"
+        :type="form.errors.has('description') ? 'is-danger' : ''"
+        :message="form.errors.has('description') ? form.errors.get('description') : ''"
+      >
+        <b-input
+          type="text"
+          v-model="form.description"
+          :disabled="isSubmitting"
+          required
+        ></b-input>
+      </b-field>
+
+      <b-field
+        expanded
         label="Quantity"
         :type="form.errors.has('quantity') ? 'is-danger' : ''"
         :message="form.errors.has('quantity') ? form.errors.get('quantity') : ''"
@@ -54,6 +70,7 @@ export default {
     return {
       form: new Form({
         name: this.arrangement.name,
+        description: this.arrangement.description,
         quantity: this.arrangement.quantity,
       }, false),
       isSubmitting: false,

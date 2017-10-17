@@ -33,6 +33,7 @@ class ArrangementEventController extends Controller
     {
         $data = $this->validate(request(), [
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'quantity' => 'required|integer',
         ]);
 
@@ -68,6 +69,7 @@ class ArrangementEventController extends Controller
     {
         $data = $this->validate(request(), [
             'name' => 'string|max:255',
+            'description' => 'nullable|string|max:255',
             'quantity' => 'integer',
         ]);
 

@@ -25,6 +25,19 @@
         </b-field>
 
         <b-field
+          label="Description"
+          :type="form.errors.has('description') ? 'is-danger' : ''"
+          :message="form.errors.has('description') ? form.errors.get('description') : ''"
+        >
+          <b-input
+            type="text"
+            v-model="form.description"
+            :disabled="isSubmitting"
+            required
+          ></b-input>
+        </b-field>
+
+        <b-field
           label="Quantity"
           :type="form.errors.has('quantity') ? 'is-danger' : ''"
           :message="form.errors.has('quantity') ? form.errors.get('quantity') : ''"
@@ -69,6 +82,7 @@ export default {
     return {
       isSubmitting: false,
       form: new Form({
+        description: '',
         name: '',
         quantity: 1,
       }),

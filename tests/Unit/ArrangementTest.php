@@ -51,6 +51,11 @@ class ArrangementTest extends TestCase
     }
 
     /** @test */
+    public function an_arrangement_has_a_description() {
+        $this->assertNotNull($this->arrangement->description);
+    }
+
+    /** @test */
     public function an_arrangement_uses_its_ingredients_to_calculate_a_total_cost()
     {
         $this->addIngredients($this->arrangement, 'App\Item', 5);
