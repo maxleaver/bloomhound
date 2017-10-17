@@ -108,9 +108,7 @@
 
       <template slot="footer">
         <div class="has-text-right content">
-          <strong>Subtotal:</strong> ${{ toTwoDigits(subtotal) }}<br />
-          <strong>Tax:</strong> ${{ toTwoDigits(tax) }}<br />
-          <strong>Total: ${{ toTwoDigits(total) }}</strong>
+          <strong>Subtotal: ${{ toTwoDigits(subtotal) }}</strong>
         </div>
       </template>
     </b-table>
@@ -135,9 +133,7 @@ export default {
   mixins: [collection],
   props: {
     event: Object,
-    isTaxable: Boolean,
     settings: Object,
-    taxAmount: Number,
   },
 
   data() {
@@ -157,23 +153,17 @@ export default {
 
   computed: {
     subtotal: function () {
+      let sum;
+
       if (this.items.length > 0) {
-        return this.items.reduce((total, item) => total + item.default_price, 0);
+        sum = this.items.reduce((total, item) => total + (item.default_price * item.quantity), 0);
+      } else {
+        sum = 0.00;
       }
 
-      return 0.00;
-    },
+      this.$emit('totalUpdate', sum);
 
-    tax: function () {
-      if (this.isTaxable) {
-        return this.subtotal * (this.taxAmount / 100);
-      }
-
-      return 0.00;
-    },
-
-    total: function () {
-      return this.subtotal + this.tax;
+      return sum;
     },
   },
 

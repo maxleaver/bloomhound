@@ -20,8 +20,7 @@
       <card-collapse title="Arrangements">
         <arrangement-list
           :event="event"
-          :isTaxable="settings.use_tax"
-          :taxAmount="settings.tax_amount"
+          @totalUpdate="updateArrangementTotal"
         ></arrangement-list>
       </card-collapse>
 
@@ -40,7 +39,14 @@
 
     <section class="section">
       <div class="container">
-        <h1 class="title">Event Totals</h1>
+        <div class="has-text-right content">
+          Arrangements: ${{ toTwoDigits(totalArrangements) }}<br />
+          Setup Fees: ${{ toTwoDigits(totalSetups) }}<br />
+          Delivery Fees: ${{ toTwoDigits(totalDeliveries) }}<br />
+          <strong>Subtotal:</strong> ${{ toTwoDigits(subtotal) }}<br />
+          Tax: ${{ toTwoDigits(tax) }}<br />
+          <strong>Total: ${{ toTwoDigits(total) }}</strong>
+        </div>
       </div>
     </section>
   </div>
@@ -70,11 +76,38 @@ export default {
     return {
       isArrangementsOpen: false,
       isVendorListOpen: false,
+      totalArrangements: 0,
+      totalDeliveries: 0,
+      totalSetups: 0,
     };
   },
 
-  methods: {
+  computed: {
+    subtotal: function () {
+      return this.totalArrangements + this.totalDeliveries + this.totalSetups;
+    },
 
+    tax: function () {
+      if (this.settings.use_tax) {
+        return this.subtotal * (this.settings.tax_amount / 100);
+      }
+
+      return 0.00;
+    },
+
+    total: function () {
+      return this.subtotal + this.tax;
+    },
+  },
+
+  methods: {
+    toTwoDigits(number) {
+      return Number(number).toFixed(2);
+    },
+
+    updateArrangementTotal(sum) {
+      this.totalArrangements = sum;
+    },
   },
 };
 </script>
