@@ -18,11 +18,11 @@
       </card-collapse>
 
       <card-collapse title="Arrangements">
-        <event-arrangements
+        <arrangement-list
           :event="event"
           :isTaxable="settings.use_tax"
           :taxAmount="settings.tax_amount"
-        ></event-arrangements>
+        ></arrangement-list>
       </card-collapse>
 
       <card-collapse title="Deliveries">
@@ -47,16 +47,16 @@
 </template>
 
 <script>
+import ArrangementList from 'components/Events/ArrangementList';
 import CardCollapse from 'components/CardCollapse';
-import EventArrangements from 'components/Events/EventArrangements';
 import EventHeader from 'components/Events/EventHeader';
 import EventVendorList from 'components/Events/EventVendorList';
 
 export default {
   name: 'event-profile',
   components: {
+    ArrangementList,
     CardCollapse,
-    EventArrangements,
     EventHeader,
     EventVendorList,
   },

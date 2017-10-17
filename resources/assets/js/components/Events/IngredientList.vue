@@ -1,5 +1,7 @@
 <template>
   <div>
+    <h1 class="title is-5">Ingredients</h1>
+
     <b-table
       default-sort="name"
       :data="items"

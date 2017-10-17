@@ -60,7 +60,7 @@
 import Form from 'helpers/Form';
 
 export default {
-  name: 'add-event-arrangement',
+  name: 'add-arrangement',
   props: {
     eventId: Number,
   },

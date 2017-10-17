@@ -61,12 +61,23 @@ class ArrangementEventController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Arrangement  $arrangement
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Arrangement $arrangement)
     {
-        //
+        $data = $this->validate(request(), [
+            'name' => 'string|max:255',
+            'quantity' => 'integer',
+        ]);
+
+        if ($arrangement->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $arrangement->update($data);
+
+        return response()->json($arrangement->fresh());
     }
 
     /**

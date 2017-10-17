@@ -34,6 +34,7 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::prefix('arrangements')->group(function () {
 		Route::prefix('{arrangement}')->group(function () {
+			Route::patch('/', 'ArrangementEventController@update');
 			Route::delete('/', 'ArrangementEventController@destroy');
 
 			Route::get('ingredients', 'ArrangementIngredientController@index');

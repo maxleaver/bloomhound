@@ -64,8 +64,6 @@ export default {
 
       this.formContainer.post(`/api/arrangements/${this.arrangementId}/ingredients`)
         .then((data) => {
-          this.isSubmitting = false;
-
           // Reset form to the defaults
           this.formContainer.reset();
           this.$emit('reset');
@@ -75,12 +73,13 @@ export default {
           this.$emit('created', data);
         })
         .catch((error) => {
-          this.isSubmitting = false;
-
           // Only show the flash message if it's not a validation error
           if (typeof error.errors === 'undefined') {
             window.flash('There was a problem saving your ingredients. Please try again.', 'danger');
           }
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

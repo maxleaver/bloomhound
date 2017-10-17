@@ -23,7 +23,7 @@
     </nav>
 
     <b-modal :active.sync="isAddModalActive" :canCancel="canCancel" has-modal-card>
-      <add-event-arrangement @created="add" :eventId="event.id"></add-event-arrangement>
+      <add-arrangement @created="add" :eventId="event.id"></add-arrangement>
     </b-modal>
 
     <b-modal
@@ -76,6 +76,13 @@
 
       <template slot="detail" scope="props">
         <div>
+          <div class="content">
+            <update-arrangement
+              :arrangement="props.row"
+              @updated="onUpdate"
+            ></update-arrangement>
+          </div>
+
           <ingredient-list
             :arrangementId="props.row.id"
             :arrangeables="arrangeables"
@@ -111,14 +118,20 @@
 </template>
 
 <script>
-import AddEventArrangement from 'components/Events/AddEventArrangement';
+import AddArrangement from 'components/Events/AddArrangement';
 import DeleteArrangementModal from 'components/Events/DeleteArrangementModal';
 import IngredientList from 'components/Events/IngredientList';
+import UpdateArrangement from 'components/Events/UpdateArrangement';
 import collection from 'mixins/collection';
 
 export default {
-  name: 'event-arrangements',
-  components: { AddEventArrangement, DeleteArrangementModal, IngredientList },
+  name: 'arrangement-list',
+  components: {
+    AddArrangement,
+    DeleteArrangementModal,
+    IngredientList,
+    UpdateArrangement,
+  },
   mixins: [collection],
   props: {
     event: Object,
@@ -194,6 +207,13 @@ export default {
 
     increaseTotals(data) {
       this.updateTotals('add', data);
+    },
+
+    onUpdate(data) {
+      const arrangement = this.findById(data.id);
+
+      arrangement.name = data.name;
+      arrangement.quantity = data.quantity;
     },
 
     updateTotals(action, data) {
