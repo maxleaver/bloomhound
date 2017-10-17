@@ -35,6 +35,11 @@ class Account extends Model
         return $this->hasMany('App\Contact');
     }
 
+    public function deliveries()
+    {
+        return $this->hasMany('App\Delivery');
+    }
+
     public function events()
     {
         return $this->hasMany('App\Event');

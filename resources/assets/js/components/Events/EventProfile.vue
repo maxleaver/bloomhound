@@ -25,7 +25,10 @@
       </card-collapse>
 
       <card-collapse title="Deliveries">
-        <h1 class="title">Delivery schedule/fees will go here...</h1>
+        <delivery-list
+          :event="event"
+          @totalUpdate="updateDeliveryTotal"
+        ></delivery-list>
       </card-collapse>
 
       <card-collapse title="Setups">
@@ -55,6 +58,7 @@
 <script>
 import ArrangementList from 'components/Events/ArrangementList';
 import CardCollapse from 'components/CardCollapse';
+import DeliveryList from 'components/Events/DeliveryList';
 import EventHeader from 'components/Events/EventHeader';
 import EventVendorList from 'components/Events/EventVendorList';
 
@@ -63,6 +67,7 @@ export default {
   components: {
     ArrangementList,
     CardCollapse,
+    DeliveryList,
     EventHeader,
     EventVendorList,
   },
@@ -107,6 +112,10 @@ export default {
 
     updateArrangementTotal(sum) {
       this.totalArrangements = sum;
+    },
+
+    updateDeliveryTotal(sum) {
+      this.totalDeliveries = sum;
     },
   },
 };

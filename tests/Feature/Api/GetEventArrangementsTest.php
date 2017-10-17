@@ -25,13 +25,18 @@ class GetEventArrangementsTest extends TestCase
         ], 10);
     }
 
+    protected function url($id)
+    {
+        return '/api/events/' . $id . '/arrangements';
+    }
+
     /** @test */
     public function a_user_can_get_a_list_of_arrangements_for_an_event()
     {
         $someOtherArrangement = create('App\Arrangement', ['account_id' => $this->user->account->id]);
 
         $this->signIn($this->user)
-            ->getJson($this->getUrl($this->event->id))
+            ->getJson($this->url($this->event->id))
     		->assertStatus(200)
     		->assertJsonFragment([$this->arrangements[0]->name])
     		->assertJsonFragment([$this->arrangements[1]->name])
@@ -44,7 +49,7 @@ class GetEventArrangementsTest extends TestCase
     	$someOtherEvent = create('App\Event');
 
     	$this->signIn($this->user)
-            ->getJson($this->getUrl($someOtherEvent->id))
+            ->getJson($this->url($someOtherEvent->id))
     		->assertStatus(403);
     }
 
@@ -54,19 +59,14 @@ class GetEventArrangementsTest extends TestCase
     	$clearlyInvalidEventId = 123;
 
     	$this->signIn($this->user)
-            ->getJson($this->getUrl($clearlyInvalidEventId))
+            ->getJson($this->url($clearlyInvalidEventId))
     		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_view_arrangements()
     {
-        $this->getJson($this->getUrl($this->event->id))
+        $this->getJson($this->url($this->event->id))
             ->assertStatus(401);
-    }
-
-    protected function getUrl($id)
-    {
-        return '/api/events/' . $id . '/arrangements';
     }
 }

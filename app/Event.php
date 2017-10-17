@@ -11,8 +11,7 @@ class Event extends Model
     protected $dates = [
         'date',
         'created_at',
-        'updated_at',
-        'deleted_at'
+        'updated_at'
     ];
     protected $hidden = ['account_id'];
     protected $guarded = ['id', 'account_id', 'created_at', 'updated_at'];
@@ -22,19 +21,24 @@ class Event extends Model
         return $this->belongsTo('App\Account');
     }
 
+    public function arrangements()
+    {
+        return $this->hasMany('App\Arrangement');
+    }
+
     public function customer()
     {
         return $this->belongsTo('App\Customer');
     }
 
+    public function deliveries()
+    {
+        return $this->hasMany('App\Delivery');
+    }
+
     public function status()
     {
         return $this->belongsTo('App\EventStatus');
-    }
-
-    public function arrangements()
-    {
-        return $this->hasMany('App\Arrangement');
     }
 
     public function vendors()

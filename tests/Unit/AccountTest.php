@@ -89,6 +89,16 @@ class AccountTest extends TestCase
     }
 
     /** @test */
+    public function an_account_can_have_many_deliveries()
+    {
+        $deliveries = create('App\Delivery', [
+            'account_id' => $this->account->id,
+        ], 10);
+
+        $this->assertInstanceOf('App\Delivery', $this->account->deliveries->first());
+    }
+
+    /** @test */
     public function an_account_has_events()
     {
         create('App\Event', [
