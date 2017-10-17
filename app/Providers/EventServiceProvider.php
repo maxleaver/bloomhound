@@ -18,6 +18,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\AccountCreated' => [
             'App\Listeners\CreateDefaultArrangeableTypeSettings',
+            'App\Listeners\CreateAccountSettings',
         ],
         'App\Events\AccountRegistered' => [
             'App\Listeners\SendAccountWelcomeEmail',

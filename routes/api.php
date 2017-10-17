@@ -19,6 +19,8 @@ Route::middleware('auth:api')->group(function () {
 	Route::prefix('account')->group(function () {
 		Route::patch('/', 'AccountProfileController@update');
 		Route::post('logo', 'AccountLogoController@store');
+
+		Route::patch('settings', 'AccountSettingController@update');
 	});
 
 	Route::prefix('arrangeables')->group(function () {

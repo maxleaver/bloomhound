@@ -52,19 +52,19 @@
         </b-table-column>
 
         <b-table-column field="cost" label="Cost per Unit" sortable>
-          {{ Number(props.row.cost).toFixed(2) }}
+          {{ toTwoDigits(props.row.cost) }}
         </b-table-column>
 
         <b-table-column label="Total Cost" sortable>
-          {{ Number(props.row.cost * props.row.quantity).toFixed(2) }}
+          {{ toTwoDigits(props.row.cost * props.row.quantity) }}
         </b-table-column>
 
         <b-table-column field="default_price" label="Price" sortable>
-          {{ Number(props.row.default_price).toFixed(2) }}
+          {{ toTwoDigits(props.row.default_price) }}
         </b-table-column>
 
         <b-table-column label="Subtotal" sortable>
-          {{ Number(props.row.default_price * props.row.quantity).toFixed(2) }}
+          {{ toTwoDigits(props.row.default_price * props.row.quantity) }}
         </b-table-column>
 
         <b-table-column centered>
@@ -101,9 +101,9 @@
 
       <template slot="footer">
         <div class="has-text-right content">
-          <strong>Subtotal:</strong> ${{ subtotal }}<br />
-          <strong>Tax:</strong> $0.00<br />
-          <strong>Total: $0.00</strong>
+          <strong>Subtotal:</strong> ${{ toTwoDigits(subtotal) }}<br />
+          <strong>Tax:</strong> ${{ toTwoDigits(tax) }}<br />
+          <strong>Total: ${{ toTwoDigits(total) }}</strong>
         </div>
       </template>
     </b-table>
@@ -122,7 +122,9 @@ export default {
   mixins: [collection],
   props: {
     event: Object,
-    taxPercent: Number,
+    isTaxable: Boolean,
+    settings: Object,
+    taxAmount: Number,
   },
 
   data() {
@@ -142,14 +144,23 @@ export default {
 
   computed: {
     subtotal: function () {
-      let sum;
-
       if (this.items.length > 0) {
-        sum = this.items.reduce((total, item) => total + item.default_price, 0);
-        return Number(sum).toFixed(2);
+        return this.items.reduce((total, item) => total + item.default_price, 0);
       }
 
       return 0.00;
+    },
+
+    tax: function () {
+      if (this.isTaxable) {
+        return this.subtotal * (this.taxAmount / 100);
+      }
+
+      return 0.00;
+    },
+
+    total: function () {
+      return this.subtotal + this.tax;
     },
   },
 
@@ -159,6 +170,10 @@ export default {
   },
 
   methods: {
+    toTwoDigits(number) {
+      return Number(number).toFixed(2);
+    },
+
     fetchArrangeables() {
       window.axios.get('/api/arrangeables')
         .then((data) => {

@@ -11,6 +11,7 @@
           <account-settings
             :markups="markups"
             :settings="settings"
+            :typeSettings="type_settings"
           ></account-settings>
         </div>
       </b-tab-item>
@@ -29,7 +30,8 @@ export default {
   props: {
     account: Object,
     markups: Array,
-    settings: Array,
+    settings: Object,
+    type_settings: Array,
   },
 
   created() {

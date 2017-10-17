@@ -15,14 +15,14 @@ class Account extends Model
         'created' => AccountCreated::class,
     ];
 
-    public function users()
+    public function arrangements()
     {
-    	return $this->hasMany('App\User');
+        return $this->hasMany('App\Arrangement');
     }
 
-    public function invitations()
+    public function arrangeable_type_settings()
     {
-    	return $this->hasMany('App\Invite');
+        return $this->hasMany('App\ArrangeableTypeSetting');
     }
 
     public function customers()
@@ -40,11 +40,6 @@ class Account extends Model
         return $this->hasMany('App\Event');
     }
 
-    public function vendors()
-    {
-        return $this->hasMany('App\Vendor');
-    }
-
     public function flowers()
     {
         return $this->hasMany('App\Flower');
@@ -60,9 +55,9 @@ class Account extends Model
         return $this->hasMany('App\FlowerVarietySource');
     }
 
-    public function arrangements()
+    public function invitations()
     {
-        return $this->hasMany('App\Arrangement');
+        return $this->hasMany('App\Invite');
     }
 
     public function items()
@@ -70,9 +65,19 @@ class Account extends Model
         return $this->hasMany('App\Item');
     }
 
-    public function arrangeable_type_settings()
+    public function settings()
     {
-        return $this->hasMany('App\ArrangeableTypeSetting');
+        return $this->hasOne('App\AccountSetting');
+    }
+
+    public function users()
+    {
+        return $this->hasMany('App\User');
+    }
+
+    public function vendors()
+    {
+        return $this->hasMany('App\Vendor');
     }
 
     public function getLogoPathAttribute()

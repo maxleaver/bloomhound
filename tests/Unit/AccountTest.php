@@ -165,4 +165,10 @@ class AccountTest extends TestCase
 
         $this->assertInstanceOf('App\ArrangeableTypeSetting', $this->account->arrangeable_type_settings->first());
     }
+
+    /** @test */
+    public function account_settings_are_generated_on_account_creation()
+    {
+        $this->assertInstanceOf('App\AccountSetting', $this->account->settings);
+    }
 }

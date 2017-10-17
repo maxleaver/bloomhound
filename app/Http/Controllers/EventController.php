@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use Auth;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -36,7 +37,8 @@ class EventController extends Controller
     public function show(Event $event)
     {
         $event = $event->load('customer');
-        return view('events.show', compact('event'));
+        $settings = Auth::user()->account->settings;
+        return view('events.show', compact('event', 'settings'));
     }
 
     /**

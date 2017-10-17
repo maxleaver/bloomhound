@@ -19,7 +19,7 @@ class CreateDefaultArrangeableTypeSettings
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param  \App\Events\AccountCreated  $event
      * @return void
      */
     public function handle(AccountCreated $event)

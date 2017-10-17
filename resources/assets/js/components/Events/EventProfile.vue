@@ -18,7 +18,11 @@
       </card-collapse>
 
       <card-collapse title="Arrangements">
-        <event-arrangements :event="event"></event-arrangements>
+        <event-arrangements
+          :event="event"
+          :isTaxable="settings.use_tax"
+          :taxAmount="settings.tax_amount"
+        ></event-arrangements>
       </card-collapse>
 
       <card-collapse title="Deliveries">
@@ -59,6 +63,7 @@ export default {
 
   props: {
     event: Object,
+    settings: Object,
   },
 
   data() {

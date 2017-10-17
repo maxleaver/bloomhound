@@ -45,7 +45,7 @@ class RegisterAccountTest extends TestCase
     }
 
     /** @test */
-    public function arrangeable_type_settings_are_created_when_an_account_is_registered()
+    public function arrangeable_type_settings_are_created_on_registration()
     {
         $this->post(route('register'), $this->request);
 
@@ -81,16 +81,5 @@ class RegisterAccountTest extends TestCase
         $this->post(route('register'), $this->request);
 
     	Mail::assertSent(NewAccountWelcome::class);
-    }
-
-    /** @test */
-    public function default_arrangeable_type_settings_are_created_after_registration()
-    {
-        $this->post(route('register'), $this->request);
-
-        $account = \Auth::user()->account;
-        $settings = \App\ArrangeableTypeSetting::whereAccountId($account->id);
-
-        $this->assertEquals(\App\ArrangeableType::all()->count(), $settings->count());
     }
 }

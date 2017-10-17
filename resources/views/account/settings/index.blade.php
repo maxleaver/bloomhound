@@ -19,7 +19,8 @@
 		<account-settings-tabs
       :account="{{ $account }}"
       :markups="{{ $markups }}"
-      :settings="{{ $account->arrangeable_type_settings->load('type', 'markup') }}"
+      :settings="{{ $account->settings }}"
+      :type_settings="{{ $account->arrangeable_type_settings->load('type', 'markup') }}"
     ></account-settings-tabs>
 	</div>
 </section>
