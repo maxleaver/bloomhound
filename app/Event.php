@@ -36,6 +36,11 @@ class Event extends Model
         return $this->hasMany('App\Delivery');
     }
 
+    public function setups()
+    {
+        return $this->hasMany('App\Setup');
+    }
+
     public function status()
     {
         return $this->belongsTo('App\EventStatus');

@@ -51,7 +51,7 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_can_have_many_arrangements()
     {
-        $arrangements = create('App\Arrangement', [
+        create('App\Arrangement', [
             'account_id' => $this->event->account->id,
             'event_id' => $this->event->id,
         ], 10);
@@ -62,12 +62,23 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_can_have_many_deliveries()
     {
-        $deliveries = create('App\Delivery', [
+        create('App\Delivery', [
             'account_id' => $this->event->account->id,
             'event_id' => $this->event->id,
         ], 10);
 
         $this->assertInstanceOf('App\Delivery', $this->event->deliveries->first());
+    }
+
+    /** @test */
+    public function an_event_can_have_many_setups()
+    {
+        create('App\Setup', [
+            'account_id' => $this->event->account->id,
+            'event_id' => $this->event->id,
+        ], 10);
+
+        $this->assertInstanceOf('App\Setup', $this->event->setups->first());
     }
 
     /** @test */

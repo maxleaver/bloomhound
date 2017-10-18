@@ -4,7 +4,7 @@
       <div class="level-left">
         <div class="level-item">
           <p class="subtitle is-5">
-            <strong>{{ deliveries.length }}</strong> deliveries
+            <strong>{{ setups.length }}</strong> setups
           </p>
         </div>
       </div>
@@ -16,26 +16,26 @@
             <span class="icon is-small">
               <i class="fa fa-plus"></i>
             </span>
-            <span>Add a Delivery</span>
+            <span>Add a Setup</span>
           </button>
         </p>
       </div>
     </nav>
 
     <b-table
-      default-sort="deliver_on"
-      :data="deliveries"
+      default-sort="setup_on"
+      :data="setups"
       :default-sort-direction="defaultSortDirection"
       :loading="isLoading"
       :mobile-cards="hasMobileCards"
     >
       <template scope="props">
-        <b-table-column field="deliver_on" label="Date" sortable>
-          {{ getMoment(props.row.deliver_on).format('MMM DD') }}
+        <b-table-column field="setup_on" label="Date" sortable>
+          {{ getMoment(props.row.setup_on).format('MMM DD') }}
         </b-table-column>
 
-        <b-table-column field="deliver_on" label="Time" sortable>
-          {{ getMoment(props.row.deliver_on).format('h:mm a') }}
+        <b-table-column field="setup_on" label="Time" sortable>
+          {{ getMoment(props.row.setup_on).format('h:mm a') }}
         </b-table-column>
 
         <b-table-column field="address" label="Address" sortable>
@@ -78,10 +78,10 @@
 import moment from 'moment';
 
 export default {
-  name: 'delivery-list',
+  name: 'setup-list',
   props: {
-    deliveries: Array,
     isLoading: Boolean,
+    setups: Array,
     subtotal: Number,
     toggleForm: Function,
   },

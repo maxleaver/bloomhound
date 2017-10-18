@@ -4,7 +4,7 @@
     @submit.prevent="onSubmit"
     @keydown="form.errors.clear($event.target.name)"
   >
-    <h1 class="title">Add a Delivery</h1>
+    <h1 class="title">Add a Setup</h1>
 
     <div class="columns">
       <div class="column">
@@ -47,18 +47,18 @@
       </div>
 
       <div class="column">
-        <b-field label="Delivery Date">
+        <b-field label="Setup Date">
           <b-datepicker
-            v-model="form.deliver_on"
+            v-model="form.setup_on"
             inline
           ></b-datepicker>
         </b-field>
 
-        <b-field label="Delivery Time">
+        <b-field label="Setup Time">
           <time-picker
             :format="dateFormat"
             hide-clear-button
-            v-model="deliveryTime"
+            v-model="setupTime"
           ></time-picker>
         </b-field>
       </div>
@@ -71,7 +71,7 @@
           type="submit"
           v-bind:class="{'is-loading' : isSubmitting}"
           :disabled="isSubmitting || form.errors.any()"
-        >Add Delivery</button>
+        >Add Setup</button>
       </p>
 
       <p class="control">
@@ -92,7 +92,7 @@ import TimePicker from 'components/TimePicker';
 import moment from 'moment';
 
 export default {
-  name: 'add-delivery',
+  name: 'add-setup',
   components: { TimePicker },
   props: {
     eventId: Number,
@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       dateFormat: 'hh:mm A',
-      deliveryTime: {
+      setupTime: {
         hh: '04',
         mm: '00',
         ss: '00',
@@ -111,7 +111,7 @@ export default {
       isSubmitting: false,
       form: new Form({
         address: '',
-        deliver_on: new Date(),
+        setup_on: new Date(),
         description: '',
         fee: '',
       }),
@@ -119,33 +119,33 @@ export default {
   },
 
   methods: {
-    setDeliveryTime() {
-      // Append delivery time to the date
-      const date = moment(this.form.deliver_on);
-      const hour = this.deliveryTime.A === 'PM' ? Number.parseInt(this.deliveryTime.hh, 10) + 12 : this.deliveryTime.hh;
+    setTime() {
+      // Append time to the date
+      const date = moment(this.form.setup_on);
+      const hour = this.setupTime.A === 'PM' ? Number.parseInt(this.setupTime.hh, 10) + 12 : this.setupTime.hh;
 
       date.hour(hour);
-      date.minute(this.deliveryTime.mm);
+      date.minute(this.setupTime.mm);
       date.second(0);
 
-      this.form.deliver_on = date.toDate();
+      this.form.setup_on = date.toDate();
     },
 
     onSubmit() {
-      this.setDeliveryTime();
+      this.setTime();
 
       this.isSubmitting = true;
 
-      this.form.post(`/api/events/${this.eventId}/deliveries`)
+      this.form.post(`/api/events/${this.eventId}/setups`)
         .then((data) => {
-          window.flash('Delivery added successfully!', 'success');
+          window.flash('Setup added successfully!', 'success');
 
           this.$emit('created', data);
 
           this.toggleForm();
         })
         .catch(() => {
-          window.flash('There was a problem saving your delivery!', 'danger');
+          window.flash('There was a problem saving your setup!', 'danger');
         })
         .then(() => {
           this.isSubmitting = false;

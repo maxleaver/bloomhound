@@ -25,14 +25,17 @@
       </card-collapse>
 
       <card-collapse title="Deliveries">
-        <delivery-list
+        <deliveries
           :event="event"
           @totalUpdate="updateDeliveryTotal"
-        ></delivery-list>
+        ></deliveries>
       </card-collapse>
 
       <card-collapse title="Setups">
-        <h1 class="title">Setup schedule/fees will go here...</h1>
+        <setups
+          :event="event"
+          @totalUpdate="updateSetupTotal"
+        ></setups>
       </card-collapse>
 
       <card-collapse title="Payment History">
@@ -43,9 +46,9 @@
     <section class="section">
       <div class="container">
         <div class="has-text-right content">
-          Arrangements: ${{ toTwoDigits(totalArrangements) }}<br />
-          Setup Fees: ${{ toTwoDigits(totalSetups) }}<br />
-          Delivery Fees: ${{ toTwoDigits(totalDeliveries) }}<br />
+          Arrangements: ${{ toTwoDigits(arrangementSubtotal) }}<br />
+          Setup Fees: ${{ toTwoDigits(setupSubtotal) }}<br />
+          Delivery Fees: ${{ toTwoDigits(deliverySubtotal) }}<br />
           <strong>Subtotal:</strong> ${{ toTwoDigits(subtotal) }}<br />
           Tax: ${{ toTwoDigits(tax) }}<br />
           <strong>Total: ${{ toTwoDigits(total) }}</strong>
@@ -58,18 +61,20 @@
 <script>
 import ArrangementList from 'components/Events/ArrangementList';
 import CardCollapse from 'components/CardCollapse';
-import DeliveryList from 'components/Events/DeliveryList';
+import Deliveries from 'components/Events/Deliveries';
 import EventHeader from 'components/Events/EventHeader';
 import EventVendorList from 'components/Events/EventVendorList';
+import Setups from 'components/Events/Setups';
 
 export default {
   name: 'event-profile',
   components: {
     ArrangementList,
     CardCollapse,
-    DeliveryList,
+    Deliveries,
     EventHeader,
     EventVendorList,
+    Setups,
   },
 
   props: {
@@ -79,17 +84,15 @@ export default {
 
   data() {
     return {
-      isArrangementsOpen: false,
-      isVendorListOpen: false,
-      totalArrangements: 0,
-      totalDeliveries: 0,
-      totalSetups: 0,
+      arrangementSubtotal: 0,
+      deliverySubtotal: 0,
+      setupSubtotal: 0,
     };
   },
 
   computed: {
     subtotal: function () {
-      return this.totalArrangements + this.totalDeliveries + this.totalSetups;
+      return this.arrangementSubtotal + this.deliverySubtotal + this.setupSubtotal;
     },
 
     tax: function () {
@@ -111,11 +114,15 @@ export default {
     },
 
     updateArrangementTotal(sum) {
-      this.totalArrangements = sum;
+      this.arrangementSubtotal = sum;
     },
 
     updateDeliveryTotal(sum) {
-      this.totalDeliveries = sum;
+      this.deliverySubtotal = sum;
+    },
+
+    updateSetupTotal(sum) {
+      this.setupSubtotal = sum;
     },
   },
 };

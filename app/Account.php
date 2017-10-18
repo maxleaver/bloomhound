@@ -75,6 +75,11 @@ class Account extends Model
         return $this->hasOne('App\AccountSetting');
     }
 
+    public function setups()
+    {
+        return $this->hasMany('App\Setup');
+    }
+
     public function users()
     {
         return $this->hasMany('App\User');

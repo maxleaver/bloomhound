@@ -91,7 +91,7 @@ class AccountTest extends TestCase
     /** @test */
     public function an_account_can_have_many_deliveries()
     {
-        $deliveries = create('App\Delivery', [
+        create('App\Delivery', [
             'account_id' => $this->account->id,
         ], 10);
 
@@ -106,6 +106,16 @@ class AccountTest extends TestCase
         ]);
 
         $this->assertInstanceOf('App\Event', $this->account->events->first());
+    }
+
+    /** @test */
+    public function an_account_can_have_many_event_setups()
+    {
+        create('App\Setup', [
+            'account_id' => $this->account->id,
+        ], 10);
+
+        $this->assertInstanceOf('App\Setup', $this->account->setups->first());
     }
 
     /** @test */
