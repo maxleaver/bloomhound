@@ -15,11 +15,12 @@ class CreateArrangementsTable extends Migration
     {
         Schema::create('arrangements', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('account_id')->unsigned()->index();
-            $table->integer('event_id')->unsigned()->index();
+            $table->unsignedInteger('account_id')->index();
+            $table->unsignedInteger('delivery_id')->nullable()->index();
+            $table->unsignedInteger('event_id')->index();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->integer('quantity')->unsigned();
+            $table->unsignedInteger('quantity');
             $table->timestamps();
         });
     }

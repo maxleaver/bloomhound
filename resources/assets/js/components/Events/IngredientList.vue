@@ -4,9 +4,8 @@
 
     <b-table
       default-sort="name"
-      :data="items"
+      :data="ingredients"
       :default-sort-direction="defaultSortDirection"
-      :loading="isLoading"
       :mobile-cards="hasMobileCards"
     >
       <template scope="props">
@@ -16,6 +15,10 @@
 
         <b-table-column field="quantity" label="Quantity" sortable>
           {{ props.row.quantity }}
+        </b-table-column>
+
+        <b-table-column field="cost" label="Cost/Unit" sortable>
+          {{ Number(props.row.arrangeable.cost).toFixed(2) }}
         </b-table-column>
 
         <b-table-column field="cost" label="Cost" sortable>
@@ -31,7 +34,7 @@
         </b-table-column>
 
         <b-table-column centered>
-          <span @click="deleteRow(props.row.id)">
+          <span @click="deleteIngredient(props.row.id)">
             <b-icon icon="delete"></b-icon>
           </span>
         </b-table-column>
@@ -53,24 +56,24 @@
     </b-table>
 
     <ingredient-form
-      :arrangementId="arrangementId"
       :arrangeables="arrangeables"
-      @created="addRows"
+      :id="id"
+      :store="store"
     ></ingredient-form>
   </div>
 </template>
 
 <script>
 import IngredientForm from 'components/Events/IngredientForm';
-import collection from 'mixins/collection';
 
 export default {
   name: 'ingredient-list',
   components: { IngredientForm },
-  mixins: [collection],
   props: {
-    arrangementId: Number,
+    id: Number,
     arrangeables: Array,
+    ingredients: Array,
+    store: Object,
   },
 
   data() {
@@ -80,24 +83,12 @@ export default {
     };
   },
 
-  created() {
-    this.fetch(`/api/arrangements/${this.arrangementId}/ingredients`);
-  },
-
   methods: {
-    addRows(data) {
-      data.forEach((item) => {
-        this.add(item);
+    deleteIngredient(ingredientId) {
+      this.store.dispatch('arrangement/deleteIngredient', {
+        arrangement_id: this.id,
+        ingredient_id: ingredientId,
       });
-    },
-
-    deleteRow(id) {
-      window.axios.delete(`/api/arrangements/${this.arrangementId}/ingredients/${id}`)
-        .then(() => {
-          this.$emit('deleted', this.findById(id));
-
-          this.removeById(id);
-        });
     },
   },
 };

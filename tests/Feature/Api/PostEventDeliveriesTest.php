@@ -56,6 +56,38 @@ class PostEventDeliveriesTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_include_arrangements_with_a_delivery()
+    {
+        $arrangements = create('App\Arrangement', [
+            'account_id' => $this->event->account->id,
+            'event_id' => $this->event->id
+        ], 5);
+
+        $this->request['arrangements'] = $arrangements->pluck('id');
+
+        $response = $this->signIn($this->user)
+            ->postJson($this->url($this->event->id), $this->request)
+            ->assertStatus(200);
+
+        $delivery = \App\Delivery::find($response->getData()->id);
+        $this->assertEquals(5, $delivery->arrangements->count());
+    }
+
+    /** @test */
+    public function a_user_can_only_include_arrangements_that_share_the_delivery_event()
+    {
+        $otherArrangements = create('App\Arrangement', [
+            'account_id' => $this->event->account->id
+        ], 3);
+
+        $this->request['arrangements'] = $otherArrangements->pluck('id');
+
+        $this->signIn($this->user)
+            ->postJson($this->url($this->event->id), $this->request)
+            ->assertStatus(422);
+    }
+
+    /** @test */
     public function a_user_can_only_add_deliveries_to_events_in_their_account()
     {
         $someOtherEvent = create('App\Event');

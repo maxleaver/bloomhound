@@ -6,8 +6,16 @@
     </section>
 
     <footer class="modal-card-foot">
-        <button class="button is-danger" @click="onSubmit">Yep, I'm sure!</button>
-        <button class="button" type="button" @click="onCancel">Nevermind</button>
+        <button
+          class="button is-danger"
+          @click="store.dispatch('arrangement/delete')"
+        >Yep, I'm sure!</button>
+
+        <button
+          class="button"
+          type="button"
+          @click="store.commit('arrangement/hideDeleteConfirmation')"
+        >Nevermind</button>
     </footer>
   </div>
 </template>
@@ -17,24 +25,16 @@ export default {
   name: 'delete-arrangement-modal',
 
   props: {
-    id: Number,
-    name: String,
+    store: Object,
   },
 
-  methods: {
-    onCancel() {
-      this.$parent.close();
+  computed: {
+    id() {
+      return this.store.state.arrangement.deleteRecord.id;
     },
 
-    onSubmit() {
-      window.axios.delete(`/api/arrangements/${this.id}`)
-        .then(() => {
-          window.flash('Arrangement deleted successfully!', 'success');
-
-          this.$emit('deleted', this.id);
-
-          this.$parent.close();
-        });
+    name() {
+      return this.store.state.arrangement.deleteRecord.name;
     },
   },
 };

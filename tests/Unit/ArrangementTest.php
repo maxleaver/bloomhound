@@ -86,6 +86,12 @@ class ArrangementTest extends TestCase
     }
 
     /** @test */
+    public function an_arrangement_may_belong_to_a_delivery()
+    {
+        $this->assertInstanceOf('App\Delivery', $this->arrangement->delivery);
+    }
+
+    /** @test */
     public function an_arrangement_belongs_to_an_event()
     {
         $this->assertInstanceOf('App\Event', $this->arrangement->event);

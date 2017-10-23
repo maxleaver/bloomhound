@@ -1,8 +1,8 @@
 <template>
   <form
     method="POST"
-    @submit.prevent="onSubmit"
-    @keydown="form.errors.clear($event.target.name)"
+    @submit.prevent="store.dispatch('arrangement/submit', form.data())"
+    @keydown="errors.clear($event.target.name)"
   >
     <div class="modal-card">
       <header class="modal-card-head">
@@ -12,8 +12,8 @@
       <section class="modal-card-body">
         <b-field
           label="Name"
-          :type="form.errors.has('name') ? 'is-danger' : ''"
-          :message="form.errors.has('name') ? form.errors.get('name') : ''"
+          :type="errors.has('name') ? 'is-danger' : ''"
+          :message="errors.has('name') ? errors.get('name') : ''"
         >
           <b-input
             type="text"
@@ -26,21 +26,20 @@
 
         <b-field
           label="Description"
-          :type="form.errors.has('description') ? 'is-danger' : ''"
-          :message="form.errors.has('description') ? form.errors.get('description') : ''"
+          :type="errors.has('description') ? 'is-danger' : ''"
+          :message="errors.has('description') ? errors.get('description') : ''"
         >
           <b-input
             type="text"
             v-model="form.description"
             :disabled="isSubmitting"
-            required
           ></b-input>
         </b-field>
 
         <b-field
           label="Quantity"
-          :type="form.errors.has('quantity') ? 'is-danger' : ''"
-          :message="form.errors.has('quantity') ? form.errors.get('quantity') : ''"
+          :type="errors.has('quantity') ? 'is-danger' : ''"
+          :message="errors.has('quantity') ? errors.get('quantity') : ''"
         >
           <b-input
             type="number"
@@ -56,12 +55,12 @@
           class="button is-primary"
           type="submit"
           v-bind:class="{'is-loading' : isSubmitting}"
-          :disabled="isSubmitting || form.errors.any()"
+          :disabled="isSubmitting || errors.any()"
         >Add Arrangement</button>
         <button
           class="button"
           type="button"
-          @click="$parent.close()"
+          @click="store.commit('arrangement/toggleForm')"
           :disabled="isSubmitting"
         >Nevermind</button>
       </footer>
@@ -75,12 +74,11 @@ import Form from 'helpers/Form';
 export default {
   name: 'add-arrangement',
   props: {
-    eventId: Number,
+    store: Object,
   },
 
   data() {
     return {
-      isSubmitting: false,
       form: new Form({
         description: '',
         name: '',
@@ -89,24 +87,13 @@ export default {
     };
   },
 
-  methods: {
-    onSubmit() {
-      this.isSubmitting = true;
+  computed: {
+    errors() {
+      return this.store.state.arrangement.errors;
+    },
 
-      this.form.post(`/api/events/${this.eventId}/arrangements`)
-        .then((data) => {
-          window.flash('Arrangement added successfully!', 'success');
-
-          this.$emit('created', data);
-
-          this.$parent.close();
-        })
-        .catch(() => {
-          window.flash('There was a problem saving your arrangement!', 'danger');
-        })
-        .then(() => {
-          this.isSubmitting = false;
-        });
+    isSubmitting() {
+      return this.store.state.arrangement.isSubmitting;
     },
   },
 };

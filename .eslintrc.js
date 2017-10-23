@@ -31,6 +31,7 @@ module.exports = {
     'func-names': ['error', 'as-needed'],
     'object-shorthand': ['error', 'properties'],
     'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
+    'no-param-reassign': ["error", { "props": false }],
   },
   settings: {
     'import/resolver': {

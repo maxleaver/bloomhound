@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArrangementIngredient extends Model
 {
-	protected $guarded = [];
+	protected $appends = ['cost', 'price'];
+    protected $casts = [
+        'cost' => 'float',
+        'price' => 'float',
+    ];
+    protected $guarded = [];
 	protected $with = ['arrangeable'];
-    protected $appends = ['cost', 'price'];
 
 	public function arrangement()
     {

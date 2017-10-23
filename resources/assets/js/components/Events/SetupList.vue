@@ -12,7 +12,7 @@
       <div class="level-right">
         <p class="level-item">
           <button class="button is-success is-pulled-right"
-            @click="toggleForm">
+            @click="store.commit('setup/toggleForm')">
             <span class="icon is-small">
               <i class="fa fa-plus"></i>
             </span>
@@ -39,7 +39,7 @@
         </b-table-column>
 
         <b-table-column field="address" label="Address" sortable>
-          {{ props.row.address }}
+          <span class="address">{{ props.row.address }}</span>
         </b-table-column>
 
         <b-table-column field="description" label="Description" sortable>
@@ -67,7 +67,7 @@
 
       <template slot="footer">
         <div class="has-text-right content">
-          <strong>Subtotal: ${{ toTwoDigits(subtotal) }}</strong>
+          <strong>Subtotal: ${{ subtotal }}</strong>
         </div>
       </template>
     </b-table>
@@ -80,10 +80,7 @@ import moment from 'moment';
 export default {
   name: 'setup-list',
   props: {
-    isLoading: Boolean,
-    setups: Array,
-    subtotal: Number,
-    toggleForm: Function,
+    store: Object,
   },
 
   data() {
@@ -91,6 +88,20 @@ export default {
       defaultSortDirection: 'asc',
       hasMobileCards: true,
     };
+  },
+
+  computed: {
+    isLoading() {
+      return this.store.state.setup.isLoading;
+    },
+
+    setups() {
+      return this.store.state.setup.records;
+    },
+
+    subtotal() {
+      return Number(this.store.getters['setup/subtotal']).toFixed(2);
+    },
   },
 
   methods: {

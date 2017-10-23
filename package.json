@@ -18,7 +18,8 @@
         "buefy": "^0.5.4",
         "bulma": "^0.5.3",
         "moment": "^2.19.1",
-        "vue": "^2.5.2"
+        "vue": "^2.5.2",
+        "vuex": "^3.0.0"
     },
     "devDependencies": {
         "babel-eslint": "^7.2.3",
@@ -30,6 +31,7 @@
         "eslint-loader": "^1.9.0",
         "eslint-plugin-html": "^3.2.2",
         "eslint-plugin-import": "^2.7.0",
-        "laravel-mix": "^1.5.0"
+        "laravel-mix": "^1.5.0",
+        "vue-template-compiler": "^2.5.2"
     }
 }

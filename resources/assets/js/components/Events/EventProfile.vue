@@ -17,25 +17,16 @@
         <event-vendor-list :event="event"></event-vendor-list>
       </card-collapse>
 
-      <card-collapse title="Arrangements">
-        <arrangement-list
-          :event="event"
-          @totalUpdate="updateArrangementTotal"
-        ></arrangement-list>
+      <card-collapse :title="arrangementTitle">
+        <arrangement-list :store="store"></arrangement-list>
       </card-collapse>
 
-      <card-collapse title="Deliveries">
-        <deliveries
-          :event="event"
-          @totalUpdate="updateDeliveryTotal"
-        ></deliveries>
+      <card-collapse :title="deliveryTitle">
+        <deliveries :store="store"></deliveries>
       </card-collapse>
 
-      <card-collapse title="Setups">
-        <setups
-          :event="event"
-          @totalUpdate="updateSetupTotal"
-        ></setups>
+      <card-collapse :title="setupTitle">
+        <setups :store="store"></setups>
       </card-collapse>
 
       <card-collapse title="Payment History">
@@ -47,8 +38,8 @@
       <div class="container">
         <div class="has-text-right content">
           Arrangements: ${{ toTwoDigits(arrangementSubtotal) }}<br />
-          Setup Fees: ${{ toTwoDigits(setupSubtotal) }}<br />
-          Delivery Fees: ${{ toTwoDigits(deliverySubtotal) }}<br />
+          Delivery: ${{ toTwoDigits(deliverySubtotal) }}<br />
+          Setup: ${{ toTwoDigits(setupSubtotal) }}<br />
           <strong>Subtotal:</strong> ${{ toTwoDigits(subtotal) }}<br />
           Tax: ${{ toTwoDigits(tax) }}<br />
           <strong>Total: ${{ toTwoDigits(total) }}</strong>
@@ -65,6 +56,7 @@ import Deliveries from 'components/Events/Deliveries';
 import EventHeader from 'components/Events/EventHeader';
 import EventVendorList from 'components/Events/EventVendorList';
 import Setups from 'components/Events/Setups';
+import eventStore from '../../stores/eventStore';
 
 export default {
   name: 'event-profile',
@@ -78,21 +70,55 @@ export default {
   },
 
   props: {
+    arrangements: Array,
+    deliveries: Array,
     event: Object,
     settings: Object,
+    vendors: Array,
   },
 
   data() {
     return {
-      arrangementSubtotal: 0,
-      deliverySubtotal: 0,
-      setupSubtotal: 0,
+      store: eventStore,
     };
   },
 
+  created() {
+    this.store.commit('arrangement/set', this.arrangements);
+    this.store.commit('setEvent', this.event);
+  },
+
   computed: {
+    arrangementTitle: function () {
+      return `${this.store.state.arrangement.records.length} Arrangements`;
+    },
+
+    deliveryTitle: function () {
+      return `${this.store.state.delivery.records.length} Deliveries`;
+    },
+
+    setupTitle: function () {
+      return `${this.store.state.setup.records.length} Setups`;
+    },
+
+    arrangementSubtotal: function () {
+      return this.store.getters['arrangement/subtotal'];
+    },
+
+    deliverySubtotal: function () {
+      return this.store.getters['delivery/subtotal'];
+    },
+
+    setupSubtotal: function () {
+      return this.store.getters['setup/subtotal'];
+    },
+
     subtotal: function () {
-      return this.arrangementSubtotal + this.deliverySubtotal + this.setupSubtotal;
+      let subtotal = this.arrangementSubtotal;
+      subtotal += this.deliverySubtotal;
+      subtotal += this.setupSubtotal;
+
+      return subtotal;
     },
 
     tax: function () {
@@ -100,7 +126,7 @@ export default {
         return this.subtotal * (this.settings.tax_amount / 100);
       }
 
-      return 0.00;
+      return 0;
     },
 
     total: function () {
@@ -111,18 +137,6 @@ export default {
   methods: {
     toTwoDigits(number) {
       return Number(number).toFixed(2);
-    },
-
-    updateArrangementTotal(sum) {
-      this.arrangementSubtotal = sum;
-    },
-
-    updateDeliveryTotal(sum) {
-      this.deliverySubtotal = sum;
-    },
-
-    updateSetupTotal(sum) {
-      this.setupSubtotal = sum;
     },
   },
 };

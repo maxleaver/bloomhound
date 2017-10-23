@@ -21,6 +21,11 @@ class Delivery extends Model
         return $this->belongsTo('App\Account');
     }
 
+    public function arrangements()
+    {
+        return $this->hasMany('App\Arrangement');
+    }
+
     public function event()
     {
         return $this->belongsTo('App\Event');

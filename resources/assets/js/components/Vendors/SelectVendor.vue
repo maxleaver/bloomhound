@@ -90,8 +90,6 @@ export default {
 
       this.form.post(`/api/events/${this.eventId}/vendors`)
         .then((data) => {
-          this.isSubmitting = false;
-
           window.flash('Vendor successfully added!', 'success');
 
           this.$emit('created', data);
@@ -99,11 +97,10 @@ export default {
           this.$parent.close();
         })
         .catch(() => {
-          this.isSubmitting = false;
-
-          console.log('ERROR!');
-
           window.flash('There was a problem saving your vendor!', 'danger');
+        })
+        .then(() => {
+          this.isSubmitting = false;
         });
     },
   },

@@ -12,7 +12,7 @@
       <div class="level-right">
         <p class="level-item">
           <button class="button is-success is-pulled-right"
-            @click="isAddModalActive = true">
+            @click="store.commit('arrangement/toggleForm')">
             <span class="icon is-small">
               <i class="fa fa-plus"></i>
             </span>
@@ -22,16 +22,16 @@
       </div>
     </nav>
 
-    <b-modal :active.sync="isAddModalActive" :canCancel="canCancel" has-modal-card>
-      <add-arrangement @created="add" :eventId="event.id"></add-arrangement>
+    <b-modal :active.sync="showForm" :canCancel="canCancel" has-modal-card>
+      <add-arrangement :store="store"></add-arrangement>
     </b-modal>
 
     <b-modal
-      :active.sync="isDeleteModalActive"
+      :active.sync="store.state.arrangement.isDeleteConfirmationVisible"
       :canCancel="canCancel"
       has-modal-card
     >
-      <delete-arrangement-modal v-bind="deleteModalProps" @deleted="removeById"></delete-arrangement-modal>
+      <delete-arrangement-modal :store="store"></delete-arrangement-modal>
     </b-modal>
 
     <b-table
@@ -39,12 +39,12 @@
       detailed
       :data="items"
       :default-sort-direction="defaultSortDirection"
-      :loading="isLoading"
       :mobile-cards="hasMobileCards"
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
-          {{ props.row.name }}
+          <strong>{{ props.row.name }}</strong>
+          <span v-if="props.row.description"><br />{{ props.row.description }}</span>
         </b-table-column>
 
         <b-table-column field="quantity" label="Quantity" sortable>
@@ -52,23 +52,23 @@
         </b-table-column>
 
         <b-table-column field="cost" label="Cost per Unit" sortable>
-          {{ toTwoDigits(props.row.cost) }}
+          {{ Number(props.row.cost).toFixed(2) }}
         </b-table-column>
 
         <b-table-column label="Total Cost" sortable>
-          {{ toTwoDigits(props.row.cost * props.row.quantity) }}
+          {{ Number(props.row.cost * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
         <b-table-column field="default_price" label="Price" sortable>
-          {{ toTwoDigits(props.row.default_price) }}
+          {{ Number(props.row.default_price).toFixed(2) }}
         </b-table-column>
 
         <b-table-column label="Subtotal" sortable>
-          {{ toTwoDigits(props.row.default_price * props.row.quantity) }}
+          {{ Number(props.row.default_price * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
         <b-table-column centered>
-          <span @click="showDeleteModal(props.row)">
+          <span @click="store.commit('arrangement/showDeleteConfirmation', props.row)">
             <b-icon icon="delete"></b-icon>
           </span>
         </b-table-column>
@@ -79,13 +79,16 @@
           <div class="content">
             <update-arrangement
               :arrangement="props.row"
-              @updated="onUpdate"
+              :isSubmitting="store.state.arrangement.isSubmitting"
+              :store="store"
             ></update-arrangement>
           </div>
 
           <ingredient-list
-            :arrangementId="props.row.id"
-            :arrangeables="arrangeables"
+            :arrangeables="store.state.arrangement.arrangeables"
+            :id="props.row.id"
+            :ingredients="props.row.ingredients"
+            :store="store"
             @added="increaseTotals"
             @deleted="decreaseTotals"
           ></ingredient-list>
@@ -108,7 +111,7 @@
 
       <template slot="footer">
         <div class="has-text-right content">
-          <strong>Subtotal: ${{ toTwoDigits(subtotal) }}</strong>
+          <strong>Subtotal: ${{ subtotal }}</strong>
         </div>
       </template>
     </b-table>
@@ -120,7 +123,6 @@ import AddArrangement from 'components/Events/AddArrangement';
 import DeleteArrangementModal from 'components/Events/DeleteArrangementModal';
 import IngredientList from 'components/Events/IngredientList';
 import UpdateArrangement from 'components/Events/UpdateArrangement';
-import collection from 'mixins/collection';
 
 export default {
   name: 'arrangement-list',
@@ -130,80 +132,43 @@ export default {
     IngredientList,
     UpdateArrangement,
   },
-  mixins: [collection],
   props: {
-    event: Object,
-    settings: Object,
+    store: Object,
   },
 
   data() {
     return {
-      arrangeables: [],
       canCancel: ['escape'],
       defaultSortDirection: 'asc',
-      deleteModalProps: {
-        id: '',
-        name: '',
-      },
       hasMobileCards: true,
-      isDeleteModalActive: false,
-      isAddModalActive: false,
     };
   },
 
-  computed: {
-    subtotal: function () {
-      let sum;
-
-      if (this.items.length > 0) {
-        sum = this.items.reduce((total, item) => total + (item.default_price * item.quantity), 0);
-      } else {
-        sum = 0.00;
-      }
-
-      this.$emit('totalUpdate', sum);
-
-      return sum;
-    },
+  created() {
+    this.store.dispatch('arrangement/fetchArrangeables');
   },
 
-  created() {
-    this.fetch(`/api/events/${this.event.id}/arrangements`);
-    this.fetchArrangeables();
+  computed: {
+    items() {
+      return this.store.state.arrangement.records;
+    },
+
+    showForm() {
+      return this.store.state.arrangement.showForm;
+    },
+
+    subtotal() {
+      return Number(this.store.getters['arrangement/subtotal']).toFixed(2);
+    },
   },
 
   methods: {
-    toTwoDigits(number) {
-      return Number(number).toFixed(2);
-    },
-
-    fetchArrangeables() {
-      window.axios.get('/api/arrangeables')
-        .then((data) => {
-          this.arrangeables = data.data;
-        });
-    },
-
-    showDeleteModal(row) {
-      this.deleteModalProps.id = row.id;
-      this.deleteModalProps.name = row.name;
-
-      this.isDeleteModalActive = true;
-    },
-
     decreaseTotals(data) {
       this.updateTotals('subtract', data);
     },
 
     increaseTotals(data) {
       this.updateTotals('add', data);
-    },
-
-    onUpdate(data) {
-      const arrangement = this.findById(data.id);
-
-      arrangement.name = data.name;
-      arrangement.quantity = data.quantity;
     },
 
     updateTotals(action, data) {

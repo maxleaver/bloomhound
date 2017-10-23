@@ -2,7 +2,7 @@
   <form
     method="POST"
     @submit.prevent="onSubmit"
-    @keydown="form.errors.clear($event.target.name)"
+    @keydown="errors.clear($event.target.name)"
   >
     <h1 class="title">Add a Setup</h1>
 
@@ -10,8 +10,8 @@
       <div class="column">
         <b-field
           label="Address"
-          :type="form.errors.has('address') ? 'is-danger' : ''"
-          :message="form.errors.has('address') ? form.errors.get('address') : ''"
+          :type="errors.has('address') ? 'is-danger' : ''"
+          :message="errors.has('address') ? errors.get('address') : ''"
         >
           <b-input
             type="textarea"
@@ -23,8 +23,8 @@
 
         <b-field
           label="Description"
-          :type="form.errors.has('description') ? 'is-danger' : ''"
-          :message="form.errors.has('description') ? form.errors.get('description') : ''"
+          :type="errors.has('description') ? 'is-danger' : ''"
+          :message="errors.has('description') ? errors.get('description') : ''"
         >
           <b-input
             type="text"
@@ -35,8 +35,8 @@
 
         <b-field
           label="Fee"
-          :type="form.errors.has('fee') ? 'is-danger' : ''"
-          :message="form.errors.has('fee') ? form.errors.get('fee') : ''"
+          :type="errors.has('fee') ? 'is-danger' : ''"
+          :message="errors.has('fee') ? errors.get('fee') : ''"
         >
           <b-input
             type="number"
@@ -70,7 +70,7 @@
           class="button is-primary"
           type="submit"
           v-bind:class="{'is-loading' : isSubmitting}"
-          :disabled="isSubmitting || form.errors.any()"
+          :disabled="isSubmitting || errors.any()"
         >Add Setup</button>
       </p>
 
@@ -78,7 +78,7 @@
         <button
           class="button"
           type="button"
-          @click="toggleForm"
+          @click="store.commit('setup/toggleForm')"
           :disabled="isSubmitting"
         >Nevermind</button>
       </p>
@@ -95,8 +95,7 @@ export default {
   name: 'add-setup',
   components: { TimePicker },
   props: {
-    eventId: Number,
-    toggleForm: Function,
+    store: Object,
   },
 
   data() {
@@ -108,7 +107,6 @@ export default {
         ss: '00',
         A: 'PM',
       },
-      isSubmitting: false,
       form: new Form({
         address: '',
         setup_on: new Date(),
@@ -118,11 +116,25 @@ export default {
     };
   },
 
+  computed: {
+    errors() {
+      return this.store.state.setup.errors;
+    },
+
+    isSubmitting() {
+      return this.store.state.setup.isSubmitting;
+    },
+  },
+
   methods: {
     setTime() {
       // Append time to the date
       const date = moment(this.form.setup_on);
-      const hour = this.setupTime.A === 'PM' ? Number.parseInt(this.setupTime.hh, 10) + 12 : this.setupTime.hh;
+      let hour = Number.parseInt(this.setupTime.hh, 10);
+
+      if (this.setupTime.A === 'PM') {
+        hour += 12;
+      }
 
       date.hour(hour);
       date.minute(this.setupTime.mm);
@@ -134,22 +146,7 @@ export default {
     onSubmit() {
       this.setTime();
 
-      this.isSubmitting = true;
-
-      this.form.post(`/api/events/${this.eventId}/setups`)
-        .then((data) => {
-          window.flash('Setup added successfully!', 'success');
-
-          this.$emit('created', data);
-
-          this.toggleForm();
-        })
-        .catch(() => {
-          window.flash('There was a problem saving your setup!', 'danger');
-        })
-        .then(() => {
-          this.isSubmitting = false;
-        });
+      this.store.dispatch('setup/submit', this.form.data());
     },
   },
 };

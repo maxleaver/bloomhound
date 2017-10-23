@@ -5,7 +5,7 @@
   >
     <hr>
 
-    <div v-for="(form, index) in formContainer.forms">
+    <div v-for="(form, index) in rows">
       <add-ingredient
         :arrangeables="arrangeables"
         :form="form"
@@ -28,7 +28,6 @@
 
 <script>
 import AddIngredient from 'components/Events/AddIngredient';
-import FormContainer from 'helpers/FormContainer';
 
 export default {
   name: 'ingredient-form',
@@ -36,51 +35,39 @@ export default {
 
   props: {
     arrangeables: Array,
-    arrangementId: Number,
+    id: Number,
+    store: Object,
   },
 
-  data() {
-    return {
-      formContainer: new FormContainer({
-        id: null,
-        type: '',
-        quantity: null,
-      }, 3),
-      isSubmitting: false,
-    };
+  computed: {
+    rows() {
+      return this.store.state.arrangement.ingredientFormContainer.forms;
+    },
+
+    isSubmitting() {
+      return this.store.state.arrangement.isAddingIngredient;
+    },
   },
 
   methods: {
     addRow(index) {
-      this.formContainer.addRow(index);
+      this.store.commit('arrangement/addIngredientRow', index);
     },
 
     onSubmit() {
-      if (this.formContainer.isEmpty()) {
+      const formContainer = this.store.state.arrangement.ingredientFormContainer;
+
+      if (formContainer.isEmpty()) {
         return;
       }
 
-      this.isSubmitting = true;
+      this.store.dispatch('arrangement/addIngredient', {
+        arrangement_id: this.id,
+        data: formContainer.data(),
+      });
 
-      this.formContainer.post(`/api/arrangements/${this.arrangementId}/ingredients`)
-        .then((data) => {
-          // Reset form to the defaults
-          this.formContainer.reset();
-          this.$emit('reset');
-
-          window.flash('Ingredients added!', 'success');
-
-          this.$emit('created', data);
-        })
-        .catch((error) => {
-          // Only show the flash message if it's not a validation error
-          if (typeof error.errors === 'undefined') {
-            window.flash('There was a problem saving your ingredients. Please try again.', 'danger');
-          }
-        })
-        .then(() => {
-          this.isSubmitting = false;
-        });
+      formContainer.reset();
+      this.$emit('reset');
     },
   },
 };

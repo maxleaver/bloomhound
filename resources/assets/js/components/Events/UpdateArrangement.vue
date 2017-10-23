@@ -28,7 +28,6 @@
           type="text"
           v-model="form.description"
           :disabled="isSubmitting"
-          required
         ></b-input>
       </b-field>
 
@@ -64,6 +63,8 @@ export default {
 
   props: {
     arrangement: Object,
+    isSubmitting: Boolean,
+    store: Object,
   },
 
   data() {
@@ -73,26 +74,15 @@ export default {
         description: this.arrangement.description,
         quantity: this.arrangement.quantity,
       }, false),
-      isSubmitting: false,
     };
   },
 
   methods: {
     onSubmit() {
-      this.isSubmitting = true;
-
-      this.form.patch(`/api/arrangements/${this.arrangement.id}`)
-        .then((data) => {
-          window.flash(`${this.form.name} was updated successfully!`, 'success');
-
-          this.$emit('updated', data);
-        })
-        .catch(() => {
-          window.flash(`There was a problem updating ${this.form.name}. Please try again.`, 'danger');
-        })
-        .then(() => {
-          this.isSubmitting = false;
-        });
+      this.store.dispatch('arrangement/update', {
+        id: this.arrangement.id,
+        data: this.form.data(),
+      });
     },
   },
 };

@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<event-profile :event="{{ $event }}" :settings="{{ $settings }}">
+<event-profile
+	:arrangements="{{ $event->arrangements }}"
+	:event="{{ $event }}"
+	:settings="{{ $settings }}"
+>
   {{ Breadcrumbs::render('event', $event) }}
 </event-profile>
 

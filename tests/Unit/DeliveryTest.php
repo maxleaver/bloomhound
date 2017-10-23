@@ -39,6 +39,17 @@ class DeliveryTest extends TestCase
     }
 
     /** @test */
+    public function a_delivery_has_many_arrangements() {
+        $arrangements = create('App\Arrangement', [
+            'account_id' => $this->delivery->account->id,
+            'delivery_id' => $this->delivery->id,
+            'event_id' => $this->delivery->event->id,
+        ]);
+
+        $this->assertInstanceOf('App\Arrangement', $this->delivery->arrangements->first());
+    }
+
+    /** @test */
     public function a_delivery_belongs_to_an_account() {
         $this->assertInstanceOf('App\Account', $this->delivery->account);
     }

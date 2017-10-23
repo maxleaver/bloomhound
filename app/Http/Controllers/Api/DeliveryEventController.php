@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Event;
-use App\Delivery;
 use Auth;
+use DB;
+use App\Arrangement;
+use App\Delivery;
+use App\Event;
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class DeliveryEventController extends Controller
 {
@@ -35,27 +39,42 @@ class DeliveryEventController extends Controller
      */
     public function store(Request $request, Event $event)
     {
-        $data = $this->validate(request(), [
-            'address' => 'required|string',
-            'deliver_on' => 'required|date',
-            'description' => 'nullable|string',
-            'fee' => 'nullable|numeric',
-        ]);
-
         if ($event->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
-        $delivery = new Delivery();
-        $delivery->address = $request->address;
-        $delivery->deliver_on = Carbon::parse($request->deliver_on);
-        $delivery->description = $request->description;
-        $delivery->fee = $request->fee;
-        $delivery->account()->associate(Auth::user()->account);
-        $delivery->event()->associate($event);
-        $delivery->save();
+        Validator::make($request->all(), [
+            'address' => 'required|string',
+            'deliver_on' => 'required|date',
+            'description' => 'nullable|string',
+            'fee' => 'nullable|numeric',
+            'arrangements.*' => [
+                'integer',
+                Rule::exists('arrangements', 'id')->where(function ($query) use ($event) {
+                    $query->where('event_id', $event->id);
+                }),
+            ],
+        ])->validate();
 
-        return response()->json($delivery);
+        $delivery = DB::transaction(function () use ($request, $event) {
+            $delivery = new Delivery();
+            $delivery->address = $request->address;
+            $delivery->deliver_on = Carbon::parse($request->deliver_on);
+            $delivery->description = $request->description;
+            $delivery->fee = $request->fee;
+            $delivery->account()->associate(Auth::user()->account);
+            $delivery->event()->associate($event);
+            $delivery->save();
+
+            if ($request->arrangements) {
+                $arrangements = Arrangement::whereIn('id', $request->arrangements)->get();
+                $delivery->arrangements()->saveMany($arrangements);
+            }
+
+            return $delivery;
+        });
+
+        return response()->json($delivery->load('arrangements'));
     }
 
     /**

@@ -24,6 +24,11 @@ class Arrangement extends Model
         return $this->belongsTo('App\Account');
     }
 
+    public function delivery()
+    {
+        return $this->belongsTo('App\Delivery');
+    }
+
     public function event()
     {
     	return $this->belongsTo('App\Event');
