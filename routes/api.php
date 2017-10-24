@@ -70,6 +70,10 @@ Route::middleware('auth:api')->group(function () {
 		Route::post('/{customer}/notes', 'NoteController@store');
 	});
 
+	Route::prefix('deliveries')->group(function () {
+	    Route::patch('{delivery}', 'DeliveryController@update');
+	});
+
 	Route::prefix('events')->group(function () {
 		Route::get('/', 'EventController@index');
 		Route::post('/', 'EventController@store');

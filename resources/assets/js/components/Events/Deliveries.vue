@@ -1,25 +1,41 @@
 <template>
   <transition name="fade" mode="out-in">
-    <add-delivery
+    <delivery-form
       v-if="store.state.delivery.showForm"
+      :form="form"
       :store="store"
-    ></add-delivery>
+      :timezone="timezone"
+    ></delivery-form>
     <delivery-list
       v-else
       :store="store"
+      :timezone="timezone"
     ></delivery-list>
   </transition>
 </template>
 
 <script>
-import AddDelivery from 'components/Events/AddDelivery';
+import DeliveryForm from 'components/Events/DeliveryForm';
 import DeliveryList from 'components/Events/DeliveryList';
+import Form from 'helpers/Form';
 
 export default {
   name: 'deliveries',
-  components: { AddDelivery, DeliveryList },
+  components: { DeliveryForm, DeliveryList },
   props: {
     store: Object,
+    timezone: String,
+  },
+
+  data() {
+    return {
+      form: new Form({
+        address: '',
+        deliver_on: new Date(),
+        description: '',
+        fee: '',
+      }),
+    };
   },
 
   created() {

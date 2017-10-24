@@ -24,6 +24,7 @@
 
     <b-table
       default-sort="deliver_on"
+      detailed
       :data="deliveries"
       :default-sort-direction="defaultSortDirection"
       :loading="isLoading"
@@ -31,11 +32,11 @@
     >
       <template scope="props">
         <b-table-column field="deliver_on" label="Date" sortable>
-          {{ getMoment(props.row.deliver_on).format('MMM DD') }}
+          {{ getLocalTime(props.row.deliver_on).format('MMM DD') }}
         </b-table-column>
 
         <b-table-column field="deliver_on" label="Time" sortable>
-          {{ getMoment(props.row.deliver_on).format('h:mm a') }}
+          {{ getLocalTime(props.row.deliver_on).format('h:mm a') }}
         </b-table-column>
 
         <b-table-column field="address" label="Address" sortable>
@@ -65,6 +66,16 @@
         </section>
       </template>
 
+      <template slot="detail" scope="props">
+        <delivery-form
+          :form="getUpdateForm(props.row)"
+          :id="props.row.id"
+          :isUpdateForm="true"
+          :store="store"
+          :timezone="timezone"
+        ></delivery-form>
+      </template>
+
       <template slot="footer">
         <div class="has-text-right content">
           <strong>Subtotal: ${{ subtotal }}</strong>
@@ -75,12 +86,16 @@
 </template>
 
 <script>
-import moment from 'moment';
+import DeliveryForm from 'components/Events/DeliveryForm';
+import Form from 'helpers/Form';
+import moment from 'moment-timezone';
 
 export default {
   name: 'delivery-list',
+  components: { DeliveryForm },
   props: {
     store: Object,
+    timezone: String,
   },
 
   data() {
@@ -105,8 +120,17 @@ export default {
   },
 
   methods: {
-    getMoment(date) {
-      return moment(date);
+    getLocalTime(date) {
+      return moment.utc(date).tz(this.timezone);
+    },
+
+    getUpdateForm(delivery) {
+      return new Form({
+        address: delivery.address,
+        deliver_on: moment.utc(delivery.deliver_on).tz(this.timezone).toDate(),
+        description: delivery.description,
+        fee: delivery.fee,
+      });
     },
 
     toTwoDigits(number) {

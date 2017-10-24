@@ -22,11 +22,17 @@
       </card-collapse>
 
       <card-collapse :title="deliveryTitle">
-        <deliveries :store="store"></deliveries>
+        <deliveries
+          :store="store"
+          :timezone="timezone"
+        ></deliveries>
       </card-collapse>
 
       <card-collapse :title="setupTitle">
-        <setups :store="store" :timezone="timezone"></setups>
+        <setups
+          :store="store"
+          :timezone="timezone"
+        ></setups>
       </card-collapse>
 
       <card-collapse title="Payment History">

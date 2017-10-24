@@ -4,7 +4,7 @@
     @submit.prevent="onSubmit"
     @keydown="errors.clear($event.target.name)"
   >
-    <h1 class="title">Add a Delivery</h1>
+    <h1 class="title" v-if="!isUpdateForm">Add a Delivery</h1>
 
     <div class="columns">
       <div class="column">
@@ -71,7 +71,7 @@
           type="submit"
           v-bind:class="{'is-loading' : isSubmitting}"
           :disabled="isSubmitting || errors.any()"
-        >Add Delivery</button>
+        >{{ buttonText }}</button>
       </p>
 
       <p class="control">
@@ -87,15 +87,18 @@
 </template>
 
 <script>
-import Form from 'helpers/Form';
 import TimePicker from 'components/TimePicker';
 import moment from 'moment';
 
 export default {
-  name: 'add-delivery',
+  name: 'delivery-form',
   components: { TimePicker },
   props: {
+    form: Object,
+    id: Number,
+    isUpdateForm: Boolean,
     store: Object,
+    timezone: String,
   },
 
   data() {
@@ -107,42 +110,67 @@ export default {
         ss: '00',
         A: 'PM',
       },
-      form: new Form({
-        address: '',
-        deliver_on: new Date(),
-        description: '',
-        fee: '',
-      }),
     };
   },
 
+  created() {
+    if (this.isUpdateForm) {
+      this.setTime();
+    }
+  },
+
   computed: {
+    buttonText() {
+      return this.isUpdateForm ? 'Update Delivery' : 'Add Delivery';
+    },
+
     errors() {
-      return this.store.state.setup.errors;
+      return this.store.state.delivery.errors;
     },
 
     isSubmitting() {
-      return this.store.state.setup.isSubmitting;
+      return this.store.state.delivery.isSubmitting;
     },
   },
 
   methods: {
-    setDeliveryTime() {
-      // Append delivery time to the date
+    appendTimeToDate() {
       const date = moment(this.form.deliver_on);
-      const hour = this.deliveryTime.A === 'PM' ? Number.parseInt(this.deliveryTime.hh, 10) + 12 : this.deliveryTime.hh;
+      const hour = this.convertTo24Hour(this.deliveryTime.hh, this.deliveryTime.A);
 
       date.hour(hour);
       date.minute(this.deliveryTime.mm);
       date.second(0);
 
-      this.form.deliver_on = date.toDate();
+      this.form.deliver_on = date.utc().toDate();
+    },
+
+    convertTo24Hour(hour, ampm) {
+      const time = Number.parseInt(hour, 10);
+      return ampm === 'PM' ? time + 12 : time;
     },
 
     onSubmit() {
-      this.setDeliveryTime();
+      this.appendTimeToDate();
 
-      this.store.dispatch('delivery/submit', this.form.data());
+      if (this.isUpdateForm) {
+        this.store.dispatch('delivery/update', {
+          id: this.id,
+          data: this.form.data(),
+        });
+      } else {
+        this.store.dispatch('delivery/submit', this.form.data());
+      }
+    },
+
+    setTime() {
+      let hours = this.form.deliver_on.getHours();
+      const minutes = this.form.deliver_on.getMinutes();
+
+      hours = hours % 12 || 12;
+      this.deliveryTime.hh = hours < 10 ? `0${hours}` : hours;
+      this.deliveryTime.mm = minutes < 10 ? `0${minutes}` : minutes;
+      this.deliveryTime.A = hours >= 12 ? 'PM' : 'AM';
     },
   },
 };

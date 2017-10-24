@@ -30,20 +30,44 @@ export default {
     },
 
     submitSuccess(state, record) {
-      window.flash('Delivery added successfully!', 'success');
-
       state.records.unshift(record);
       state.errors.clear();
 
       state.isSubmitting = false;
       state.showForm = false;
+
+      window.flash('Delivery added successfully!', 'success');
     },
 
     submitFailure(state, errors) {
-      window.flash('There was a problem saving your delivery!', 'danger');
-
       state.isSubmitting = false;
       state.errors.record(errors);
+
+      window.flash('There was a problem saving your delivery!', 'danger');
+    },
+
+    updateRequest(state) {
+      state.isSubmitting = true;
+    },
+
+    updateSuccess(state, data) {
+      const record = state.records.find(item => item.id === data.id);
+      record.address = data.address;
+      record.description = data.description;
+      record.fee = data.fee;
+      record.deliver_on = data.deliver_on;
+
+      state.errors.clear();
+      state.isSubmitting = false;
+
+      window.flash('Delivery updated successfully!', 'success');
+    },
+
+    updateFailure(state, errors) {
+      state.isSubmitting = false;
+      state.errors.record(errors);
+
+      window.flash('There was a problem updating your delivery!', 'danger');
     },
   },
   actions: {
@@ -65,6 +89,18 @@ export default {
         })
         .catch((error) => {
           commit('submitFailure', error.response.data.errors);
+        });
+    },
+
+    update({ commit }, { id, data }) {
+      commit('updateRequest');
+
+      window.axios.patch(`/api/deliveries/${id}`, data)
+        .then((response) => {
+          commit('updateSuccess', response.data);
+        })
+        .catch((error) => {
+          commit('updateFailure', error.response.data.errors);
         });
     },
   },
