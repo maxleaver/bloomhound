@@ -43,8 +43,9 @@
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
-          <strong>{{ props.row.name }}</strong>
-          <span v-if="props.row.description"><br />{{ props.row.description }}</span>
+          <strong>{{ props.row.name }}</strong><br />
+          <span v-if="props.row.description">{{ props.row.description }}<br /></span>
+          <span class="is-size-7">{{ getDescription(props.row) }}</span>
         </b-table-column>
 
         <b-table-column field="quantity" label="Quantity" sortable>
@@ -103,8 +104,6 @@
             :id="props.row.id"
             :ingredients="props.row.ingredients"
             :store="store"
-            @added="increaseTotals"
-            @deleted="decreaseTotals"
           ></ingredient-list>
         </div>
       </template>
@@ -177,26 +176,15 @@ export default {
   },
 
   methods: {
-    decreaseTotals(data) {
-      this.updateTotals('subtract', data);
-    },
+    getDescription(row) {
+      const array = [];
 
-    increaseTotals(data) {
-      this.updateTotals('add', data);
-    },
+      row.ingredients.forEach((ingredient) => {
+        const txt = `${ingredient.arrangeable.ingredient_name} x${ingredient.quantity}`;
+        array.push(txt);
+      });
 
-    updateTotals(action, data) {
-      const arrangement = this.findById(data.arrangement_id);
-
-      if (action === 'add') {
-        arrangement.cost += data.cost;
-        arrangement.default_price += data.price;
-      }
-
-      if (action === 'subtract') {
-        arrangement.cost -= data.cost;
-        arrangement.default_price -= data.price;
-      }
+      return array.join(', ');
     },
   },
 };
