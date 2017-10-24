@@ -15,12 +15,7 @@
         <h1 class="title">Event Proposal for {{ event.customer.name }}</h1>
 
         <b-collapse :open="store.state.showSettingsPanel">
-          <div class="field">
-            <b-switch
-              @input="store.commit('toggleCosts', showCosts)"
-              v-model="showCosts"
-            >{{ costToggleText }}</b-switch>
-          </div>
+          <settings :store="store"></settings>
         </b-collapse>
 
       </div>
@@ -54,7 +49,7 @@
       </card-collapse>
     </div>
 
-    <section class="section">
+    <section class="section" v-if="store.state.showPrices">
       <div class="container">
         <div class="has-text-right content">
           Arrangements: ${{ toTwoDigits(arrangementSubtotal) }}<br />
@@ -76,6 +71,7 @@ import CardCollapse from 'components/CardCollapse';
 import Deliveries from 'components/Events/Deliveries';
 import EventHeader from 'components/Events/EventHeader';
 import EventVendorList from 'components/Events/EventVendorList';
+import Settings from 'components/Events/Settings';
 import Setups from 'components/Events/Setups';
 import eventStore from '../../stores/eventStore';
 
@@ -87,6 +83,7 @@ export default {
     Deliveries,
     EventHeader,
     EventVendorList,
+    Settings,
     Setups,
   },
 

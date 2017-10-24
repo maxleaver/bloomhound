@@ -15,6 +15,7 @@ export default new Vuex.Store({
   state: {
     event: {},
     showCosts: false,
+    showPrices: true,
     showSettingsPanel: false,
   },
 
@@ -25,6 +26,10 @@ export default new Vuex.Store({
 
     toggleCosts(state, showCosts) {
       state.showCosts = showCosts;
+    },
+
+    togglePrices(state, showPrices) {
+      state.showPrices = showPrices;
     },
 
     toggleSettingPanel(state) {

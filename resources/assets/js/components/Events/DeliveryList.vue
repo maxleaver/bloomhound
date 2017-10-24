@@ -47,7 +47,13 @@
           {{ props.row.description }}
         </b-table-column>
 
-        <b-table-column field="fee" label="Fee" sortable numeric>
+        <b-table-column
+          field="fee"
+          label="Fee"
+          sortable
+          numeric
+          :visible="store.state.showPrices"
+        >
           {{ toTwoDigits(props.row.fee) }}
         </b-table-column>
       </template>
@@ -76,7 +82,7 @@
         ></delivery-form>
       </template>
 
-      <template slot="footer">
+      <template slot="footer" v-if="store.state.showPrices">
         <div class="has-text-right content">
           <strong>Subtotal: ${{ subtotal }}</strong>
         </div>

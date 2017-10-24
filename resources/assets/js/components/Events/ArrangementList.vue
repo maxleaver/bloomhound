@@ -68,11 +68,16 @@
           {{ Number(props.row.cost * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
-        <b-table-column field="default_price" label="Price" sortable>
+        <b-table-column
+          field="default_price"
+          label="Price"
+          sortable
+          :visible="store.state.showPrices"
+        >
           {{ Number(props.row.default_price).toFixed(2) }}
         </b-table-column>
 
-        <b-table-column label="Subtotal" sortable>
+        <b-table-column label="Subtotal" sortable :visible="store.state.showPrices">
           {{ Number(props.row.default_price * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
@@ -118,7 +123,7 @@
         </section>
       </template>
 
-      <template slot="footer">
+      <template slot="footer" v-if="store.state.showPrices">
         <div class="has-text-right content">
           <strong>Subtotal: ${{ subtotal }}</strong>
         </div>

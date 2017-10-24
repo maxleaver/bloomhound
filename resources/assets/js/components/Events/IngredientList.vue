@@ -35,11 +35,20 @@
           {{ Number(props.row.arrangeable.cost * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
-        <b-table-column field="price" label="Price/Unit" sortable>
+        <b-table-column
+          field="price"
+          label="Price/Unit"
+          sortable
+          :visible="store.state.showPrices"
+        >
           {{ props.row.arrangeable.price }}
         </b-table-column>
 
-        <b-table-column label="Subtotal" sortable>
+        <b-table-column
+          label="Subtotal"
+          sortable
+          :visible="store.state.showPrices"
+        >
           {{ Number(props.row.arrangeable.price * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
