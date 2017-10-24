@@ -65,10 +65,18 @@
       </template>
     </b-table>
 
+    <button
+      class="button is-link"
+      type="button"
+      @click="store.commit('arrangement/toggleIngredientForm')"
+      v-if="!showIngredientForm"
+    >Add Ingredients</button>
+
     <ingredient-form
       :arrangeables="arrangeables"
       :id="id"
       :store="store"
+      v-if="showIngredientForm"
     ></ingredient-form>
   </div>
 </template>
@@ -91,6 +99,12 @@ export default {
       defaultSortDirection: 'asc',
       hasMobileCards: true,
     };
+  },
+
+  computed: {
+    showIngredientForm() {
+      return this.store.state.arrangement.showIngredientForm;
+    },
   },
 
   methods: {

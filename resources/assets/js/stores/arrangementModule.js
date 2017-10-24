@@ -21,6 +21,7 @@ export default {
     isSubmitting: false,
     records: [],
     showForm: false,
+    showIngredientForm: false,
   },
   mutations: {
     set(state, records) {
@@ -42,6 +43,10 @@ export default {
     toggleForm(state) {
       state.showForm = !state.showForm;
       state.errors.clear();
+    },
+
+    toggleIngredientForm(state) {
+      state.showIngredientForm = !state.showIngredientForm;
     },
 
     fetchArrangeablesRequest(state) {

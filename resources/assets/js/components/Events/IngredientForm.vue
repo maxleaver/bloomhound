@@ -17,12 +17,25 @@
       ></add-ingredient>
     </div>
 
-    <button
-      class="button is-primary"
-      type="submit"
-      v-bind:class="{'is-loading' : isSubmitting}"
-      :disabled="isSubmitting"
-    >Add Ingredients</button>
+    <b-field grouped>
+      <p class="control">
+        <button
+          class="button is-primary"
+          type="submit"
+          v-bind:class="{'is-loading' : isSubmitting}"
+          :disabled="isSubmitting"
+        >Add Ingredients</button>
+      </p>
+
+      <p class="control">
+        <button
+          class="button"
+          type="button"
+          @click="store.commit('arrangement/toggleIngredientForm')"
+          :disabled="isSubmitting"
+        >Nevermind</button>
+      </p>
+    </b-field>
   </form>
 </template>
 
