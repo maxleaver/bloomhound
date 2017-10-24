@@ -52,7 +52,7 @@
         </b-table-column>
 
         <b-table-column field="address" label="Address" sortable>
-          {{ props.row.address }}
+          <span class="address">{{ props.row.address }}</span>
         </b-table-column>
 
         <b-table-column field="created_at" label="Created On" sortable centered>

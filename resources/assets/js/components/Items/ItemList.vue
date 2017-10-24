@@ -36,7 +36,7 @@
     >
       <template scope="props">
         <b-table-column field="name" label="Name" sortable>
-          {{ props.row.name }}
+          <strong>{{ props.row.name }}</strong>
         </b-table-column>
 
         <b-table-column field="description" label="Description" sortable>

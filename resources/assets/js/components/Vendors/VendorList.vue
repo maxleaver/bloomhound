@@ -39,6 +39,25 @@
           <strong>{{ props.row.name }}</strong>
         </b-table-column>
 
+        <b-table-column field="address" label="Address" sortable>
+          <span class="address">{{ props.row.address }}</span class="address">
+        </b-table-column>
+
+        <b-table-column field="email" label="Email" sortable>
+          {{ props.row.email }}
+        </b-table-column>
+
+        <b-table-column field="phone" label="Phone" sortable>
+          {{ props.row.phone }}
+        </b-table-column>
+
+        <b-table-column field="website" label="Website" sortable>
+          <a
+            :alt="props.row.name"
+            :href="props.row.website"
+          >{{ props.row.website }}</a>
+        </b-table-column>
+
         <b-table-column field="created_at" label="Created On" sortable centered>
           {{ new Date(props.row.created_at).toLocaleDateString() }}
         </b-table-column>
