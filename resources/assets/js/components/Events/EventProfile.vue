@@ -26,7 +26,7 @@
       </card-collapse>
 
       <card-collapse :title="setupTitle">
-        <setups :store="store"></setups>
+        <setups :store="store" :timezone="timezone"></setups>
       </card-collapse>
 
       <card-collapse title="Payment History">
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import moment from 'moment-timezone';
 import ArrangementList from 'components/Events/ArrangementList';
 import CardCollapse from 'components/CardCollapse';
 import Deliveries from 'components/Events/Deliveries';
@@ -80,6 +81,7 @@ export default {
   data() {
     return {
       store: eventStore,
+      timezone: moment.tz.guess(),
     };
   },
 

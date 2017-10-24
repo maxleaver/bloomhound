@@ -132,6 +132,10 @@ Route::middleware('auth:api')->group(function () {
 		Route::patch('/', 'ProfileController@update');
 	});
 
+	Route::prefix('setups')->group(function () {
+	    Route::patch('{setup}', 'SetupController@update');
+	});
+
 	Route::prefix('users')->group(function () {
 	    Route::get('/', 'UserController@index');
 		Route::post('/', 'InviteController@store');

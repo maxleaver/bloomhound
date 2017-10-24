@@ -24,6 +24,7 @@
 
     <b-table
       default-sort="setup_on"
+      detailed
       :data="setups"
       :default-sort-direction="defaultSortDirection"
       :loading="isLoading"
@@ -31,11 +32,11 @@
     >
       <template scope="props">
         <b-table-column field="setup_on" label="Date" sortable>
-          {{ getMoment(props.row.setup_on).format('MMM DD') }}
+          {{ getLocalTime(props.row.setup_on).format('MMM DD') }}
         </b-table-column>
 
         <b-table-column field="setup_on" label="Time" sortable>
-          {{ getMoment(props.row.setup_on).format('h:mm a') }}
+          {{ getLocalTime(props.row.setup_on).format('h:mm a') }}
         </b-table-column>
 
         <b-table-column field="address" label="Address" sortable>
@@ -65,6 +66,16 @@
         </section>
       </template>
 
+      <template slot="detail" scope="props">
+        <setup-form
+          :form="getUpdateForm(props.row)"
+          :id="props.row.id"
+          :isUpdateForm="true"
+          :store="store"
+          :timezone="timezone"
+        ></setup-form>
+      </template>
+
       <template slot="footer">
         <div class="has-text-right content">
           <strong>Subtotal: ${{ subtotal }}</strong>
@@ -75,12 +86,16 @@
 </template>
 
 <script>
-import moment from 'moment';
+import SetupForm from 'components/Events/SetupForm';
+import Form from 'helpers/Form';
+import moment from 'moment-timezone';
 
 export default {
   name: 'setup-list',
+  components: { SetupForm },
   props: {
     store: Object,
+    timezone: String,
   },
 
   data() {
@@ -105,8 +120,17 @@ export default {
   },
 
   methods: {
-    getMoment(date) {
-      return moment(date);
+    getLocalTime(date) {
+      return moment.utc(date).tz(this.timezone);
+    },
+
+    getUpdateForm(setup) {
+      return new Form({
+        address: setup.address,
+        setup_on: moment.utc(setup.setup_on).tz(this.timezone).toDate(),
+        description: setup.description,
+        fee: setup.fee,
+      });
     },
 
     toTwoDigits(number) {

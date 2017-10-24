@@ -4,7 +4,7 @@
     @submit.prevent="onSubmit"
     @keydown="errors.clear($event.target.name)"
   >
-    <h1 class="title">Add a Setup</h1>
+    <h1 class="title" v-if="!isUpdateForm">Add a Setup</h1>
 
     <div class="columns">
       <div class="column">
@@ -71,10 +71,10 @@
           type="submit"
           v-bind:class="{'is-loading' : isSubmitting}"
           :disabled="isSubmitting || errors.any()"
-        >Add Setup</button>
+        >{{ buttonText }}</button>
       </p>
 
-      <p class="control">
+      <p class="control" v-if="!isUpdateForm">
         <button
           class="button"
           type="button"
@@ -87,15 +87,18 @@
 </template>
 
 <script>
-import Form from 'helpers/Form';
 import TimePicker from 'components/TimePicker';
 import moment from 'moment';
 
 export default {
-  name: 'add-setup',
+  name: 'setup-form',
   components: { TimePicker },
   props: {
+    form: Object,
+    id: Number,
+    isUpdateForm: Boolean,
     store: Object,
+    timezone: String,
   },
 
   data() {
@@ -107,16 +110,20 @@ export default {
         ss: '00',
         A: 'PM',
       },
-      form: new Form({
-        address: '',
-        setup_on: new Date(),
-        description: '',
-        fee: '',
-      }),
     };
   },
 
+  created() {
+    if (this.isUpdateForm) {
+      this.setTime();
+    }
+  },
+
   computed: {
+    buttonText() {
+      return this.isUpdateForm ? 'Update Setup' : 'Add Setup';
+    },
+
     errors() {
       return this.store.state.setup.errors;
     },
@@ -127,26 +134,43 @@ export default {
   },
 
   methods: {
-    setTime() {
-      // Append time to the date
+    appendTimeToDate() {
       const date = moment(this.form.setup_on);
-      let hour = Number.parseInt(this.setupTime.hh, 10);
-
-      if (this.setupTime.A === 'PM') {
-        hour += 12;
-      }
+      const hour = this.convertTo24Hour(this.setupTime.hh, this.setupTime.A);
 
       date.hour(hour);
       date.minute(this.setupTime.mm);
       date.second(0);
 
-      this.form.setup_on = date.toDate();
+      this.form.setup_on = date.utc().toDate();
+    },
+
+    convertTo24Hour(hour, ampm) {
+      const time = Number.parseInt(hour, 10);
+      return ampm === 'PM' ? time + 12 : time;
     },
 
     onSubmit() {
-      this.setTime();
+      this.appendTimeToDate();
 
-      this.store.dispatch('setup/submit', this.form.data());
+      if (this.isUpdateForm) {
+        this.store.dispatch('setup/update', {
+          id: this.id,
+          data: this.form.data(),
+        });
+      } else {
+        this.store.dispatch('setup/submit', this.form.data());
+      }
+    },
+
+    setTime() {
+      let hours = this.form.setup_on.getHours();
+      const minutes = this.form.setup_on.getMinutes();
+
+      hours = hours % 12 || 12;
+      this.setupTime.hh = hours < 10 ? `0${hours}` : hours;
+      this.setupTime.mm = minutes < 10 ? `0${minutes}` : minutes;
+      this.setupTime.A = hours >= 12 ? 'PM' : 'AM';
     },
   },
 };
