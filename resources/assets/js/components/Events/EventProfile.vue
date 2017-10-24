@@ -8,7 +8,21 @@
 
     <section class="section">
       <div class="container">
+        <div class="is-pulled-right" @click="store.commit('toggleSettingPanel')">
+          <b-icon icon="settings"></b-icon>
+        </div>
+
         <h1 class="title">Event Proposal for {{ event.customer.name }}</h1>
+
+        <b-collapse :open="store.state.showSettingsPanel">
+          <div class="field">
+            <b-switch
+              @input="store.commit('toggleCosts', showCosts)"
+              v-model="showCosts"
+            >{{ costToggleText }}</b-switch>
+          </div>
+        </b-collapse>
+
       </div>
     </section>
 
@@ -86,6 +100,7 @@ export default {
 
   data() {
     return {
+      showCosts: eventStore.state.showCosts,
       store: eventStore,
       timezone: moment.tz.guess(),
     };
@@ -97,20 +112,20 @@ export default {
   },
 
   computed: {
+    arrangementSubtotal: function () {
+      return this.store.getters['arrangement/subtotal'];
+    },
+
     arrangementTitle: function () {
       return `${this.store.state.arrangement.records.length} Arrangements`;
     },
 
+    costToggleText: function () {
+      return this.showCosts ? 'Show Costs' : 'Hide Costs';
+    },
+
     deliveryTitle: function () {
       return `${this.store.state.delivery.records.length} Deliveries`;
-    },
-
-    setupTitle: function () {
-      return `${this.store.state.setup.records.length} Setups`;
-    },
-
-    arrangementSubtotal: function () {
-      return this.store.getters['arrangement/subtotal'];
     },
 
     deliverySubtotal: function () {
@@ -119,6 +134,10 @@ export default {
 
     setupSubtotal: function () {
       return this.store.getters['setup/subtotal'];
+    },
+
+    setupTitle: function () {
+      return `${this.store.state.setup.records.length} Setups`;
     },
 
     subtotal: function () {

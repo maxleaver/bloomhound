@@ -51,11 +51,20 @@
           {{ props.row.quantity }}
         </b-table-column>
 
-        <b-table-column field="cost" label="Cost per Unit" sortable>
+        <b-table-column
+          field="cost"
+          label="Cost per Unit"
+          sortable
+          :visible="store.state.showCosts"
+        >
           {{ Number(props.row.cost).toFixed(2) }}
         </b-table-column>
 
-        <b-table-column label="Total Cost" sortable>
+        <b-table-column
+          label="Total Cost"
+          sortable
+          :visible="store.state.showCosts"
+        >
           {{ Number(props.row.cost * props.row.quantity).toFixed(2) }}
         </b-table-column>
 

@@ -14,11 +14,21 @@ export default new Vuex.Store({
 
   state: {
     event: {},
+    showCosts: false,
+    showSettingsPanel: false,
   },
 
   mutations: {
     setEvent(state, event) {
       state.event = event;
+    },
+
+    toggleCosts(state, showCosts) {
+      state.showCosts = showCosts;
+    },
+
+    toggleSettingPanel(state) {
+      state.showSettingsPanel = !state.showSettingsPanel;
     },
   },
 

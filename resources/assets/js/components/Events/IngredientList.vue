@@ -17,11 +17,21 @@
           {{ props.row.quantity }}
         </b-table-column>
 
-        <b-table-column field="cost" label="Cost/Unit" sortable>
+        <b-table-column
+          field="cost"
+          label="Cost/Unit"
+          sortable
+          :visible="store.state.showCosts"
+        >
           {{ Number(props.row.arrangeable.cost).toFixed(2) }}
         </b-table-column>
 
-        <b-table-column field="cost" label="Cost" sortable>
+        <b-table-column
+          field="cost"
+          label="Cost"
+          sortable
+          :visible="store.state.showCosts"
+        >
           {{ Number(props.row.arrangeable.cost * props.row.quantity).toFixed(2) }}
         </b-table-column>
 
