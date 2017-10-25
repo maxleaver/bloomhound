@@ -4,7 +4,7 @@
       :data="this.sourceList"
       :mobile-cards="hasMobileCards"
     >
-      <template scope="props">
+      <template slot-scope="props">
           <b-table-column label="Vendor">
               {{ props.row.vendor.name }}
               <span v-if="props.row.isBestPrice" class="tag is-success">Best Price</span>

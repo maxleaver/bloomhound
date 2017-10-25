@@ -18,7 +18,7 @@
       :loading="isLoading"
       detailed
     >
-      <template scope="props">
+      <template slot-scope="props">
         <b-table-column field="name" label="Name" sortable>
           {{ props.row.name }}
         </b-table-column>
@@ -38,7 +38,7 @@
         </b-table-column>
       </template>
 
-      <template slot="detail" scope="props">
+      <template slot="detail" slot-scope="props">
         <update-flower-variety
           :markups="markups"
           :variety="props.row"

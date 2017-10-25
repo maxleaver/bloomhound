@@ -30,7 +30,7 @@
       :loading="isLoading"
       :mobile-cards="hasMobileCards"
     >
-      <template scope="props">
+      <template slot-scope="props">
         <b-table-column field="setup_on" label="Date" sortable>
           {{ getLocalTime(props.row.setup_on).format('MMM DD') }}
         </b-table-column>
@@ -72,7 +72,7 @@
         </section>
       </template>
 
-      <template slot="detail" scope="props">
+      <template slot="detail" slot-scope="props">
         <setup-form
           :form="getUpdateForm(props.row)"
           :id="props.row.id"

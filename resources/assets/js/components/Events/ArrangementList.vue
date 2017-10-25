@@ -41,7 +41,7 @@
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"
     >
-      <template scope="props">
+      <template slot-scope="props">
         <b-table-column field="name" label="Name" sortable>
           <strong>{{ props.row.name }}</strong><br />
           <span v-if="props.row.description">{{ props.row.description }}<br /></span>
@@ -89,7 +89,7 @@
         </b-table-column>
       </template>
 
-      <template slot="detail" scope="props">
+      <template slot="detail" slot-scope="props">
         <div>
           <div class="content">
             <update-arrangement

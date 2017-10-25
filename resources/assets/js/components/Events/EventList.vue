@@ -34,7 +34,7 @@
       @click="onClick"
       :loading="isLoading"
     >
-      <template scope="props">
+      <template slot-scope="props">
         <b-table-column field="status" label="Status" sortable>
           <b-tag rounded type="is-primary" size="is-medium">{{ props.row.status.title }}</b-tag>
         </b-table-column>

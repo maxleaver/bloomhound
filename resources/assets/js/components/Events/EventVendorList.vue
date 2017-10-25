@@ -33,7 +33,7 @@
       default-sort="name"
       :loading="isLoading"
     >
-      <template scope="props">
+      <template slot-scope="props">
         <b-table-column field="name" label="Name" sortable>
           <strong>{{ props.row.name }}</strong>
         </b-table-column>
