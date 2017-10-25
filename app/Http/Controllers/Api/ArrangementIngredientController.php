@@ -144,12 +144,21 @@ class ArrangementIngredientController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Arrangement  $arrangement
+     * @param  \App\ArrangementIngredient  $ingredient
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Arrangement $arrangement, ArrangementIngredient $ingredient)
     {
-        //
+        if ($arrangement->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $data = $this->validate(request(), [
+            'quantity' => 'required|integer'
+        ]);
+
+        $ingredient->update($data);
     }
 
     /**

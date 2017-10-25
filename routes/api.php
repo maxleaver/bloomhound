@@ -39,7 +39,10 @@ Route::middleware('auth:api')->group(function () {
 
 			Route::get('ingredients', 'ArrangementIngredientController@index');
 		    Route::post('ingredients', 'ArrangementIngredientController@store');
-		    Route::delete('ingredients/{ingredient}', 'ArrangementIngredientController@destroy');
+		    Route::prefix('ingredients/{ingredient}')->group(function () {
+		    	Route::patch('/', 'ArrangementIngredientController@update');
+			    Route::delete('/', 'ArrangementIngredientController@destroy');
+		    });
 		});
 	});
 

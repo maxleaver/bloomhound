@@ -12,7 +12,7 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js/')
-  .extract(['axios', 'buefy', 'bulma', 'moment', 'vue', 'vuex'])
+  .extract(['axios', 'buefy', 'bulma', 'moment', 'moment-timezone', 'vue', 'vuex'])
   .sass('resources/assets/sass/app.scss', 'public/css/')
   .sourceMaps();
 
@@ -20,16 +20,19 @@ if (mix.config.inProduction) {
   mix.version();
 }
 
-if (process.env.NODE_ENV === 'development') {
-  mix.webpackConfig({
-    resolve: {
-      alias:{
-        components: path.resolve(__dirname, 'resources/assets/js/components/'),
-        helpers: path.resolve(__dirname, 'resources/assets/js/helpers/'),
-        mixins: path.resolve(__dirname, 'resources/assets/js/mixins/'),
-      },
-      extensions: ['*', '.js', '.vue']
+var config = {
+  resolve: {
+    alias:{
+      components: path.resolve(__dirname, 'resources/assets/js/components/'),
+      helpers: path.resolve(__dirname, 'resources/assets/js/helpers/'),
+      mixins: path.resolve(__dirname, 'resources/assets/js/mixins/'),
     },
+    extensions: ['*', '.js', '.vue']
+  }
+};
+
+if (process.env.NODE_ENV === 'development') {
+  Object.assign(config, {
     module: {
       rules: [
         {
@@ -45,3 +48,5 @@ if (process.env.NODE_ENV === 'development') {
     },
   });
 }
+
+mix.webpackConfig(config);

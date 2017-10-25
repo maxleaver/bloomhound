@@ -160,6 +160,30 @@ export default {
       window.flash('There was a problem deleting that ingredient. Please try again.', 'danger');
       console.log(error);
     },
+
+    updateIngredientSuccess(state, data) {
+      const arrangement = state.records.find(item => item.id === data.arrangement_id);
+      const ingredient = arrangement.ingredients.find(item => item.id === data.ingredient_id);
+      ingredient.quantity = data.quantity;
+    },
+
+    updateIngredientFailure(state, error) {
+      window.flash('There was a problem updating your ingredient quantity. Please try again.', 'danger');
+      console.log(error);
+    },
+
+    updateArrangementTotals(state) {
+      state.records.forEach((row) => {
+        const items = row.ingredients;
+        row.cost = items.reduce((sum, item) => sum + (
+          item.arrangeable.cost * item.quantity
+        ), 0);
+
+        row.default_price = items.reduce((sum, item) => (
+          sum + (item.arrangeable.price * item.quantity)
+        ), 0);
+      });
+    },
   },
   actions: {
     fetchArrangeables({ commit }) {
@@ -231,6 +255,24 @@ export default {
         })
         .catch((error) => {
           commit('deleteIngredientFailure', error.response.data.errors);
+        });
+    },
+
+    updateIngredient({ commit }, data) {
+      const url = `/api/arrangements/${data.arrangement_id}/ingredients/${data.ingredient_id}`;
+
+      window.axios.patch(url, { quantity: data.quantity })
+        .then(() => {
+          commit('updateIngredientSuccess', {
+            arrangement_id: data.arrangement_id,
+            ingredient_id: data.ingredient_id,
+            quantity: data.quantity,
+          });
+
+          commit('updateArrangementTotals');
+        })
+        .catch((error) => {
+          commit('updateIngredientFailure', error.response.data.errors);
         });
     },
   },
