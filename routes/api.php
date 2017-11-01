@@ -37,12 +37,17 @@ Route::middleware('auth:api')->group(function () {
 			Route::patch('/', 'ArrangementEventController@update');
 			Route::delete('/', 'ArrangementEventController@destroy');
 
-			Route::get('ingredients', 'ArrangementIngredientController@index');
-		    Route::post('ingredients', 'ArrangementIngredientController@store');
-		    Route::prefix('ingredients/{ingredient}')->group(function () {
-		    	Route::patch('/', 'ArrangementIngredientController@update');
-			    Route::delete('/', 'ArrangementIngredientController@destroy');
-		    });
+			Route::prefix('discounts')->group(function () {
+				Route::post('/', 'ArrangementDiscountController@store');
+				Route::delete('{discount}', 'ArrangementDiscountController@destroy');
+			});
+
+			Route::prefix('ingredients')->group(function () {
+				Route::get('/', 'ArrangementIngredientController@index');
+		    	Route::post('/', 'ArrangementIngredientController@store');
+				Route::patch('{ingredient}', 'ArrangementIngredientController@update');
+			    Route::delete('{ingredient}', 'ArrangementIngredientController@destroy');
+			});
 		});
 	});
 
@@ -50,27 +55,31 @@ Route::middleware('auth:api')->group(function () {
 	    Route::get('/', 'ContactController@index');
 		Route::post('/', 'ContactController@store');
 
-		Route::get('{contact}', 'ContactController@show');
-		Route::patch('{contact}', 'ContactController@update');
+		Route::prefix('{contact}')->group(function () {
+			Route::get('/', 'ContactController@show');
+			Route::patch('/', 'ContactController@update');
 
-		Route::get('{contact}/notes', 'NoteController@index');
-		Route::post('{contact}/notes', 'NoteController@store');
+			Route::get('notes', 'NoteController@index');
+			Route::post('notes', 'NoteController@store');
+		});
 	});
 
 	Route::prefix('customers')->group(function () {
 	    Route::get('/', 'CustomerController@index');
 	    Route::post('/', 'CustomerController@store');
 
-		Route::get('{customer}', 'CustomerController@show');
-		Route::patch('{customer}', 'CustomerController@update');
+	    Route::prefix('{customer}')->group(function () {
+			Route::get('/', 'CustomerController@show');
+			Route::patch('/', 'CustomerController@update');
 
-		Route::get('{customer}/contacts', 'ContactCustomerController@index');
+			Route::get('contacts', 'ContactCustomerController@index');
 
-		Route::get('{customer}/events', 'CustomerEventController@index');
-		Route::post('{customer}/events', 'CustomerEventController@store');
+			Route::get('events', 'CustomerEventController@index');
+			Route::post('events', 'CustomerEventController@store');
 
-		Route::get('/{customer}/notes', 'NoteController@index');
-		Route::post('/{customer}/notes', 'NoteController@store');
+			Route::get('notes', 'NoteController@index');
+			Route::post('notes', 'NoteController@store');
+		});
 	});
 
 	Route::prefix('deliveries')->group(function () {
@@ -80,34 +89,39 @@ Route::middleware('auth:api')->group(function () {
 	Route::prefix('events')->group(function () {
 		Route::get('/', 'EventController@index');
 		Route::post('/', 'EventController@store');
-		Route::patch('{event}', 'EventController@update');
 
-		Route::get('{event}/arrangements', 'ArrangementEventController@index');
-		Route::post('{event}/arrangements', 'ArrangementEventController@store');
+		Route::prefix('{event}')->group(function () {
+			Route::patch('/', 'EventController@update');
 
-		Route::get('{event}/deliveries', 'DeliveryEventController@index');
-		Route::post('{event}/deliveries', 'DeliveryEventController@store');
+			Route::get('arrangements', 'ArrangementEventController@index');
+			Route::post('arrangements', 'ArrangementEventController@store');
 
-		Route::get('{event}/notes', 'NoteController@index');
-		Route::post('{event}/notes', 'NoteController@store');
+			Route::get('deliveries', 'DeliveryEventController@index');
+			Route::post('deliveries', 'DeliveryEventController@store');
 
-		Route::get('{event}/setups', 'EventSetupController@index');
-		Route::post('{event}/setups', 'EventSetupController@store');
+			Route::get('notes', 'NoteController@index');
+			Route::post('notes', 'NoteController@store');
 
-		Route::get('{event}/vendors', 'EventVendorController@index');
-		Route::post('{event}/vendors', 'EventVendorController@store');
-		Route::delete('{event}/vendors/{vendor}', 'EventVendorController@destroy');
+			Route::get('setups', 'EventSetupController@index');
+			Route::post('setups', 'EventSetupController@store');
+
+			Route::get('vendors', 'EventVendorController@index');
+			Route::post('vendors', 'EventVendorController@store');
+			Route::delete('vendors/{vendor}', 'EventVendorController@destroy');
+		});
 	});
 
 	Route::prefix('flowers')->group(function () {
 		Route::get('/', 'FlowerController@index');
 		Route::post('/', 'FlowerController@store');
 
-		Route::get('{flower}/varieties', 'FlowerVarietyController@index');
-		Route::post('{flower}/varieties', 'FlowerVarietyController@store');
+		Route::prefix('{flower}')->group(function () {
+			Route::get('varieties', 'FlowerVarietyController@index');
+			Route::post('varieties', 'FlowerVarietyController@store');
 
-		Route::get('{flower}/notes', 'NoteController@index');
-		Route::post('{flower}/notes', 'NoteController@store');
+			Route::get('notes', 'NoteController@index');
+			Route::post('notes', 'NoteController@store');
+		});
 	});
 
 	Route::get('invitations', 'InviteController@index');
@@ -116,11 +130,13 @@ Route::middleware('auth:api')->group(function () {
 		Route::get('/', 'ItemController@index');
 		Route::post('/', 'ItemController@store');
 
-		Route::get('/{item}', 'ItemController@show');
-		Route::patch('/{item}', 'ItemController@update');
+		Route::prefix('{item}')->group(function () {
+			Route::get('/', 'ItemController@show');
+			Route::patch('/', 'ItemController@update');
 
-		Route::get('{item}/notes', 'NoteController@index');
-		Route::post('{item}/notes', 'NoteController@store');
+			Route::get('notes', 'NoteController@index');
+			Route::post('notes', 'NoteController@store');
+		});
 	});
 
 	Route::prefix('markups')->group(function () {
@@ -128,8 +144,8 @@ Route::middleware('auth:api')->group(function () {
 	});
 
 	Route::prefix('notes')->group(function () {
-		Route::delete('/{note}', 'NoteController@destroy');
-		Route::patch('/{note}', 'NoteController@update');
+		Route::delete('{note}', 'NoteController@destroy');
+		Route::patch('{note}', 'NoteController@update');
 	});
 
 	Route::patch('password', 'UpdatePasswordController@update');
@@ -149,18 +165,22 @@ Route::middleware('auth:api')->group(function () {
 	});
 
 	Route::prefix('varieties')->group(function () {
-		Route::patch('{flower_variety}', 'FlowerVarietyController@update');
-
-	    Route::get('{flower_variety}/sources', 'FlowerVarietySourceController@index');
-	    Route::post('{flower_variety}/sources', 'FlowerVarietySourceController@store');
+		Route::prefix('{flower_variety}')->group(function () {
+			Route::patch('/', 'FlowerVarietyController@update');
+		    Route::get('sources', 'FlowerVarietySourceController@index');
+		    Route::post('sources', 'FlowerVarietySourceController@store');
+		});
 	});
 
 	Route::prefix('vendors')->group(function () {
 		Route::get('/', 'VendorController@index');
 		Route::post('/', 'VendorController@store');
-		Route::patch('{vendor}', 'VendorController@update');
 
-		Route::get('{vendor}/notes', 'NoteController@index');
-		Route::post('{vendor}/notes', 'NoteController@store');
+		Route::prefix('{vendor}')->group(function () {
+			Route::patch('/', 'VendorController@update');
+
+			Route::get('notes', 'NoteController@index');
+			Route::post('notes', 'NoteController@store');
+		});
 	});
 });

@@ -70,16 +70,16 @@
         </b-table-column>
 
         <b-table-column
-          field="default_price"
-          label="Price"
+          field="price"
+          label="Price/Unit"
           sortable
           :visible="store.state.showPrices"
         >
-          {{ Number(props.row.default_price).toFixed(2) }}
+          {{ Number(props.row.price).toFixed(2) }}
         </b-table-column>
 
         <b-table-column label="Subtotal" sortable :visible="store.state.showPrices">
-          {{ Number(props.row.default_price * props.row.quantity).toFixed(2) }}
+          {{ Number(props.row.total_price).toFixed(2) }}
         </b-table-column>
 
         <b-table-column centered>
@@ -97,6 +97,14 @@
               :isSubmitting="store.state.arrangement.isSubmitting"
               :store="store"
             ></update-arrangement>
+          </div>
+
+          <div class="content">
+            <discounts
+              :discounts="props.row.discounts"
+              :id="props.row.id"
+              :store="store"
+            ></discounts>
           </div>
 
           <ingredient-list
@@ -134,6 +142,7 @@
 <script>
 import AddArrangement from 'components/Events/AddArrangement';
 import DeleteArrangementModal from 'components/Events/DeleteArrangementModal';
+import Discounts from 'components/Events/Discounts';
 import IngredientList from 'components/Events/IngredientList';
 import UpdateArrangement from 'components/Events/UpdateArrangement';
 
@@ -142,6 +151,7 @@ export default {
   components: {
     AddArrangement,
     DeleteArrangementModal,
+    Discounts,
     IngredientList,
     UpdateArrangement,
   },

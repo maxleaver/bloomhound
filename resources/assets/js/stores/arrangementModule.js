@@ -1,4 +1,5 @@
 import Errors from 'helpers/Errors';
+import Form from 'helpers/Form';
 import FormContainer from 'helpers/FormContainer';
 
 export default {
@@ -9,6 +10,11 @@ export default {
       id: '',
       name: '',
     },
+    discountForm: new Form({
+      name: '',
+      amount: 0,
+      type: 'fixed',
+    }),
     errors: new Errors(),
     ingredientFormContainer: new FormContainer({
       id: null,
@@ -19,6 +25,7 @@ export default {
     isDeleteConfirmationVisible: false,
     isLoading: false,
     isSubmitting: false,
+    isSubmittingDiscount: false,
     records: [],
     showForm: false,
     showIngredientForm: false,
@@ -88,15 +95,12 @@ export default {
       state.isDeleteConfirmationVisible = false;
     },
 
-    updateRequest(state) {
-      state.isSubmitting = true;
-    },
-
     updateSuccess(state, data) {
       const record = state.records.find(item => item.id === data.id);
       record.name = data.name;
       record.description = data.description;
       record.quantity = data.quantity;
+      record.total_price = data.total_price;
 
       window.flash(`${data.name} was updated successfully!`, 'success');
 
@@ -119,14 +123,11 @@ export default {
     },
 
     addIngredientSuccess(state, data) {
-      const arrangement = state.records.find(item => item.id === data.arrangement_id);
-
-      data.ingredients.forEach((ingredient) => {
-        arrangement.cost += ingredient.cost;
-        arrangement.default_price += ingredient.price;
-
-        arrangement.ingredients.unshift(ingredient);
-      });
+      const arrangement = state.records.find(item => item.id === data.id);
+      arrangement.ingredients = data.ingredients;
+      arrangement.cost = data.cost;
+      arrangement.price = data.price;
+      arrangement.total_price = data.total_price;
 
       state.isAddingIngredient = false;
 
@@ -142,16 +143,11 @@ export default {
     },
 
     deleteIngredientSuccess(state, data) {
-      const arrangement = state.records.find(item => item.id === data.arrangement_id);
-
-      arrangement.ingredients.forEach((ingredient, index) => {
-        if (ingredient.id === data.ingredient_id) {
-          arrangement.cost -= ingredient.cost;
-          arrangement.default_price -= ingredient.price;
-
-          arrangement.ingredients.splice(index, 1);
-        }
-      });
+      const arrangement = state.records.find(item => item.id === data.id);
+      arrangement.ingredients = data.ingredients;
+      arrangement.cost = data.cost;
+      arrangement.price = data.price;
+      arrangement.total_price = data.total_price;
 
       window.flash('Ingredient deleted', 'success');
     },
@@ -162,9 +158,11 @@ export default {
     },
 
     updateIngredientSuccess(state, data) {
-      const arrangement = state.records.find(item => item.id === data.arrangement_id);
-      const ingredient = arrangement.ingredients.find(item => item.id === data.ingredient_id);
-      ingredient.quantity = data.quantity;
+      const arrangement = state.records.find(item => item.id === data.id);
+      arrangement.ingredients = data.ingredients;
+      arrangement.cost = data.cost;
+      arrangement.price = data.price;
+      arrangement.total_price = data.total_price;
     },
 
     updateIngredientFailure(state, error) {
@@ -172,17 +170,49 @@ export default {
       console.log(error);
     },
 
-    updateArrangementTotals(state) {
-      state.records.forEach((row) => {
-        const items = row.ingredients;
-        row.cost = items.reduce((sum, item) => sum + (
-          item.arrangeable.cost * item.quantity
-        ), 0);
+    addDiscountRequest(state) {
+      state.isSubmittingDiscount = true;
+    },
 
-        row.default_price = items.reduce((sum, item) => (
-          sum + (item.arrangeable.price * item.quantity)
-        ), 0);
-      });
+    addDiscountSuccess(state, data) {
+      const arrangement = state.records.find(item => item.id === data.arrangement_id);
+
+      arrangement.total_price = data.discount.discountable.total_price;
+      arrangement.discounts.unshift(data.discount);
+
+      state.isSubmittingDiscount = false;
+
+      state.discountForm.reset();
+
+      window.flash('Discount added successfully', 'success');
+    },
+
+    addDiscountFailure(state, error) {
+      state.isSubmittingDiscount = false;
+
+      window.flash('There was a problem adding your discount. Please try again.', 'danger');
+
+      state.discountForm.errors.record(error);
+    },
+
+    deleteDiscountRequest(state) {
+      state.isSubmittingDiscount = true;
+    },
+
+    deleteDiscountSuccess(state, data) {
+      const arrangement = state.records.find(item => item.id === data.id);
+
+      arrangement.total_price = data.total_price;
+      arrangement.discounts = data.discounts;
+
+      state.isSubmittingDiscount = false;
+
+      window.flash('Discount deleted successfully', 'success');
+    },
+
+    deleteDiscountFailure(state) {
+      state.isSubmittingDiscount = false;
+      window.flash('There was a problem deleting your discount. Please try again.', 'danger');
     },
   },
   actions: {
@@ -210,18 +240,20 @@ export default {
           commit('submitSuccess', response.data);
         })
         .catch((error) => {
+          console.log(error);
           commit('submitFailure', error.response.data.errors);
         });
     },
 
     update({ commit }, data) {
-      commit('updateRequest');
+      commit('submitRequest');
 
       window.axios.patch(`/api/arrangements/${data.id}`, data.data)
         .then((response) => {
           commit('updateSuccess', response.data);
         })
         .catch((error) => {
+          console.log(error);
           commit('updateFailure', error.response.data.errors);
         });
     },
@@ -233,12 +265,10 @@ export default {
 
       window.axios.post(url, data.data)
         .then((response) => {
-          commit('addIngredientSuccess', {
-            arrangement_id: data.arrangement_id,
-            ingredients: response.data,
-          });
+          commit('addIngredientSuccess', response.data);
         })
         .catch((error) => {
+          console.log(error);
           commit('addIngredientFailure', error.response.data.errors);
         });
     },
@@ -247,13 +277,11 @@ export default {
       const url = `/api/arrangements/${data.arrangement_id}/ingredients/${data.ingredient_id}`;
 
       window.axios.delete(url)
-        .then(() => {
-          commit('deleteIngredientSuccess', {
-            arrangement_id: data.arrangement_id,
-            ingredient_id: data.ingredient_id,
-          });
+        .then((response) => {
+          commit('deleteIngredientSuccess', response.data);
         })
         .catch((error) => {
+          console.log(error);
           commit('deleteIngredientFailure', error.response.data.errors);
         });
     },
@@ -262,17 +290,45 @@ export default {
       const url = `/api/arrangements/${data.arrangement_id}/ingredients/${data.ingredient_id}`;
 
       window.axios.patch(url, { quantity: data.quantity })
-        .then(() => {
-          commit('updateIngredientSuccess', {
-            arrangement_id: data.arrangement_id,
-            ingredient_id: data.ingredient_id,
-            quantity: data.quantity,
-          });
-
-          commit('updateArrangementTotals');
+        .then((response) => {
+          commit('updateIngredientSuccess', response.data);
         })
         .catch((error) => {
+          console.log(error);
           commit('updateIngredientFailure', error.response.data.errors);
+        });
+    },
+
+    addDiscount({ commit }, data) {
+      const url = `/api/arrangements/${data.id}/discounts`;
+
+      commit('addDiscountRequest');
+
+      window.axios.post(url, data.discount)
+        .then((response) => {
+          commit('addDiscountSuccess', {
+            arrangement_id: data.id,
+            discount: response.data,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          commit('addDiscountFailure', error.response.data.errors);
+        });
+    },
+
+    deleteDiscount({ commit }, data) {
+      const url = `/api/arrangements/${data.arrangement_id}/discounts/${data.discount_id}`;
+
+      commit('deleteDiscountRequest');
+
+      window.axios.delete(url)
+        .then((response) => {
+          commit('deleteDiscountSuccess', response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          commit('deleteDiscountFailure', error.response.data.errors);
         });
     },
   },
@@ -281,10 +337,7 @@ export default {
       let sum = 0;
 
       if (typeof state.records !== 'undefined' && state.records.length > 0) {
-        sum = state.records.reduce((accumulator, item) => {
-          const price = item.default_price * item.quantity;
-          return accumulator + price;
-        }, 0);
+        sum = state.records.reduce((subtotal, item) => subtotal + item.total_price, 0);
       }
 
       return Number(sum);

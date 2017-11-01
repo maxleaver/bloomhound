@@ -27,19 +27,6 @@ class ArrangementTest extends TestCase
         ], $amount);
     }
 
-    protected function sumIngredientsField($name)
-    {
-        $total = 0;
-        $this->arrangement
-            ->ingredients()
-            ->each(function ($ingredient) use (&$total, $name) {
-                $qty = $ingredient->quantity;
-                $field = $ingredient->arrangeable[$name];
-                $total += $qty * $field;
-            });
-        return $total;
-    }
-
     /** @test */
     public function an_arrangement_has_a_name() {
         $this->assertNotNull($this->arrangement->name);
@@ -56,27 +43,39 @@ class ArrangementTest extends TestCase
     }
 
     /** @test */
-    public function an_arrangement_uses_its_ingredients_to_calculate_a_total_cost()
+    public function an_arrangement_has_a_cost_per_unit()
     {
         $this->addIngredients($this->arrangement, 'App\Item', 5);
         $this->addIngredients($this->arrangement, 'App\FlowerVariety', 5);
 
-        $expectedCost = $this->sumIngredientsField('cost');
+        $expectedCost = $this->arrangement->ingredients->sum('cost');
 
         $this->assertNotNull($this->arrangement->cost);
         $this->assertEquals($this->arrangement->cost, $expectedCost);
     }
 
     /** @test */
-    public function an_arrangement_uses_its_ingredients_to_calculate_a_default_price()
+    public function an_arrangement_has_a_price_per_unit()
     {
         $this->addIngredients($this->arrangement, 'App\Item', 5);
         $this->addIngredients($this->arrangement, 'App\FlowerVariety', 5);
 
-        $expectedPrice = $this->sumIngredientsField('price');
+        $expectedPrice = $this->arrangement->ingredients->sum('price');
 
-        $this->assertNotNull($this->arrangement->default_price);
-        $this->assertEquals($this->arrangement->default_price, $expectedPrice);
+        $this->assertNotNull($this->arrangement->price);
+        $this->assertEquals($this->arrangement->price, $expectedPrice);
+    }
+
+    /** @test */
+    public function an_arrangement_has_a_total_price()
+    {
+        $this->addIngredients($this->arrangement, 'App\Item', 5);
+        $this->addIngredients($this->arrangement, 'App\FlowerVariety', 5);
+
+        $expectedPrice = $this->arrangement->ingredients->sum('price') * $this->arrangement->quantity;
+
+        $this->assertNotNull($this->arrangement->totalPrice);
+        $this->assertEquals($this->arrangement->totalPrice, $expectedPrice);
     }
 
     /** @test */
@@ -95,6 +94,44 @@ class ArrangementTest extends TestCase
     public function an_arrangement_belongs_to_an_event()
     {
         $this->assertInstanceOf('App\Event', $this->arrangement->event);
+    }
+
+    /** @test */
+    public function an_arrangement_can_have_discounts()
+    {
+        create('App\Discount', [
+            'account_id' => $this->arrangement->account->id,
+            'discountable_id' => $this->arrangement->id,
+            'discountable_type' => 'App\Arrangement',
+        ]);
+
+        $this->assertInstanceOf('App\Discount', $this->arrangement->discounts->first());
+    }
+
+    /** @test */
+    public function discounts_affect_the_total_price()
+    {
+        $this->addIngredients($this->arrangement, 'App\Item', 5);
+        $this->addIngredients($this->arrangement, 'App\FlowerVariety', 5);
+        create('App\Discount', [
+            'discountable_id' => $this->arrangement->id,
+            'discountable_type' => 'App\Arrangement',
+            'type' => 'fixed',
+            'amount' => 10,
+        ], 2);
+
+        create('App\Discount', [
+            'discountable_id' => $this->arrangement->id,
+            'discountable_type' => 'App\Arrangement',
+            'type' => 'percent',
+            'amount' => 10,
+        ], 2);
+
+        $originalPrice = $this->arrangement->ingredients->sum('price') * $this->arrangement->quantity;
+        $expectedPrice = $originalPrice - ($originalPrice * 0.2) - 20;
+
+        $this->assertNotNull($this->arrangement->totalPrice);
+        $this->assertEquals($this->arrangement->totalPrice, $expectedPrice);
     }
 
     /** @test */

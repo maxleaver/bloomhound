@@ -6,17 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class Arrangement extends Model
 {
-	protected $guarded = [];
-    protected $appends = ['cost', 'default_price'];
+	protected $appends = ['cost', 'price', 'total_price'];
+    protected $casts = [
+        'cost' => 'float',
+        'price' => 'float',
+        'total_price' => 'float',
+    ];
+    protected $guarded = [];
 
     public function getCostAttribute()
     {
         return $this->ingredients->sum('cost');
     }
 
-    public function getDefaultPriceAttribute()
+    public function getPriceAttribute()
     {
         return $this->ingredients->sum('price');
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        return ($this->price * $this->quantity) - $this->percentOff() - $this->amountOff();
     }
 
 	public function account()
@@ -29,6 +39,11 @@ class Arrangement extends Model
         return $this->belongsTo('App\Delivery');
     }
 
+    public function discounts()
+    {
+        return $this->morphMany('App\Discount', 'discountable');
+    }
+
     public function event()
     {
     	return $this->belongsTo('App\Event');
@@ -37,5 +52,14 @@ class Arrangement extends Model
     public function ingredients()
     {
         return $this->hasMany('App\ArrangementIngredient');
+    }
+
+    protected function percentOff() {
+        $percent = $this->discounts()->where('type', 'percent')->sum('amount');
+        return ($this->price * $this->quantity) * ($percent / 100);
+    }
+
+    protected function amountOff() {
+        return $this->discounts()->where('type', 'fixed')->sum('amount');
     }
 }

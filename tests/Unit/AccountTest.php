@@ -99,6 +99,16 @@ class AccountTest extends TestCase
     }
 
     /** @test */
+    public function an_account_has_discounts()
+    {
+        create('App\Discount', [
+            'account_id' => $this->account->id
+        ]);
+
+        $this->assertInstanceOf('App\Discount', $this->account->discounts->first());
+    }
+
+    /** @test */
     public function an_account_has_events()
     {
         create('App\Event', [

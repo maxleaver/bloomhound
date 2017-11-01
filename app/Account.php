@@ -40,6 +40,11 @@ class Account extends Model
         return $this->hasMany('App\Delivery');
     }
 
+    public function discounts()
+    {
+        return $this->hasMany('App\Discount');
+    }
+
     public function events()
     {
         return $this->hasMany('App\Event');
