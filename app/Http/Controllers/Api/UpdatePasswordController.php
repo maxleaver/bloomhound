@@ -3,22 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
-use App\Rules\MatchesPassword;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Rules\MatchesPassword;
+use Illuminate\Support\Facades\Hash;
 
 class UpdatePasswordController extends Controller
 {
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update()
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'current_password' => ['required', 'string', new MatchesPassword],
             'password' => 'required|string|min:6|confirmed',
         ]);

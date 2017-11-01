@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use App\ArrangeableTypeSetting;
 use App\Item;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ItemController extends Controller
@@ -23,12 +22,11 @@ class ItemController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'arrangeable_type_id' => 'required|integer|exists:arrangeable_types,id',
             'cost' => 'nullable|numeric',
             'description' => 'nullable|string|max:255',
@@ -40,7 +38,7 @@ class ItemController extends Controller
 
         // Look up default markup for the item type
         $setting = ArrangeableTypeSetting::whereAccountId($account->id)
-            ->whereArrangeableTypeId($request->arrangeable_type_id)
+            ->whereArrangeableTypeId($data['arrangeable_type_id'])
             ->first();
 
         $item = new Item($data);
@@ -70,17 +68,16 @@ class ItemController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function update(Item $item)
     {
         if ($item->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
             'inventory' => 'nullable|integer',

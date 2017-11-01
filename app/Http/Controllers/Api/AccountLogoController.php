@@ -3,22 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
 
 class AccountLogoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -27,7 +17,7 @@ class AccountLogoController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'logo' => 'required|image|mimes:jpeg,jpg,bmp,png,gif|dimensions:min_width=100,min_height=100',
         ]);
 
@@ -45,38 +35,5 @@ class AccountLogoController extends Controller
         $account->update(['logo' => $path_to_file]);
 
         return response()->json($account->logo_path);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

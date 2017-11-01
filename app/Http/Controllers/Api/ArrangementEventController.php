@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use App\Arrangement;
 use App\Event;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ArrangementEventController extends Controller
@@ -26,15 +25,14 @@ class ArrangementEventController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param  \App\Event  $event
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Event $event, Request $request)
+    public function store(Event $event)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'quantity' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
         ]);
 
         $this->eventIsValid($event);
@@ -61,16 +59,15 @@ class ArrangementEventController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Arrangement  $arrangement
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Arrangement $arrangement)
+    public function update(Arrangement $arrangement)
     {
-        $data = $this->validate(request(), [
-            'name' => 'string|max:255',
+        $data = request()->validate([
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'quantity' => 'integer',
+            'quantity' => 'required|integer|min:1',
         ]);
 
         if ($arrangement->account->id !== Auth::user()->account->id) {

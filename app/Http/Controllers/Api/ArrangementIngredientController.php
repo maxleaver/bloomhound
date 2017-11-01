@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Auth;
+use Exception;
 use App\Arrangement;
 use App\ArrangementIngredient;
 use App\Rules\IsArrangeable;
-use Auth;
-use Exception;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class ArrangementIngredientController extends Controller
 {
@@ -36,10 +36,10 @@ class ArrangementIngredientController extends Controller
      */
     public function store(Arrangement $arrangement, Request $request)
     {
-        $data = $this->validate(request(), [
+        request()->validate([
             '*.id' => 'required|integer',
             '*.type' => ['required', 'string', 'max:255', new IsArrangeable],
-            '*.quantity' => 'required|integer',
+            '*.quantity' => 'required|integer|min:1',
         ]);
 
         $accountId = Auth::user()->account->id;
@@ -95,11 +95,9 @@ class ArrangementIngredientController extends Controller
             }
         }
 
-        // TODO: This is really ugly. There's got to be a better way to get the ingredients
-        // after they've been added. The create method returns the raw arrangeables.
-        $result = $arrangement->ingredients()->createMany($ingredients);
-        $added = ArrangementIngredient::whereIn('id', $result->pluck('id')->toArray())->get();
-        return response()->json($added);
+        $arrangement->ingredients()->createMany($ingredients);
+
+        return response()->json($arrangement->fresh()->load('ingredients'));
     }
 
     protected function getArrangeableClass($type)
@@ -143,22 +141,23 @@ class ArrangementIngredientController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Arrangement  $arrangement
      * @param  \App\ArrangementIngredient  $ingredient
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Arrangement $arrangement, ArrangementIngredient $ingredient)
+    public function update(Arrangement $arrangement, ArrangementIngredient $ingredient)
     {
         if ($arrangement->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
-        $data = $this->validate(request(), [
-            'quantity' => 'required|integer'
+        $data = request()->validate([
+            'quantity' => 'required|integer|min:1'
         ]);
 
         $ingredient->update($data);
+
+        return response()->json($arrangement->fresh()->load('ingredients'));
     }
 
     /**
@@ -175,5 +174,7 @@ class ArrangementIngredientController extends Controller
         }
 
         $ingredient->delete();
+
+        return response()->json($arrangement->fresh()->load('ingredients'));
     }
 }

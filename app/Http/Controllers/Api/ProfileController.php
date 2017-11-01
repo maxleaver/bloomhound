@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ProfileController extends Controller
@@ -22,21 +21,17 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update()
     {
         $user = Auth::user();
 
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
         ]);
 
-        $user->update([
-            'name' => $data['name'],
-            'email' => $data['email']
-        ]);
+        $user->update($data);
     }
 }

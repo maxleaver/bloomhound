@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use Auth;
 use App\Flower;
 use App\FlowerVariety;
 use App\Services\CreateFlowerVarietyService;
-use Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class FlowerVarietyController extends Controller
@@ -29,20 +28,19 @@ class FlowerVarietyController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param  \App\Flower  $flower
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Flower $flower, Request $request)
+    public function store(Flower $flower)
     {
         if ($flower->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $variety = (new CreateFlowerVarietyService($request->name, $flower))->make();
+        $variety = (new CreateFlowerVarietyService($data['name'], $flower))->make();
         return response()->json($variety);
     }
 
@@ -60,17 +58,16 @@ class FlowerVarietyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\FlowerVariety  $flower_variety
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, FlowerVariety $flower_variety)
+    public function update(FlowerVariety $flower_variety)
     {
         if ($flower_variety->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
             'markup_id' => 'nullable|integer|exists:markups,id',
             'markup_value' => 'nullable|numeric',

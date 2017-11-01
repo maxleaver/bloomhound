@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ArrangeableController extends Controller

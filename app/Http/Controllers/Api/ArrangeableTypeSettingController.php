@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\ArrangeableTypeSetting;
 use Auth;
 use DB;
+use App\ArrangeableTypeSetting;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 
 class ArrangeableTypeSettingController extends Controller
 {

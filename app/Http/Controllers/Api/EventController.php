@@ -6,9 +6,8 @@ use Auth;
 use App\Customer;
 use App\Event;
 use App\EventStatus;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -26,12 +25,11 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'date' => 'required|date',
             'customer' => 'required|string',
             'name' => 'required|string',
@@ -69,13 +67,12 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(Event $event)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
         ]);

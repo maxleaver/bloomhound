@@ -6,7 +6,6 @@ use Auth;
 use App\Contact;
 use App\Customer;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
@@ -24,12 +23,11 @@ class ContactController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'customer_id' => 'required|integer',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -70,13 +68,12 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Contact              $contact
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Contact $contact)
+    public function update(Contact $contact)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'address' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255',
             'first_name' => 'required|string|max:255',

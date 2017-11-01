@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Vendor;
 use Auth;
-use Illuminate\Http\Request;
+use App\Vendor;
 use App\Http\Controllers\Controller;
 
 class VendorController extends Controller
@@ -23,12 +22,11 @@ class VendorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
         ]);
 
@@ -53,23 +51,22 @@ class VendorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Vendor               $vendor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vendor $vendor)
+    public function update(Vendor $vendor)
     {
-        $data = $this->validate(request(), [
+        if ($vendor->account->id !== Auth::user()->account->id) {
+            abort(403);
+        }
+
+        $data = request()->validate([
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255',
             'address' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
             'website' => 'nullable|string|max:255',
         ]);
-
-        if ($vendor->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
 
         $vendor->update($data);
     }

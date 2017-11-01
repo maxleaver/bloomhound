@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use App\Event;
 use App\Vendor;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class EventVendorController extends Controller
@@ -29,12 +28,11 @@ class EventVendorController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Event                $event
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Event $event, Request $request)
+    public function store(Event $event)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'vendor_id' => 'nullable|integer|required_without:vendor_name',
             'vendor_name' => 'nullable|string|required_without:vendor_id|max:255',
         ]);
@@ -62,29 +60,6 @@ class EventVendorController extends Controller
 
         $event->vendors()->attach($vendor);
         return response()->json($vendor);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

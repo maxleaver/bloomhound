@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class AccountProfileController extends Controller
@@ -11,12 +10,11 @@ class AccountProfileController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update()
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
             'address' => 'nullable|string',
             'website' => 'nullable|string|max:255',

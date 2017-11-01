@@ -8,7 +8,6 @@ use App\Invite;
 use App\Mail\UserInvited;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Http\Request;
 
 class InviteController extends Controller
 {
@@ -20,7 +19,7 @@ class InviteController extends Controller
 
 	public function store()
 	{
-		$data = $this->validate(request(), [
+		$data = request()->validate([
             'email' => 'required|string|email|max:255|unique:users'
         ]);
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use App\Customer;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
@@ -23,12 +22,11 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255'
         ]);
 
@@ -58,13 +56,12 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Customer             $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Customer $customer)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255',
             'address' => 'nullable|string|max:255',

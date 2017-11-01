@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use Auth;
 use App\Event;
 use App\Setup;
-use Auth;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class EventSetupController extends Controller
 {
@@ -29,13 +28,12 @@ class EventSetupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Event $event
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Event $event)
+    public function store(Event $event)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'address' => 'required|string',
             'setup_on' => 'required|date',
             'description' => 'nullable|string',
@@ -47,48 +45,14 @@ class EventSetupController extends Controller
         }
 
         $setup = new Setup();
-        $setup->address = $request->address;
-        $setup->setup_on = Carbon::parse($request->setup_on);
-        $setup->description = $request->description;
-        $setup->fee = $request->fee;
+        $setup->address = $data['address'];
+        $setup->setup_on = Carbon::parse($data['setup_on']);
+        $setup->description = $data['description'];
+        $setup->fee = $data['fee'];
         $setup->account()->associate(Auth::user()->account);
         $setup->event()->associate($event);
         $setup->save();
 
         return response()->json($setup);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

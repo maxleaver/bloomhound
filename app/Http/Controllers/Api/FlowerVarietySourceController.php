@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use Auth;
+use DB;
+use Validator;
 use App\FlowerVariety;
 use App\FlowerVarietySource;
 use App\Vendor;
 use App\Http\Requests\StoreFlowerVarietySource;
-use Auth;
-use DB;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
 
 class FlowerVarietySourceController extends Controller
 {
@@ -92,39 +91,5 @@ class FlowerVarietySourceController extends Controller
         $vendor->account()->associate(Auth::user()->account);
         $vendor->save();
         return $vendor;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

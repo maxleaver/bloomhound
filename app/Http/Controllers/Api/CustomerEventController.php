@@ -6,9 +6,8 @@ use Auth;
 use App\Customer;
 use App\Event;
 use App\EventStatus;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class CustomerEventController extends Controller
 {
@@ -31,12 +30,11 @@ class CustomerEventController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Customer  $customer
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Customer $customer, Request $request)
+    public function store(Customer $customer)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'date' => 'required|date',
             'name' => 'required|string',
         ]);
@@ -55,39 +53,5 @@ class CustomerEventController extends Controller
         $event->save();
 
         return response()->json($event);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

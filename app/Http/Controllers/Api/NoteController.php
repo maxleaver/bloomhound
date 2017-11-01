@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Note;
 use Auth;
 use Exception;
-use Illuminate\Http\Request;
+use App\Note;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
@@ -29,7 +29,7 @@ class NoteController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'text' => 'required|string',
         ]);
 
@@ -58,13 +58,12 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Note $note)
+    public function update(Note $note)
     {
-        $data = $this->validate(request(), [
+        $data = request()->validate([
             'text' => 'required|string',
         ]);
 
