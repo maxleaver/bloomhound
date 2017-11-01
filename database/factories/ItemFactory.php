@@ -21,3 +21,9 @@ $factory->define(App\Item::class, function (Faker $faker) {
         'cost' => $faker->randomDigitNotNull,
     ];
 });
+
+$factory->state(App\Item::class, 'cost', [
+    'markup_id' => function () {
+        return \App\Markup::whereName('cost')->first()->id;
+    },
+]);

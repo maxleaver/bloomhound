@@ -15,7 +15,7 @@ class Flower extends Model
      * @var array
      */
     protected $hidden = [
-        'flower_library_id', 'account_id',
+        'account_id',
     ];
 
     protected $dispatchesEvents = [

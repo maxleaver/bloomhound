@@ -14,3 +14,11 @@ $factory->define(App\ArrangementIngredient::class, function (Faker $faker) {
         'quantity' => $faker->randomNumber(2),
     ];
 });
+
+$factory->state(App\ArrangementIngredient::class, 'item', [
+    'arrangeable_type' => 'App\Item',
+]);
+
+$factory->state(App\ArrangementIngredient::class, 'flower', [
+    'arrangeable_type' => 'App\FlowerVariety',
+]);

@@ -10,7 +10,7 @@
     >
       <template slot-scope="{ row }">
         <b-table-column field="name" label="Name" sortable>
-          {{ row.arrangeable.ingredient_name }} {{ row.id }}
+          {{ row.arrangeable.ingredient_name }}
         </b-table-column>
 
         <b-table-column field="quantity" label="Quantity" width="100">
