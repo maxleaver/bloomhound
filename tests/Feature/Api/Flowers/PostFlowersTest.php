@@ -11,16 +11,12 @@ class PostFlowersTest extends TestCase
     use RefreshDatabase;
 
     protected $request;
-    protected $user;
-    protected $url;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
         $this->request = ['name' => 'Some Flower'];
-        $this->url = 'api/flowers';
     }
 
     /** @test */
@@ -28,8 +24,7 @@ class PostFlowersTest extends TestCase
     {
     	$this->assertEquals(Flower::count(), 0);
 
-    	$this->signIn($this->user)
-            ->postJson($this->url, $this->request)
+        $this->createFlower($this->request)
     		->assertStatus(200);
 
     	$this->assertEquals(Flower::count(), 1);
@@ -38,7 +33,18 @@ class PostFlowersTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_create_flowers()
     {
-    	$this->postJson($this->url, $this->request)
+    	$this->createFlower($this->request, false)
     		->assertStatus(401);
+    }
+
+    protected function createFlower($request, $signIn = true)
+    {
+        $url = 'api/flowers';
+
+        if ($signIn) {
+            $this->signIn(create('App\User'));
+        }
+
+        return $this->postJson($url, $request);
     }
 }

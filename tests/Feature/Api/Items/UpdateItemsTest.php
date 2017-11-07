@@ -11,50 +11,21 @@ class UpdateItemsTest extends TestCase
 
     protected $item;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->item = create('App\Item', ['account_id' => $this->user->account->id]);
-
-        $name = 'test name';
-        $description = 'test description';
-        $inventory = 10;
-        $cost = 10;
-        $arrangeable_type_id = \App\ArrangeableType::whereName('consummable')->first()->id;
-        $markup_id = \App\Markup::whereName('cost_plus_percent')->first()->id;
-        $markup_value = 50;
-        $use_default_markup = false;
-        $this->request = compact(
-            'name',
-            'description',
-            'inventory',
-            'cost',
-            'arrangeable_type_id',
-            'markup_id',
-            'markup_value',
-            'use_default_markup'
-        );
-    }
-
-    protected function makeRequest($itemId, $signIn = true)
-    {
-        $url = '/api/items/' . $itemId;
-
-        if ($signIn) {
-            return $this->signIn($this->user)->patchJson($url, $this->request);
-        }
-
-        return $this->patchJson($url, $this->request);
+        $this->item = create('App\Item');
+        $this->request = create('App\Item', [
+            'account_id' => $this->item->account->id,
+        ])->toArray();
     }
 
     /** @test */
     public function a_user_can_update_an_item()
     {
-        $this->makeRequest($this->item->id)
+        $this->updateItem($this->item->id)
             ->assertStatus(200);
 
         $item = $this->item->fresh();
@@ -65,7 +36,7 @@ class UpdateItemsTest extends TestCase
         $this->assertEquals($this->request['arrangeable_type_id'], $item->type->id);
         $this->assertEquals($this->request['markup_id'], $item->markup->id);
         $this->assertEquals($this->request['markup_value'], $item->markup_value);
-        $this->assertFalse($item->use_default_markup);
+        $this->assertEquals($this->request['use_default_markup'], $item->use_default_markup);
     }
 
     /** @test */
@@ -73,7 +44,8 @@ class UpdateItemsTest extends TestCase
     {
         $invalidTypeId = 123;
         $this->request['arrangeable_type_id'] = $invalidTypeId;
-        $this->makeRequest($this->item->id)
+
+        $this->updateItem($this->item->id)
             ->assertStatus(422);
     }
 
@@ -82,7 +54,8 @@ class UpdateItemsTest extends TestCase
     {
         $invalidMarkupId = 123;
         $this->request['markup_id'] = $invalidMarkupId;
-        $this->makeRequest($this->item->id)
+
+        $this->updateItem($this->item->id)
             ->assertStatus(422);
     }
 
@@ -90,7 +63,8 @@ class UpdateItemsTest extends TestCase
     public function a_user_can_only_update_an_item_in_their_account()
     {
         $itemInAnotherAccount = create('App\Item');
-        $this->makeRequest($itemInAnotherAccount->id)
+
+        $this->updateItem($itemInAnotherAccount->id)
             ->assertStatus(403);
     }
 
@@ -98,14 +72,28 @@ class UpdateItemsTest extends TestCase
     public function a_user_can_only_update_items_that_exist()
     {
         $invalidItemId = 123;
-        $this->makeRequest($invalidItemId)
+
+        $this->updateItem($invalidItemId)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_update_items()
     {
-        $this->makeRequest($this->item->id, false)
+        $this->updateItem($this->item->id, false)
             ->assertStatus(401);
+    }
+
+    protected function updateItem($id, $signIn = true)
+    {
+        $url = '/api/items/' . $id;
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->item->account->id,
+            ]));
+        }
+
+        return $this->patchJson($url, $this->request);
     }
 }

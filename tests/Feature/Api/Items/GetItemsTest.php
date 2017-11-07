@@ -10,7 +10,6 @@ class GetItemsTest extends TestCase
     use RefreshDatabase;
 
     protected $items;
-    protected $url;
     protected $user;
 
     protected function setUp()
@@ -18,17 +17,17 @@ class GetItemsTest extends TestCase
         parent::setUp();
 
         $this->user = create('App\User');
-        $this->items = create('App\Item', ['account_id' => $this->user->account->id], 10);
-        $this->url = 'api/items';
+        $this->items = create('App\Item', [
+            'account_id' => $this->user->account->id,
+        ], 10);
     }
 
     /** @test */
-    public function a_user_can_get_items_in_their_account()
+    public function a_user_can_get_a_list_of_items()
     {
         $otherItems = create('App\Item', [], 10);
 
-        $this->signIn($this->user)
-            ->getJson($this->url)
+        $this->getItems()
             ->assertStatus(200)
             ->assertJsonFragment([$this->items[0]->name])
     		->assertJsonFragment([$this->items[1]->name])
@@ -39,8 +38,7 @@ class GetItemsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_specific_item()
     {
-        $this->signIn($this->user)
-            ->getJson($this->url . '/' . $this->items[0]->id)
+        $this->getItems($this->items[0]->id)
             ->assertStatus(200)
             ->assertJsonFragment([$this->items[0]->name])
             ->assertJsonMissing([$this->items[1]->name]);
@@ -49,17 +47,27 @@ class GetItemsTest extends TestCase
     /** @test */
     public function a_user_can_only_get_an_item_in_their_account()
     {
-        $someOtherItem = create('App\Item');
+        $someOtherItem = create('App\Item')->id;
 
-        $this->signIn($this->user)
-            ->getJson($this->url . '/' . $someOtherItem->id)
+        $this->getItems($someOtherItem)
             ->assertStatus(403);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_items()
     {
-        $this->getJson($this->url)
+        $this->getItems(null, false)
             ->assertStatus(401);
+    }
+
+    protected function getItems($id = null, $signIn = true)
+    {
+        $url = isset($id) ? 'api/items/' . $id : 'api/items';
+
+        if ($signIn) {
+            $this->signIn($this->user);
+        }
+
+        return $this->getJson($url);
     }
 }

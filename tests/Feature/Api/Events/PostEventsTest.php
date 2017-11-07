@@ -12,30 +12,25 @@ class PostEventsTest extends TestCase
     use RefreshDatabase;
 
     protected $request;
-    protected $user;
-    protected $url;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
         $this->request = [
             'name' => 'Event Name',
             'customer' => 'John Doe',
             'date' => '2017-09-12T12:37:55.729Z'
         ];
-        $this->url = 'api/events';
     }
 
     /** @test */
-    public function authenticated_users_can_add_an_event_for_a_new_customer()
+    public function a_user_can_create_an_event_for_a_new_customer()
     {
     	$this->assertEquals(Event::count(), 0);
         $this->assertEquals(Customer::count(), 0);
 
-    	$this->signIn($this->user)
-            ->postJson($this->url, $this->request)
+        $this->createEvent()
     		->assertStatus(200);
 
     	$this->assertEquals(Event::count(), 1);
@@ -43,9 +38,51 @@ class PostEventsTest extends TestCase
     }
 
     /** @test */
-    public function unauthenticated_users_cannot_add_events_for_new_customers()
+    public function an_event_requires_a_name()
     {
-    	$this->postJson($this->url, $this->request)
+        $this->request['name'] = null;
+
+        $this->createEvent()
+            ->assertSessionHasErrors('name');
+    }
+
+    /** @test */
+    public function an_event_requires_a_customer_name_or_id()
+    {
+        $this->request['customer'] = null;
+
+        $this->createEvent()
+            ->assertSessionHasErrors('customer');
+    }
+
+    /** @test */
+    public function an_event_requires_a_valid_date()
+    {
+        $this->request['date'] = null;
+
+        $this->createEvent()
+            ->assertSessionHasErrors('date');
+    }
+
+    /** @test */
+    public function unauthenticated_users_cannot_create_events()
+    {
+    	$this->createEvent(false, true)
     		->assertStatus(401);
+    }
+
+    protected function createEvent($signIn = true, $withJson = false)
+    {
+        $url = '/api/events';
+
+        if ($signIn) {
+            $this->signIn(create('App\User'));
+        }
+
+        if ($withJson) {
+            return $this->postJson($url, $this->request);
+        }
+
+        return $this->post($url, $this->request);
     }
 }

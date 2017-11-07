@@ -10,15 +10,17 @@ class GetFlowersTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $account;
     protected $flowers;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->flowers = create('App\Flower', ['account_id' => $this->user->account->id], 5);
+        $this->account = create('App\Account');
+        $this->flowers = create('App\Flower', [
+            'account_id' => $this->account->id,
+        ], 2);
     }
 
     /** @test */
@@ -26,8 +28,7 @@ class GetFlowersTest extends TestCase
     {
     	$flowersInAnotherAccount = create('App\Flower', [], 2);
 
-        $this->signIn($this->user)
-            ->getJson('api/flowers')
+        $this->getFlowers()
     		->assertStatus(200)
     		->assertJsonFragment([$this->flowers[0]->name])
     		->assertJsonFragment([$this->flowers[1]->name])
@@ -38,7 +39,20 @@ class GetFlowersTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_get_flowers()
     {
-        $this->getJson('api/flowers')
+        $this->getFlowers(false)
     		->assertStatus(401);
+    }
+
+    protected function getFlowers($signIn = true)
+    {
+        $url = 'api/flowers';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->account->id,
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

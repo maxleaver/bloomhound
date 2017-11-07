@@ -11,47 +11,36 @@ class UpdateEventTest extends TestCase
 	use RefreshDatabase;
 
     protected $event;
-    protected $user;
+    protected $request;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->event = create('App\Event', ['account_id' => $this->user->account->id]);
-    }
-
-    protected function url($id)
-    {
-        return 'api/events/' . $id;
+        $this->event = create('App\Event');
+        $this->request = [
+            'name' => 'test event',
+            'date' => Carbon::now()->addDays(10)->toDateTimeString(),
+        ];
     }
 
     /** @test */
     public function users_can_update_an_event()
     {
-        $name = 'Test Event';
-        $date = Carbon::now()->addDays(10)->toDateTimeString();
-        $request = compact('name', 'date');
-
-        $this->signIn($this->user)
-            ->patchJson($this->url($this->event->id), $request)
+        $this->updateEvent($this->event->id)
             ->assertStatus(200);
 
         $event = $this->event->fresh();
-        $this->assertEquals($name, $event->name);
-        $this->assertEquals($date, $event->date);
+        $this->assertEquals($this->request['name'], $event->name);
+        $this->assertEquals($this->request['date'], $event->date);
     }
 
     /** @test */
     public function users_can_only_update_events_in_their_account()
     {
-        $eventInAnotherAccount = create('App\Event');
-        $name = 'New Name';
-        $date = Carbon::now()->addDays(10)->toDateTimeString();
-        $request = compact('name', 'date');
+        $eventInAnotherAccount = create('App\Event')->id;
 
-        $this->signIn($this->user)
-            ->patchJson($this->url($eventInAnotherAccount->id), $request)
+        $this->updateEvent($eventInAnotherAccount)
             ->assertStatus(403);
     }
 
@@ -59,23 +48,32 @@ class UpdateEventTest extends TestCase
     public function users_can_only_update_events_that_exist()
     {
         $badEventId = 123;
-        $name = 'New Name';
-        $date = Carbon::now()->addDays(10)->toDateTimeString();
-        $request = compact('name', 'date');
 
-        $this->signIn($this->user)
-            ->patchJson($this->url($badEventId), $request)
+        $this->updateEvent($badEventId)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_update_events()
     {
-        $name = 'New Name';
-        $date = Carbon::now()->addDays(10)->toDateTimeString();
-        $request = compact('name', 'date');
-
-        $this->patchJson($this->url($this->event->id), $request)
+        $this->updateEvent($this->event->id, false, true)
             ->assertStatus(401);
+    }
+
+    protected function updateEvent($id, $signIn = true, $withJson = false)
+    {
+        $url = '/api/events/' . $id;
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->event->account->id,
+            ]));
+        }
+
+        if ($withJson) {
+            return $this->patchJson($url, $this->request);
+        }
+
+        return $this->patch($url, $this->request);
     }
 }

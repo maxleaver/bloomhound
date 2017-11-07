@@ -14,16 +14,14 @@ class PostItemsTest extends TestCase
 
     protected $request;
     protected $type;
-    protected $url;
     protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->url = 'api/items';
         $this->type = ArrangeableType::whereName('consummable')->first();
+        $this->user = create('App\User');
         $this->request = [
             'arrangeable_type_id' => $this->type->id,
             'name' => 'My Item',
@@ -38,8 +36,7 @@ class PostItemsTest extends TestCase
     {
         $this->assertEquals(Item::count(), 0);
 
-        $this->signIn($this->user)
-            ->postJson($this->url, $this->request)
+        $this->createItem($this->request)
             ->assertStatus(200);
 
         $item = Item::whereName($this->request['name'])->first();
@@ -62,8 +59,7 @@ class PostItemsTest extends TestCase
         $defaultSetting->markup_value = 10;
         $defaultSetting->save();
 
-        $this->signIn($this->user)
-            ->postJson($this->url, $this->request)
+        $this->createItem($this->request)
             ->assertStatus(200);
 
         $item = Item::whereName($this->request['name'])->first();
@@ -78,15 +74,25 @@ class PostItemsTest extends TestCase
     {
         $this->request['arrangeable_type_id'] = 123;
 
-        $this->signIn($this->user)
-            ->postJson($this->url, $this->request)
+        $this->createItem($this->request)
             ->assertStatus(422);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_add_items()
     {
-        $this->postJson($this->url, $this->request)
+        $this->createItem($this->request, false)
             ->assertStatus(401);
+    }
+
+    protected function createItem($request, $signIn = true)
+    {
+        $url = 'api/items';
+
+        if ($signIn) {
+            $this->signIn($this->user);
+        }
+
+        return $this->postJson($url, $request);
     }
 }

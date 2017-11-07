@@ -12,7 +12,6 @@ class PostFlowerVarietySourcesTest extends TestCase
     use RefreshDatabase;
 
     protected $request;
-    protected $user;
     protected $variety;
     protected $vendor;
 
@@ -20,23 +19,17 @@ class PostFlowerVarietySourcesTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->variety = create('App\FlowerVariety', [
-        	'flower_id' => create('App\Flower', ['account_id' => $this->user->account->id])->id
-        ]);
-        $this->vendor = create('App\Vendor', ['account_id' => $this->user->account->id]);
-        $this->request = [
-        	[
-        		'vendor_id' => $this->vendor->id,
-	        	'cost' => 9.99,
-	        	'stems_per_bunch' => 10,
-	       	]
-        ];
-    }
+        $this->variety = create('App\FlowerVariety');
 
-    protected function getUrl($id)
-    {
-    	return 'api/varieties/' . $id . '/sources';
+        $this->vendor = create('App\Vendor', [
+            'account_id' => $this->variety->flower->account->id
+        ]);
+
+        $this->request = [
+            make('App\FlowerVarietySource', [
+                'vendor_id' => $this->vendor->id
+            ])->toArray()
+        ];
     }
 
     /** @test */
@@ -44,8 +37,7 @@ class PostFlowerVarietySourcesTest extends TestCase
     {
     	$this->assertEquals(FlowerVarietySource::count(), 0);
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
+        $this->createSources($this->variety->id, $this->request)
     		->assertStatus(200);
 
     	$this->assertEquals(FlowerVarietySource::count(), 1);
@@ -54,26 +46,21 @@ class PostFlowerVarietySourcesTest extends TestCase
     /** @test */
     public function users_can_add_multiple_sources_to_a_flower_variety()
     {
-    	$this->withoutExceptionHandling();
-
-    	$request = [
+        $request = [
 			[
 				'vendor_name' => 'A new vendor',
 	        	'cost' => 9.99,
 	        	'stems_per_bunch' => 10,
     		],
-    		[
-	        	'vendor_id' => $this->vendor->id,
-	        	'cost' => 4.99,
-	        	'stems_per_bunch' => 5,
-    		],
+    		make('App\FlowerVarietySource', [
+                'vendor_id' => $this->vendor->id
+            ])->toArray()
     	];
 
     	$this->assertEquals(FlowerVarietySource::count(), 0);
     	$this->assertEquals(Vendor::count(), 1);
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $request)
+        $this->createSources($this->variety->id, $request)
     		->assertStatus(200);
 
     	$this->assertEquals(FlowerVarietySource::count(), 2);
@@ -83,21 +70,18 @@ class PostFlowerVarietySourcesTest extends TestCase
     /** @test */
     public function users_can_only_add_sources_to_varieties_of_flowers_in_their_account()
     {
-    	$someOtherFlower = create('App\Flower');
-    	$otherVariety = create('App\FlowerVariety', ['flower_id' => $someOtherFlower->id]);
+    	$otherVariety = create('App\FlowerVariety')->id;
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($otherVariety->id), $this->request)
+        $this->createSources($otherVariety, $this->request)
     		->assertStatus(403);
     }
 
     /** @test */
     public function users_can_only_add_sources_to_flower_varieties_that_exist()
     {
-    	$clearlyInvalidId = 666;
+    	$badId = 666;
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($clearlyInvalidId), $this->request)
+        $this->createSources($badId, $this->request)
     		->assertStatus(404);
     }
 
@@ -107,8 +91,7 @@ class PostFlowerVarietySourcesTest extends TestCase
     	$someOtherVendor = create('App\Vendor');
     	$this->request[0]['vendor_id'] = $someOtherVendor->id;
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
+        $this->createSources($this->variety->id, $this->request)
     		->assertStatus(403);
     }
 
@@ -120,24 +103,20 @@ class PostFlowerVarietySourcesTest extends TestCase
 
     	$this->assertEquals(\App\Vendor::count(), 1);
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
+        $this->createSources($this->variety->id, $this->request)
     		->assertStatus(200);
 
     	$this->assertEquals(\App\Vendor::count(), 2);
     }
 
     /** @test */
-    public function if_both_a_vendor_id_and_name_are_provided_the_vendor_id_will_take_precedence()
+    public function if_both_a_vendor_id_and_name_are_provided_the_vendor_id_is_used()
     {
-    	$this->withoutExceptionHandling();
-
     	$this->request[0]['vendor_name'] = 'Vendor Name';
 
     	$this->assertEquals(\App\Vendor::count(), 1);
 
-    	$response = $this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
+        $response = $this->createSources($this->variety->id, $this->request)
     		->assertStatus(200);
 
     	$newRecord = FlowerVarietySource::find($response->getData()[0]->id);
@@ -151,8 +130,7 @@ class PostFlowerVarietySourcesTest extends TestCase
     {
     	$this->request[0]['vendor_id'] = 666;
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
+        $this->createSources($this->variety->id, $this->request)
     		->assertStatus(403);
     }
 
@@ -162,9 +140,9 @@ class PostFlowerVarietySourcesTest extends TestCase
         $this->request[0]['vendor_id'] = null;
         $this->request[0]['vendor_name'] = null;
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
-    		->assertStatus(422);
+        $this->createSources($this->variety->id, $this->request)
+            ->assertSessionHasErrors('0.vendor_id')
+            ->assertSessionHasErrors('0.vendor_name');
     }
 
     /** @test */
@@ -172,9 +150,8 @@ class PostFlowerVarietySourcesTest extends TestCase
     {
     	$this->request[0]['cost'] = null;
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
-    		->assertStatus(422);
+        $this->createSources($this->variety->id, $this->request)
+            ->assertSessionHasErrors('0.cost');
     }
 
     /** @test */
@@ -182,15 +159,31 @@ class PostFlowerVarietySourcesTest extends TestCase
     {
     	$this->request[0]['stems_per_bunch'] = null;
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->variety->id), $this->request)
-    		->assertStatus(422);
+        $this->createSources($this->variety->id, $this->request)
+            ->assertSessionHasErrors('0.stems_per_bunch');
     }
 
     /** @test */
     public function unauthenticated_users_cannot_add_sources()
     {
-    	$this->postJson($this->getUrl($this->variety->id), $this->request)
+    	$this->createSources($this->variety->id, $this->request, false, true)
     		->assertStatus(401);
+    }
+
+    protected function createSources($id, $request, $signIn = true, $withJson = false)
+    {
+        $url = 'api/varieties/' . $id . '/sources';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->variety->flower->account->id
+            ]));
+        }
+
+        if ($withJson) {
+            return $this->postJson($url, $request);
+        }
+
+        return $this->post($url, $request);
     }
 }

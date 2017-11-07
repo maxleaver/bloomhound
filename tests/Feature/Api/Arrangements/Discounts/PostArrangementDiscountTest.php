@@ -95,7 +95,7 @@ class PostArrangementDiscountTest extends TestCase
     }
 
     /** @test */
-    public function a_discount_cannot_decrease_an_arrangement_price_below_zero()
+    public function a_discount_cannot_be_greater_than_the_arrangement_price()
     {
         $discount = factory('App\Discount')
             ->states('fixed')

@@ -13,20 +13,13 @@ class PostFlowerVarietiesTest extends TestCase
 
     protected $flower;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->flower = create('App\Flower', ['account_id' => $this->user->account->id]);
+        $this->flower = create('App\Flower');
         $this->request = ['name' => 'Some Variety'];
-    }
-
-    protected function url($id)
-    {
-        return 'api/flowers/' . $id . '/varieties';
     }
 
     /** @test */
@@ -34,8 +27,7 @@ class PostFlowerVarietiesTest extends TestCase
     {
         $this->assertEquals(FlowerVariety::count(), 1);
 
-        $this->signIn($this->user)
-            ->postJson($this->url($this->flower->id), $this->request)
+        $this->createVariety($this->flower->id, $this->request)
             ->assertStatus(200);
 
         $this->assertEquals(FlowerVariety::count(), 2);
@@ -52,8 +44,7 @@ class PostFlowerVarietiesTest extends TestCase
         $defaultSetting->markup_value = 10;
         $defaultSetting->save();
 
-        $this->signIn($this->user)
-            ->postJson($this->url($this->flower->id), $this->request)
+        $this->createVariety($this->flower->id, $this->request)
             ->assertStatus(200);
 
         $variety = FlowerVariety::whereName($this->request['name'])->first();
@@ -66,17 +57,29 @@ class PostFlowerVarietiesTest extends TestCase
     /** @test */
     public function users_can_only_add_varieties_to_flowers_in_their_account()
     {
-        $someOtherFlower = create('App\Flower');
+        $someOtherFlower = create('App\Flower')->id;
 
-        $this->signIn($this->user)
-            ->postJson($this->url($someOtherFlower->id), $this->request)
+        $this->createVariety($someOtherFlower, $this->request)
             ->assertStatus(403);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_add_varieties()
     {
-        $this->postJson($this->url($this->flower->id), $this->request)
+        $this->createVariety($this->flower->id, $this->request, false)
             ->assertStatus(401);
+    }
+
+    protected function createVariety($id, $request, $signIn = true)
+    {
+        $url = 'api/flowers/' . $id . '/varieties';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->flower->account->id
+            ]));
+        }
+
+        return $this->postJson($url, $request);
     }
 }

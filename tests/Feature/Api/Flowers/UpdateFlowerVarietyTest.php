@@ -11,67 +11,44 @@ class UpdateFlowerVarietyTest extends TestCase
 
     protected $variety;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->variety = create('App\FlowerVariety', [
-            'account_id' => $this->user->account->id
-        ]);
-
-        $name = 'test name';
-        $markup_id = \App\Markup::whereName('cost_plus_percent')->first()->id;
-        $markup_value = 50;
-        $use_default_markup = false;
-        $this->request = compact(
-            'name',
-            'markup_id',
-            'markup_value',
-            'use_default_markup'
-        );
-    }
-
-    protected function makeRequest($varietyId, $signIn = true)
-    {
-        $url = '/api/varieties/' . $varietyId;
-
-        if ($signIn) {
-            return $this->signIn($this->user)->patchJson($url, $this->request);
-        }
-
-        return $this->patchJson($url, $this->request);
+        $this->variety = create('App\FlowerVariety');
+        $this->request = make('App\FlowerVariety')->toArray();
     }
 
     /** @test */
     public function a_user_can_update_a_flower_variety()
     {
-        $this->makeRequest($this->variety->id)
+        $this->updateVariety($this->variety->id)
             ->assertStatus(200);
 
         $variety = $this->variety->fresh();
         $this->assertEquals($this->request['name'], $variety->name);
         $this->assertEquals($this->request['markup_id'], $variety->markup->id);
         $this->assertEquals($this->request['markup_value'], $variety->markup_value);
-        $this->assertFalse($variety->use_default_markup);
+        $this->assertEquals($this->request['use_default_markup'], $variety->use_default_markup);
     }
 
     /** @test */
     public function a_user_cannot_update_a_flower_variety_with_an_invalid_markup_id()
     {
-        $invalidMarkupId = 123;
-        $this->request['markup_id'] = $invalidMarkupId;
-        $this->makeRequest($this->variety->id)
-            ->assertStatus(422);
+        $badId = 123;
+        $this->request['markup_id'] = $badId;
+
+        $this->updateVariety($this->variety->id)
+            ->assertSessionHasErrors('markup_id');
     }
 
     /** @test */
     public function a_user_can_only_update_a_flower_variety_in_their_account()
     {
-        $varietyInAnotherAccount = create('App\FlowerVariety');
-        $this->makeRequest($varietyInAnotherAccount->id)
+        $varietyInAnotherAccount = create('App\FlowerVariety')->id;
+
+        $this->updateVariety($varietyInAnotherAccount)
             ->assertStatus(403);
     }
 
@@ -79,14 +56,31 @@ class UpdateFlowerVarietyTest extends TestCase
     public function a_user_can_only_update_flower_varieties_that_exist()
     {
         $invalidVarietyId = 123;
-        $this->makeRequest($invalidVarietyId)
+        $this->updateVariety($invalidVarietyId)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_update_flower_varieties()
     {
-        $this->makeRequest($this->variety->id, false)
+        $this->updateVariety($this->variety->id, false, true)
             ->assertStatus(401);
+    }
+
+    protected function updateVariety($id, $signIn = true, $withJson = false)
+    {
+        $url = '/api/varieties/' . $id;
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->variety->account->id,
+            ]));
+        }
+
+        if ($withJson) {
+            return $this->patchJson($url, $this->request);
+        }
+
+        return $this->patch($url, $this->request);
     }
 }
