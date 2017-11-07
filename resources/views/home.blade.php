@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="hero is-dark">
-  <div class="hero-body">
-    <div class="container">
-      <h1 class="title">Home</h1>
-      <h2 class="subtitle">You are logged in!</h2>
-    </div>
-  </div>
-</div>
+
+@component('layouts._hero')
+  Home
+
+  @slot('subtitle')
+    You are logged in!
+  @endslot
+@endcomponent
 
 <div class="container">
   {{ Breadcrumbs::render('home') }}

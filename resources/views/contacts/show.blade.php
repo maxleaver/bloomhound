@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="hero is-dark">
-  <div class="hero-body">
-    <div class="container">
-      <h1 class="title">{{ $contact->name }}</h1>
-      <h2 class="subtitle">Last updated {{ $contact->updated_at->diffForHumans() }}</h2>
-    </div>
-  </div>
-</div>
+
+@component('layouts._hero')
+  {{ $contact->name }}
+
+  @slot('subtitle')
+    Last updated {{ $contact->updated_at->diffForHumans() }}
+  @endslot
+@endcomponent
 
 <div class="container">
   {{ Breadcrumbs::render('contact', $contact) }}
