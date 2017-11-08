@@ -2,12 +2,11 @@
 
 @section('content')
 <event-profile
-	:arrangements="{{ $event->arrangements }}"
 	:event="{{ $event }}"
+	:proposal="{{ $proposal }}"
 	:settings="{{ $settings }}"
->
-  {{ Breadcrumbs::render('event', $event) }}
-</event-profile>
+	:vendors="{{ $vendors }}"
+></event-profile>
 
 <section class="section">
   <div class="container">

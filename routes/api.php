@@ -34,8 +34,8 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::prefix('arrangements')->group(function () {
 		Route::prefix('{arrangement}')->group(function () {
-			Route::patch('/', 'ArrangementEventController@update');
-			Route::delete('/', 'ArrangementEventController@destroy');
+			Route::patch('/', 'ArrangementProposalController@update');
+			Route::delete('/', 'ArrangementProposalController@destroy');
 
 			Route::prefix('discounts')->group(function () {
 				Route::post('/', 'ArrangementDiscountController@store');
@@ -93,21 +93,14 @@ Route::middleware('auth:api')->group(function () {
 		Route::prefix('{event}')->group(function () {
 			Route::patch('/', 'EventController@update');
 
-			Route::get('arrangements', 'ArrangementEventController@index');
-			Route::post('arrangements', 'ArrangementEventController@store');
-
-			Route::get('deliveries', 'DeliveryEventController@index');
-			Route::post('deliveries', 'DeliveryEventController@store');
-
 			Route::get('notes', 'NoteController@index');
 			Route::post('notes', 'NoteController@store');
 
-			Route::get('setups', 'EventSetupController@index');
-			Route::post('setups', 'EventSetupController@store');
-
-			Route::get('vendors', 'EventVendorController@index');
-			Route::post('vendors', 'EventVendorController@store');
-			Route::delete('vendors/{vendor}', 'EventVendorController@destroy');
+			Route::prefix('proposals')->group(function () {
+				Route::get('/', 'ProposalController@index');
+				Route::post('/', 'ProposalController@store');
+				Route::patch('{proposal}', 'ProposalController@update');
+			});
 		});
 	});
 
@@ -153,6 +146,25 @@ Route::middleware('auth:api')->group(function () {
 	Route::prefix('profile')->group(function () {
 		Route::get('/', 'ProfileController@index');
 		Route::patch('/', 'ProfileController@update');
+	});
+
+	Route::prefix('proposals')->group(function () {
+		Route::prefix('{proposal}')->group(function () {
+			Route::get('/', 'ProposalController@show');
+
+			Route::get('arrangements', 'ArrangementProposalController@index');
+			Route::post('arrangements', 'ArrangementProposalController@store');
+
+			Route::get('deliveries', 'DeliveryProposalController@index');
+			Route::post('deliveries', 'DeliveryProposalController@store');
+
+			Route::get('setups', 'ProposalSetupController@index');
+			Route::post('setups', 'ProposalSetupController@store');
+
+			Route::get('vendors', 'ProposalVendorController@index');
+			Route::post('vendors', 'ProposalVendorController@store');
+			Route::delete('vendors/{vendor}', 'ProposalVendorController@destroy');
+		});
 	});
 
 	Route::prefix('setups')->group(function () {

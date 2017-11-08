@@ -36,9 +36,13 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event = $event->load('customer', 'arrangements', 'arrangements.discounts');
+        $event = $event->load('customer', 'proposals');
+        $proposal = $event->active_proposal->load('arrangements', 'deliveries', 'setups', 'vendors');
         $settings = Auth::user()->account->settings;
-        return view('events.show', compact('event', 'settings'));
+        $vendors = Auth::user()->account->vendors;
+        $data = compact('event', 'proposal', 'settings', 'vendors');
+
+        return view('events.show', $data);
     }
 
     /**

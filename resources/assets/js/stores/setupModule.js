@@ -3,6 +3,7 @@ import { calculateSum } from 'helpers/helpers';
 
 export default {
   namespaced: true,
+
   state: {
     errors: new Errors(),
     isLoading: false,
@@ -10,6 +11,7 @@ export default {
     records: [],
     showForm: false,
   },
+
   mutations: {
     toggleForm(state) {
       state.showForm = !state.showForm;
@@ -70,11 +72,12 @@ export default {
       window.flash('There was a problem updating your setup!', 'danger');
     },
   },
+
   actions: {
     fetch({ commit, rootState }) {
       commit('fetchRequest');
 
-      window.axios.get(`/api/events/${rootState.event.id}/setups`)
+      window.axios.get(`/api/proposals/${rootState.proposal.id}/setups`)
         .then((data) => {
           commit('fetchSuccess', data.data);
         });
@@ -83,7 +86,7 @@ export default {
     submit({ commit, rootState }, data) {
       commit('submitRequest');
 
-      window.axios.post(`/api/events/${rootState.event.id}/setups`, data)
+      window.axios.post(`/api/proposals/${rootState.proposal.id}/setups`, data)
         .then((response) => {
           commit('submitSuccess', response.data);
         })
@@ -104,6 +107,7 @@ export default {
         });
     },
   },
+
   getters: {
     subtotal: state => calculateSum(state.records, 'fee'),
   },

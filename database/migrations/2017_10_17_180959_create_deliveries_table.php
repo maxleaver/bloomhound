@@ -16,7 +16,7 @@ class CreateDeliveriesTable extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('account_id')->index();
-            $table->unsignedInteger('event_id')->index();
+            $table->unsignedInteger('proposal_id')->index();
             $table->string('address');
             $table->dateTime('deliver_on')->nullable();
             $table->string('description')->nullable();
@@ -27,8 +27,8 @@ class CreateDeliveriesTable extends Migration
                 ->references('id')->on('accounts')
                 ->onDelete('cascade');
 
-            $table->foreign('event_id')
-                ->references('id')->on('events')
+            $table->foreign('proposal_id')
+                ->references('id')->on('proposals')
                 ->onDelete('cascade');
         });
     }

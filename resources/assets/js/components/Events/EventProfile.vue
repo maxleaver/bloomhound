@@ -1,29 +1,12 @@
 <template>
   <div>
-    <event-header :event="event"></event-header>
-
-    <div class="container">
-      <slot></slot>
-    </div>
-
     <section class="section">
-      <div class="container">
-        <div class="is-pulled-right" @click="store.commit('toggleSettingPanel')">
-          <b-icon icon="settings"></b-icon>
-        </div>
-
-        <h1 class="title">Event Proposal for {{ event.customer.name }}</h1>
-
-        <b-collapse :open="store.state.showSettingsPanel">
-          <settings :store="store"></settings>
-        </b-collapse>
-
-      </div>
+      <event-header :store="store"></event-header>
     </section>
 
     <div class="container">
       <card-collapse title="Vendors">
-        <event-vendor-list :event="event"></event-vendor-list>
+        <vendors :store="store"></vendors>
       </card-collapse>
 
       <card-collapse :title="arrangementTitle">
@@ -70,8 +53,7 @@ import ArrangementList from 'components/Events/ArrangementList';
 import CardCollapse from 'components/CardCollapse';
 import Deliveries from 'components/Events/Deliveries';
 import EventHeader from 'components/Events/EventHeader';
-import EventVendorList from 'components/Events/EventVendorList';
-import Settings from 'components/Events/Settings';
+import Vendors from 'components/Events/Vendors';
 import Setups from 'components/Events/Setups';
 import eventStore from '../../stores/eventStore';
 
@@ -82,21 +64,22 @@ export default {
     CardCollapse,
     Deliveries,
     EventHeader,
-    EventVendorList,
-    Settings,
     Setups,
+    Vendors,
   },
 
   props: {
-    arrangements: Array,
-    deliveries: Array,
     event: Object,
+    proposal: Object,
     settings: Object,
     vendors: Array,
   },
 
   data() {
     return {
+      arrangements: this.proposal.arrangements,
+      deliveries: this.proposal.deliveries,
+      setups: this.proposal.setups,
       showCosts: eventStore.state.showCosts,
       store: eventStore,
       timezone: moment.tz.guess(),
@@ -104,8 +87,11 @@ export default {
   },
 
   created() {
-    this.store.commit('arrangement/set', this.arrangements);
-    this.store.commit('setEvent', this.event);
+    this.store.dispatch('init', {
+      event: this.event,
+      proposal: this.proposal,
+      vendors: this.vendors,
+    });
   },
 
   computed: {

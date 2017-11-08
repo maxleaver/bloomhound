@@ -15,7 +15,9 @@ $factory->define(App\Event::class, function (Faker $faker) {
             return factory('App\Account')->create()->id;
         },
         'customer_id' => function (array $contact) {
-            return factory('App\Customer')->create(['account_id' => $contact['account_id']]);
-        }
+            return factory('App\Customer')->create([
+                'account_id' => $contact['account_id']
+            ]);
+        },
     ];
 });

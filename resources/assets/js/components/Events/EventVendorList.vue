@@ -90,7 +90,7 @@ export default {
   },
 
   created() {
-    this.fetch(`/api/events/${this.event.id}/vendors`);
+    // this.fetch(`/api/events/${this.event.id}/vendors`);
     this.fetchVendors();
   },
 

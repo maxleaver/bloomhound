@@ -8,9 +8,11 @@ $factory->define(App\Setup::class, function (Faker $faker) {
         'account_id' => function () {
             return factory('App\Account')->create()->id;
         },
-        'event_id' => function (array $setup) {
-            return factory('App\Event')->create([
-            	'account_id' => $setup['account_id']
+        'proposal_id' => function (array $setup) {
+            return factory('App\Proposal')->create([
+                'event_id' => create('App\Event', [
+                    'account_id' => $setup['account_id']
+                ])
             ]);
         },
         'address' => $faker->address,

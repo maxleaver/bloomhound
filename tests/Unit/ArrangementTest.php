@@ -15,7 +15,7 @@ class ArrangementTest extends TestCase
     {
     	parent::setUp();
 
-        $this->arrangement = create('App\Arrangement');
+        $this->arrangement = factory('App\Arrangement')->states('delivery')->create();
     }
 
     protected function addIngredients($arrangement, $type, $amount)
@@ -91,9 +91,9 @@ class ArrangementTest extends TestCase
     }
 
     /** @test */
-    public function an_arrangement_belongs_to_an_event()
+    public function an_arrangement_belongs_to_a_proposal()
     {
-        $this->assertInstanceOf('App\Event', $this->arrangement->event);
+        $this->assertInstanceOf('App\Proposal', $this->arrangement->proposal);
     }
 
     /** @test */

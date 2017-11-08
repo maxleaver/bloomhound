@@ -5,18 +5,18 @@ namespace Tests\Feature\Api;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class PostEventArrangementsTest extends TestCase
+class PostProposalArrangementsTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $event;
+    protected $proposal;
     protected $request;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->event = create('App\Event');
+        $this->proposal = create('App\Proposal');
         $this->request = [
             'name' => 'Some arrangement name',
             'description' => 'this is a description',
@@ -25,16 +25,16 @@ class PostEventArrangementsTest extends TestCase
     }
 
     /** @test */
-    public function users_can_create_flower_arrangements_for_an_event()
+    public function users_can_create_flower_arrangements_for_a_proposal()
     {
-    	$this->assertEquals($this->event->arrangements()->count(), 0);
+    	$this->assertEquals($this->proposal->arrangements()->count(), 0);
 
-        $this->addArrangement($this->event->id, $this->request)
+        $this->addArrangement($this->proposal->id, $this->request)
             ->assertStatus(200);
 
-        $arrangement = $this->event->arrangements()->first();
+        $arrangement = $this->proposal->arrangements()->first();
 
-        $this->assertEquals($this->event->arrangements()->count(), 1);
+        $this->assertEquals($this->proposal->arrangements()->count(), 1);
         $this->assertEquals($arrangement->name, $this->request['name']);
         $this->assertEquals($arrangement->description, $this->request['description']);
         $this->assertEquals($arrangement->quantity, $this->request['quantity']);
@@ -43,10 +43,10 @@ class PostEventArrangementsTest extends TestCase
     /** @test */
     public function an_arrangement_requires_a_name_and_a_quantity()
     {
-        $this->addArrangement($this->event->id, ['quantity' => 1])
+        $this->addArrangement($this->proposal->id, ['quantity' => 1])
             ->assertSessionHasErrors('name');
 
-        $this->addArrangement($this->event->id, ['name' => 'test'])
+        $this->addArrangement($this->proposal->id, ['name' => 'test'])
             ->assertSessionHasErrors('quantity');
     }
 
@@ -54,43 +54,43 @@ class PostEventArrangementsTest extends TestCase
     public function an_arrangement_requires_a_quantity_greater_than_zero()
     {
         $request = ['name' => 'test', 'quantity' => 0];
-        $this->addArrangement($this->event->id, $request)
+        $this->addArrangement($this->proposal->id, $request)
             ->assertSessionHasErrors('quantity');
     }
 
     /** @test */
-    public function users_can_only_create_arrangements_for_valid_events()
+    public function users_can_only_create_arrangements_for_a_valid_proposal()
     {
-        $badEventId = 123;
-        $this->addArrangement($badEventId, $this->request)
+        $badId = 123;
+        $this->addArrangement($badId, $this->request)
             ->assertStatus(404);
     }
 
     /** @test */
-    public function users_can_only_create_arrangements_for_events_in_their_account()
+    public function an_arrangement_can_only_be_created_for_a_proposal_in_the_users_account()
     {
-        $eventInAnotherAccount = create('App\Event')->id;
-        $this->addArrangement($eventInAnotherAccount, $this->request)
+        $proposalInAnotherAccount = create('App\Proposal')->id;
+        $this->addArrangement($proposalInAnotherAccount, $this->request)
             ->assertStatus(403);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_create_arrangements()
     {
-        $this->postJson($this->url($this->event->id), $this->request)
+        $this->postJson($this->url($this->proposal->id), $this->request)
             ->assertStatus(401);
     }
 
     protected function url($id)
     {
-        return 'api/events/' . $id . '/arrangements';
+        return 'api/proposals/' . $id . '/arrangements';
     }
 
     protected function addArrangement($id, $request, $signIn = true)
     {
         if ($signIn) {
             $this->signIn(create('App\User', [
-                'account_id' => $this->event->account->id,
+                'account_id' => $this->proposal->event->account->id,
             ]));
         }
 

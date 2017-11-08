@@ -4,30 +4,30 @@ namespace App\Http\Controllers\Api;
 
 use Auth;
 use App\Arrangement;
-use App\Event;
+use App\Proposal;
 use App\Http\Controllers\Controller;
 
-class ArrangementEventController extends Controller
+class ArrangementProposalController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param  \App\Event  $event
+     * @param  \App\Proposal  $proposal
      * @return \Illuminate\Http\Response
      */
-    public function index(Event $event)
+    public function index(Proposal $proposal)
     {
-        $this->eventIsValid($event);
+        $this->proposalIsValid($proposal);
 
-        return response()->json($event->arrangements);
+        return response()->json($proposal->arrangements);
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param  \App\Event  $event
+     * @param  \App\Proposal  $proposal
      * @return \Illuminate\Http\Response
      */
-    public function store(Event $event)
+    public function store(Proposal $proposal)
     {
         $data = request()->validate([
             'name' => 'required|string|max:255',
@@ -35,11 +35,11 @@ class ArrangementEventController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $this->eventIsValid($event);
+        $this->proposalIsValid($proposal);
 
         $arrangement = new Arrangement($data);
         $arrangement->account()->associate(Auth::user()->account);
-        $arrangement->event()->associate($event);
+        $arrangement->proposal()->associate($proposal);
         $arrangement->save();
 
         return response()->json($arrangement);
@@ -94,9 +94,9 @@ class ArrangementEventController extends Controller
         $arrangement->delete();
     }
 
-    protected function eventIsValid(Event $event)
+    protected function proposalIsValid(Proposal $proposal)
     {
-        if ($event->account->id !== Auth::user()->account->id) {
+        if ($proposal->event->account->id !== Auth::user()->account->id) {
             abort(403);
         }
     }

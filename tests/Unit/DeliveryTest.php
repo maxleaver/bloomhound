@@ -43,7 +43,7 @@ class DeliveryTest extends TestCase
         $arrangements = create('App\Arrangement', [
             'account_id' => $this->delivery->account->id,
             'delivery_id' => $this->delivery->id,
-            'event_id' => $this->delivery->event->id,
+            'proposal_id' => $this->delivery->proposal->id,
         ]);
 
         $this->assertInstanceOf('App\Arrangement', $this->delivery->arrangements->first());
@@ -55,7 +55,7 @@ class DeliveryTest extends TestCase
     }
 
     /** @test */
-    public function a_delivery_belongs_to_an_event() {
-        $this->assertInstanceOf('App\Event', $this->delivery->event);
+    public function a_delivery_belongs_to_a_proposal() {
+        $this->assertInstanceOf('App\Proposal', $this->delivery->proposal);
     }
 }

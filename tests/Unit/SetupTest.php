@@ -44,7 +44,7 @@ class SetupTest extends TestCase
     }
 
     /** @test */
-    public function an_event_setup_belongs_to_an_event() {
-        $this->assertInstanceOf('App\Event', $this->setup->event);
+    public function an_event_setup_belongs_to_a_proposal() {
+        $this->assertInstanceOf('App\Proposal', $this->setup->proposal);
     }
 }

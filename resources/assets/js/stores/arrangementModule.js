@@ -4,6 +4,7 @@ import FormContainer from 'helpers/FormContainer';
 
 export default {
   namespaced: true,
+
   state: {
     arrangeables: [],
     deleteRecord: {
@@ -30,6 +31,7 @@ export default {
     showForm: false,
     showIngredientForm: false,
   },
+
   mutations: {
     set(state, records) {
       state.records = records;
@@ -215,6 +217,7 @@ export default {
       window.flash('There was a problem deleting your discount. Please try again.', 'danger');
     },
   },
+
   actions: {
     fetchArrangeables({ commit }) {
       commit('fetchArrangeablesRequest');
@@ -235,7 +238,7 @@ export default {
     submit({ commit, rootState }, data) {
       commit('submitRequest');
 
-      window.axios.post(`/api/events/${rootState.event.id}/arrangements`, data)
+      window.axios.post(`/api/proposals/${rootState.proposal.id}/arrangements`, data)
         .then((response) => {
           commit('submitSuccess', response.data);
         })
@@ -332,6 +335,7 @@ export default {
         });
     },
   },
+
   getters: {
     subtotal: (state) => {
       let sum = 0;

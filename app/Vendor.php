@@ -15,8 +15,8 @@ class Vendor extends Model
         return $this->belongsTo('App\Account');
     }
 
-    public function events()
+    public function proposals()
     {
-        return $this->belongsToMany('App\Event');
+        return $this->belongsToMany('App\Proposal');
     }
 }

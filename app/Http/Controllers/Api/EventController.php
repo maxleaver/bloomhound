@@ -85,6 +85,8 @@ class EventController extends Controller
             'name' => $data['name'],
             'date' => Carbon::parse($data['date']),
         ]);
+
+        return response()->json($event);
     }
 
     /**

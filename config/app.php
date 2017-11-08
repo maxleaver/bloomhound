@@ -169,6 +169,7 @@ return [
          */
         App\Providers\ResponseServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Bkwld\Cloner\ServiceProvider::class,
 
         /*
          * Application Service Providers...

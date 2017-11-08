@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Event;
 use App\FlowerVarietySource;
+use App\Proposal;
+use App\Observers\EventObserver;
 use App\Observers\FlowerVarietySourceObserver;
+use App\Observers\ProposalObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
@@ -26,7 +30,9 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Register model observers
+        Event::observe(EventObserver::class);
         FlowerVarietySource::observe(FlowerVarietySourceObserver::class);
+        Proposal::observe(ProposalObserver::class);
     }
 
     /**

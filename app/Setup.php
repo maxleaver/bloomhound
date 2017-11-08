@@ -21,8 +21,8 @@ class Setup extends Model
         return $this->belongsTo('App\Account');
     }
 
-    public function event()
+    public function proposal()
     {
-        return $this->belongsTo('App\Event');
+        return $this->belongsTo('App\Proposal');
     }
 }

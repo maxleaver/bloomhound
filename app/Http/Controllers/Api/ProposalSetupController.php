@@ -3,35 +3,35 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
-use App\Event;
+use App\Proposal;
 use App\Setup;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
-class EventSetupController extends Controller
+class ProposalSetupController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param  \App\Event $event
+     * @param  \App\Proposal $proposal
      * @return \Illuminate\Http\Response
      */
-    public function index(Event $event)
+    public function index(Proposal $proposal)
     {
-        if ($event->account->id !== Auth::user()->account->id) {
+        if ($proposal->event->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
-        return response()->json($event->setups);
+        return response()->json($proposal->setups);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Event $event
+     * @param  \App\Proposal $proposal
      * @return \Illuminate\Http\Response
      */
-    public function store(Event $event)
+    public function store(Proposal $proposal)
     {
         $data = request()->validate([
             'address' => 'required|string',
@@ -40,7 +40,7 @@ class EventSetupController extends Controller
             'fee' => 'nullable|numeric',
         ]);
 
-        if ($event->account->id !== Auth::user()->account->id) {
+        if ($proposal->event->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
@@ -50,7 +50,7 @@ class EventSetupController extends Controller
         $setup->description = $data['description'];
         $setup->fee = $data['fee'];
         $setup->account()->associate(Auth::user()->account);
-        $setup->event()->associate($event);
+        $setup->proposal()->associate($proposal);
         $setup->save();
 
         return response()->json($setup);

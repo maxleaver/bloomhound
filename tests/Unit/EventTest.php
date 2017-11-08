@@ -49,48 +49,6 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_can_have_many_arrangements()
-    {
-        create('App\Arrangement', [
-            'account_id' => $this->event->account->id,
-            'event_id' => $this->event->id,
-        ], 10);
-
-        $this->assertInstanceOf('App\Arrangement', $this->event->arrangements->first());
-    }
-
-    /** @test */
-    public function an_event_can_have_many_deliveries()
-    {
-        create('App\Delivery', [
-            'account_id' => $this->event->account->id,
-            'event_id' => $this->event->id,
-        ], 10);
-
-        $this->assertInstanceOf('App\Delivery', $this->event->deliveries->first());
-    }
-
-    /** @test */
-    public function an_event_can_have_many_setups()
-    {
-        create('App\Setup', [
-            'account_id' => $this->event->account->id,
-            'event_id' => $this->event->id,
-        ], 10);
-
-        $this->assertInstanceOf('App\Setup', $this->event->setups->first());
-    }
-
-    /** @test */
-    public function an_event_can_have_many_vendors()
-    {
-        $vendors = create('App\Vendor', [], 10);
-        $this->event->vendors()->attach($vendors);
-
-        $this->assertInstanceOf('App\Vendor', $this->event->vendors->first());
-    }
-
-    /** @test */
     public function an_event_can_have_many_notes()
     {
         create('App\Note', [
@@ -101,5 +59,47 @@ class EventTest extends TestCase
         ]);
 
         $this->assertInstanceOf('App\Note', $this->event->notes->first());
+    }
+
+    /** @test */
+    public function an_event_can_have_many_proposals()
+    {
+        create('App\Proposal', [
+            'event_id' => $this->event->id,
+        ], 3);
+
+        $this->assertInstanceOf('App\Proposal', $this->event->proposals->first());
+    }
+
+    /** @test */
+    public function an_event_has_one_active_proposal()
+    {
+        create('App\Proposal', [
+            'event_id' => $this->event->id,
+        ]);
+
+        $this->assertInstanceOf('App\Proposal', $this->event->active_proposal);
+    }
+
+    /** @test */
+    public function on_creation_an_event_generates_an_initial_proposal()
+    {
+        $this->assertInstanceOf('App\Proposal', $this->event->proposals->first());
+        $this->assertEquals(1, $this->event->proposals->first()->version);
+    }
+
+    /** @test */
+    public function an_event_can_set_an_active_proposal()
+    {
+        $firstProposal = $this->event->proposals()->first();
+        $secondProposal = create('App\Proposal', [
+            'event_id' => $this->event->id
+        ]);
+
+        $this->assertTrue($secondProposal->isActive);
+        $this->assertFalse($firstProposal->isActive);
+        $this->event->fresh()->setActiveProposal($firstProposal);
+        $this->assertTrue($firstProposal->isActive);
+        $this->assertFalse($secondProposal->isActive);
     }
 }

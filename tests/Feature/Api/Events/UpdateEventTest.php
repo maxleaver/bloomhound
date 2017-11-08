@@ -27,12 +27,12 @@ class UpdateEventTest extends TestCase
     /** @test */
     public function users_can_update_an_event()
     {
-        $this->updateEvent($this->event->id)
-            ->assertStatus(200);
+        $response = $this->updateEvent($this->event->id, true, true)
+            ->assertStatus(200)
+            ->getData();
 
-        $event = $this->event->fresh();
-        $this->assertEquals($this->request['name'], $event->name);
-        $this->assertEquals($this->request['date'], $event->date);
+        $this->assertEquals($this->request['name'], $response->name);
+        $this->assertEquals($this->request['date'], $response->date);
     }
 
     /** @test */

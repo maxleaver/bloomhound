@@ -55,12 +55,12 @@ class VendorTest extends TestCase
     }
 
     /** @test */
-    public function a_vendor_can_have_many_events()
+    public function a_vendor_belongs_to_many_proposals()
     {
-        $events = create('App\Event', [], 10);
-        $this->vendor->events()->attach($events);
+        $proposals = create('App\Proposal', [], 10);
+        $this->vendor->proposals()->attach($proposals);
 
-        $this->assertInstanceOf('App\Event', $this->vendor->events->first());
+        $this->assertInstanceOf('App\Proposal', $this->vendor->proposals->first());
     }
 
     /** @test */

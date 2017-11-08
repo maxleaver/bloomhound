@@ -44,14 +44,14 @@ class Arrangement extends Model
         return $this->morphMany('App\Discount', 'discountable');
     }
 
-    public function event()
-    {
-    	return $this->belongsTo('App\Event');
-    }
-
     public function ingredients()
     {
         return $this->hasMany('App\ArrangementIngredient');
+    }
+
+    public function proposal()
+    {
+        return $this->belongsTo('App\Proposal');
     }
 
     protected function percentOff() {

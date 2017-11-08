@@ -26,8 +26,8 @@ class Delivery extends Model
         return $this->hasMany('App\Arrangement');
     }
 
-    public function event()
+    public function proposal()
     {
-        return $this->belongsTo('App\Event');
+        return $this->belongsTo('App\Proposal');
     }
 }

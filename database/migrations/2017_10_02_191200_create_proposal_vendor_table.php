@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventVendorTable extends Migration
+class CreateProposalVendorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateEventVendorTable extends Migration
      */
     public function up()
     {
-        Schema::create('event_vendor', function (Blueprint $table) {
-            $table->integer('event_id')->unsigned()->index();
+        Schema::create('proposal_vendor', function (Blueprint $table) {
+            $table->integer('proposal_id')->unsigned()->index();
             $table->integer('vendor_id')->unsigned();
 
-            $table->primary(['event_id', 'vendor_id']);
+            $table->primary(['proposal_id', 'vendor_id']);
 
-            $table->foreign('event_id')
-                ->references('id')->on('events')
+            $table->foreign('proposal_id')
+                ->references('id')->on('proposals')
                 ->onDelete('cascade');
 
             $table->foreign('vendor_id')
@@ -36,6 +36,6 @@ class CreateEventVendorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_vendor');
+        Schema::dropIfExists('proposal_vendor');
     }
 }

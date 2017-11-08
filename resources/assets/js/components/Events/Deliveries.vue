@@ -37,9 +37,5 @@ export default {
       }),
     };
   },
-
-  created() {
-    this.store.dispatch('delivery/fetch');
-  },
 };
 </script>

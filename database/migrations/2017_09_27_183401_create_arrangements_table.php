@@ -17,7 +17,7 @@ class CreateArrangementsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('account_id')->index();
             $table->unsignedInteger('delivery_id')->nullable()->index();
-            $table->unsignedInteger('event_id')->index();
+            $table->unsignedInteger('proposal_id')->index();
             $table->string('name');
             $table->string('description')->nullable();
             $table->unsignedInteger('quantity');

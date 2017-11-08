@@ -7,7 +7,7 @@ use App\ArrangementIngredient;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class DeleteEventArrangementTest extends TestCase
+class DeleteArrangementTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,18 +19,9 @@ class DeleteEventArrangementTest extends TestCase
         parent::setUp();
 
         $this->user = create('App\User');
-        $this->arrangement = create('App\Arrangement', ['account_id' => $this->user->account->id]);
-    }
-
-    protected function makeRequest($arrangementId, $signIn = true)
-    {
-        $url = 'api/arrangements/' . $arrangementId;
-
-        if ($signIn) {
-            return $this->signIn($this->user)->deleteJson($url);
-        }
-
-        return $this->deleteJson($url);
+        $this->arrangement = create('App\Arrangement', [
+            'account_id' => $this->user->account->id
+        ]);
     }
 
     /** @test */
@@ -88,5 +79,16 @@ class DeleteEventArrangementTest extends TestCase
     {
         $this->makeRequest($this->arrangement->id, false)
             ->assertStatus(401);
+    }
+
+    protected function makeRequest($arrangementId, $signIn = true)
+    {
+        $url = 'api/arrangements/' . $arrangementId;
+
+        if ($signIn) {
+            return $this->signIn($this->user)->deleteJson($url);
+        }
+
+        return $this->deleteJson($url);
     }
 }

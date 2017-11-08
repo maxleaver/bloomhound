@@ -6,40 +6,40 @@ use Auth;
 use DB;
 use App\Arrangement;
 use App\Delivery;
-use App\Event;
+use App\Proposal;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class DeliveryEventController extends Controller
+class DeliveryProposalController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param  \App\Event $event
+     * @param  \App\Proposal $proposal
      * @return \Illuminate\Http\Response
      */
-    public function index(Event $event)
+    public function index(Proposal $proposal)
     {
-        if ($event->account->id !== Auth::user()->account->id) {
+        if ($proposal->event->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
-        return response()->json($event->deliveries);
+        return response()->json($proposal->deliveries);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Event $event
+     * @param  \App\Proposal $proposal
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Event $event)
+    public function store(Request $request, Proposal $proposal)
     {
-        if ($event->account->id !== Auth::user()->account->id) {
+        if ($proposal->event->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 
@@ -50,20 +50,20 @@ class DeliveryEventController extends Controller
             'fee' => 'nullable|numeric',
             'arrangements.*' => [
                 'integer',
-                Rule::exists('arrangements', 'id')->where(function ($query) use ($event) {
-                    $query->where('event_id', $event->id);
+                Rule::exists('arrangements', 'id')->where(function ($query) use ($proposal) {
+                    $query->where('proposal_id', $proposal->id);
                 }),
             ],
         ])->validate();
 
-        $delivery = DB::transaction(function () use ($request, $event) {
+        $delivery = DB::transaction(function () use ($request, $proposal) {
             $delivery = new Delivery();
             $delivery->address = $request->address;
             $delivery->deliver_on = Carbon::parse($request->deliver_on);
             $delivery->description = $request->description;
             $delivery->fee = $request->fee;
             $delivery->account()->associate(Auth::user()->account);
-            $delivery->event()->associate($event);
+            $delivery->proposal()->associate($proposal);
             $delivery->save();
 
             if ($request->arrangements) {

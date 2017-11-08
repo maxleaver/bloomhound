@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class UpdateEventSetupTest extends TestCase
+class UpdateProposalSetupTest extends TestCase
 {
 	use RefreshDatabase;
 
