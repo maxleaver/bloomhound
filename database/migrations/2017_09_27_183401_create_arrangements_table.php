@@ -21,6 +21,8 @@ class CreateArrangementsTable extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->unsignedInteger('quantity');
+            $table->boolean('override_price')->default(false);
+            $table->decimal('price', 15, 2)->unsigned()->nullable();
             $table->timestamps();
         });
     }

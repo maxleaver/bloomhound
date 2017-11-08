@@ -18,15 +18,6 @@ class ArrangementTest extends TestCase
         $this->arrangement = factory('App\Arrangement')->states('delivery')->create();
     }
 
-    protected function addIngredients($arrangement, $type, $amount)
-    {
-        create('App\ArrangementIngredient', [
-            'arrangement_id' => $arrangement->id,
-            'arrangeable_id' => create($type)->id,
-            'arrangeable_type' => $type
-        ], $amount);
-    }
-
     /** @test */
     public function an_arrangement_has_a_name() {
         $this->assertNotNull($this->arrangement->name);
@@ -55,7 +46,7 @@ class ArrangementTest extends TestCase
     }
 
     /** @test */
-    public function an_arrangement_has_a_price_per_unit()
+    public function an_arrangement_can_calculate_its_price_using_ingredient_prices()
     {
         $this->addIngredients($this->arrangement, 'App\Item', 5);
         $this->addIngredients($this->arrangement, 'App\FlowerVariety', 5);
@@ -64,6 +55,25 @@ class ArrangementTest extends TestCase
 
         $this->assertNotNull($this->arrangement->price);
         $this->assertEquals($this->arrangement->price, $expectedPrice);
+    }
+
+    /** @test */
+    public function an_arrangement_can_have_a_manual_override_price()
+    {
+        $arrangement = factory('App\Arrangement')
+            ->states('override_price')
+            ->create();
+
+        $expectedPrice = $arrangement->price;
+
+        $this->addIngredients($arrangement, 'App\Item', 5);
+        $this->addIngredients($arrangement, 'App\FlowerVariety', 5);
+
+        $ingredientSum = $arrangement->ingredients->sum('price');
+
+        $this->assertNotNull($arrangement->price);
+        $this->assertNotEquals($arrangement->price, $ingredientSum);
+        $this->assertEquals($arrangement->price, $expectedPrice);
     }
 
     /** @test */
@@ -147,5 +157,14 @@ class ArrangementTest extends TestCase
             'App\ArrangementIngredient',
             $this->arrangement->ingredients->first()
         );
+    }
+
+    protected function addIngredients($arrangement, $type, $amount)
+    {
+        create('App\ArrangementIngredient', [
+            'arrangement_id' => $arrangement->id,
+            'arrangeable_id' => create($type)->id,
+            'arrangeable_type' => $type
+        ], $amount);
     }
 }

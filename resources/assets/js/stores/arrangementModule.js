@@ -102,6 +102,7 @@ export default {
       record.name = data.name;
       record.description = data.description;
       record.quantity = data.quantity;
+      record.price = data.price;
       record.total_price = data.total_price;
 
       window.flash(`${data.name} was updated successfully!`, 'success');

@@ -11,97 +11,120 @@ class UpdateArrangementTest extends TestCase
 	use RefreshDatabase;
 
     protected $arrangement;
+    protected $request;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->arrangement = create('App\Arrangement');
+        $this->request = [
+            'name' => 'new name',
+            'description' => 'new description',
+            'quantity' => 55,
+        ];
     }
 
     /** @test */
     public function users_can_update_an_arrangement()
     {
-        $name = 'new name';
-        $description = 'new description';
-        $quantity = 55;
-        $request = [
-            'name' => $name,
-            'description' => $description,
-            'quantity' => $quantity
-        ];
-
-        $this->updateArrangement($this->arrangement->id, $request)
+        $this->update($this->arrangement->id, $this->request)
             ->assertStatus(200);
 
-        $this->assertEquals($this->arrangement->fresh()->name, $name);
-        $this->assertEquals($this->arrangement->fresh()->description, $description);
-        $this->assertEquals($this->arrangement->fresh()->quantity, $quantity);
+        $arrangement = $this->arrangement->fresh();
+        $this->assertEquals($arrangement->name, $this->request['name']);
+        $this->assertEquals($arrangement->description, $this->request['description']);
+        $this->assertEquals($arrangement->quantity, $this->request['quantity']);
     }
 
     /** @test */
-    public function an_arrangement_requires_a_name_and_a_quantity()
+    public function an_arrangement_requires_a_name()
     {
-        $this->updateArrangement($this->arrangement->id, ['quantity' => 1])
+        $this->update($this->arrangement->id, ['quantity' => 1])
             ->assertSessionHasErrors('name');
+    }
 
-        $this->updateArrangement($this->arrangement->id, ['name' => 'test'])
+    /** @test */
+    public function an_arrangement_requires_a_quantity()
+    {
+        $this->update($this->arrangement->id, ['name' => 'test'])
             ->assertSessionHasErrors('quantity');
     }
 
     /** @test */
     public function an_arrangement_quantity_must_be_greater_than_zero()
     {
-        $request = [
-            'name' => 'new name',
-            'quantity' => 0,
-        ];
-
-        $this->updateArrangement($this->arrangement->id, $request)
+        $this->request['quantity'] = 0;
+        $this->update($this->arrangement->id, $this->request)
             ->assertSessionHasErrors('quantity');
     }
 
     /** @test */
-    public function users_can_only_update_arrangements_in_their_account()
+    public function a_price_is_required_if_override_is_true()
+    {
+        $this->request['override_price'] = true;
+        $this->update($this->arrangement->id, $this->request)
+            ->assertSessionHasErrors('price');
+    }
+
+    /** @test */
+    public function a_user_can_override_the_price_of_an_arrangement()
+    {
+        $this->request['override_price'] = true;
+        $this->request['price'] = 500;
+        $this->update($this->arrangement->id, $this->request);
+
+        $arrangement = $this->arrangement->fresh();
+        $this->assertTrue($arrangement->override_price);
+        $this->assertEquals(500, $arrangement->price);
+    }
+
+    /** @test */
+    public function an_arrangement_price_cannot_be_zero_or_less()
+    {
+        $this->request['override_price'] = true;
+        $this->request['price'] = 0;
+        $this->update($this->arrangement->id, $this->request)
+            ->assertSessionHasErrors('price');
+    }
+
+    /** @test */
+    public function users_cannot_update_arrangements_in_other_accounts()
     {
         $someOtherArrangement = create('App\Arrangement')->id;
-        $request = ['name' => 'some name', 'quantity' => 1];
-
-        $this->updateArrangement($someOtherArrangement, $request)
+        $this->update($someOtherArrangement, $this->request)
             ->assertStatus(403);
     }
 
     /** @test */
-    public function users_can_only_update_arrangements_that_exist()
+    public function users_cannot_update_invalid_arrangements()
     {
         $someBadId = 666;
-        $request = ['name' => 'some name', 'quantity' => 1];
-
-        $this->updateArrangement($someBadId, $request)
+        $this->update($someBadId, $this->request)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_update_arrangements()
     {
-        $request = ['name' => 'some name', 'quantity' => 1];
-        $this->patchJson($this->url($this->arrangement->id), $request)
+        $this->update($this->arrangement->id, $this->request, false, true)
             ->assertStatus(401);
     }
 
-    protected function url($id)
+    protected function update($id, $request, $signIn = true, $withJson = false)
     {
-        return 'api/arrangements/' . $id;
-    }
+        $url = 'api/arrangements/' . $id;
 
-    protected function updateArrangement($id, $request, $signIn = true)
-    {
         if ($signIn) {
             $this->signIn(create('App\User', [
                 'account_id' => $this->arrangement->account->id
             ]));
         }
 
-        return $this->patch($this->url($id), $request);
+        if ($withJson) {
+            return $this->patchJson($url, $request);
+        }
+
+        return $this->patch($url, $request);
     }
 }

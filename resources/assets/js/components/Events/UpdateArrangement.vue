@@ -7,22 +7,22 @@
       <b-field
         expanded
         label="Name"
-        :type="form.errors.has('name') ? 'is-danger' : ''"
         :message="form.errors.has('name') ? form.errors.get('name') : ''"
+        :type="form.errors.has('name') ? 'is-danger' : ''"
       >
         <b-input
+          required
           type="text"
           v-model="form.name"
           :disabled="isSubmitting"
-          required
         ></b-input>
       </b-field>
 
       <b-field
         expanded
         label="Description"
-        :type="form.errors.has('description') ? 'is-danger' : ''"
         :message="form.errors.has('description') ? form.errors.get('description') : ''"
+        :type="form.errors.has('description') ? 'is-danger' : ''"
       >
         <b-input
           type="text"
@@ -34,14 +34,37 @@
       <b-field
         expanded
         label="Quantity"
-        :type="form.errors.has('quantity') ? 'is-danger' : ''"
         :message="form.errors.has('quantity') ? form.errors.get('quantity') : ''"
+        :type="form.errors.has('quantity') ? 'is-danger' : ''"
       >
         <b-input
+          required
           type="number"
           v-model="form.quantity"
           :disabled="isSubmitting"
+        ></b-input>
+      </b-field>
+    </b-field>
+
+    <b-field grouped>
+      <div class="field">
+        <b-switch v-model="form.override_price" :disabled="isSubmitting">
+          {{ overrideText }}
+        </b-switch>
+      </div>
+
+      <b-field
+        expanded
+        v-if="form.override_price"
+        :message="form.errors.has('price') ? form.errors.get('price') : ''"
+        :type="form.errors.has('price') ? 'is-danger' : ''"
+      >
+        <b-input
+          placeholder="Price per Arrangement"
           required
+          type="number"
+          v-model="form.price"
+          :disabled="isSubmitting"
         ></b-input>
       </b-field>
     </b-field>
@@ -73,8 +96,16 @@ export default {
         name: this.arrangement.name,
         description: this.arrangement.description,
         quantity: this.arrangement.quantity,
+        override_price: this.arrangement.override_price,
+        price: this.arrangement.price,
       }, false),
     };
+  },
+
+  computed: {
+    overrideText: function () {
+      return this.form.override_price ? 'Set the price manually' : 'Calculate a retail price';
+    },
   },
 
   methods: {

@@ -34,8 +34,8 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::prefix('arrangements')->group(function () {
 		Route::prefix('{arrangement}')->group(function () {
-			Route::patch('/', 'ArrangementProposalController@update');
-			Route::delete('/', 'ArrangementProposalController@destroy');
+			Route::patch('/', 'ArrangementController@update');
+			Route::delete('/', 'ArrangementController@destroy');
 
 			Route::prefix('discounts')->group(function () {
 				Route::post('/', 'ArrangementDiscountController@store');
@@ -152,8 +152,8 @@ Route::middleware('auth:api')->group(function () {
 		Route::prefix('{proposal}')->group(function () {
 			Route::get('/', 'ProposalController@show');
 
-			Route::get('arrangements', 'ArrangementProposalController@index');
-			Route::post('arrangements', 'ArrangementProposalController@store');
+			Route::get('arrangements', 'ArrangementController@index');
+			Route::post('arrangements', 'ArrangementController@store');
 
 			Route::get('deliveries', 'DeliveryProposalController@index');
 			Route::post('deliveries', 'DeliveryProposalController@store');

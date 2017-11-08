@@ -7,7 +7,7 @@ use App\Arrangement;
 use App\Proposal;
 use App\Http\Controllers\Controller;
 
-class ArrangementProposalController extends Controller
+class ArrangementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -68,6 +68,8 @@ class ArrangementProposalController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
             'quantity' => 'required|integer|min:1',
+            'override_price' => 'nullable|boolean',
+            'price' => 'required_if:override_price,true|numeric|min:0.01',
         ]);
 
         if ($arrangement->account->id !== Auth::user()->account->id) {

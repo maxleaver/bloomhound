@@ -18,6 +18,8 @@ $factory->define(App\Arrangement::class, function (Faker $faker) {
         'name' => $faker->text(20),
         'description' => $faker->text(20),
         'quantity' => $faker->randomNumber(2),
+        'override_price' => false,
+        'price' => null,
     ];
 });
 
@@ -29,3 +31,10 @@ $factory->state(App\Arrangement::class, 'delivery', [
         ]);
     },
 ]);
+
+$factory->state(App\Arrangement::class, 'override_price', function ($faker) {
+    return [
+        'override_price' => true,
+        'price' => $faker->randomFloat(2, 1),
+    ];
+});

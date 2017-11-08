@@ -9,6 +9,7 @@ class Arrangement extends Model
 	protected $appends = ['cost', 'price', 'total_price'];
     protected $casts = [
         'cost' => 'float',
+        'override_price' => 'boolean',
         'price' => 'float',
         'total_price' => 'float',
     ];
@@ -21,6 +22,10 @@ class Arrangement extends Model
 
     public function getPriceAttribute()
     {
+        if ($this->override_price) {
+            return $this->attributes['price'];
+        }
+
         return $this->ingredients->sum('price');
     }
 

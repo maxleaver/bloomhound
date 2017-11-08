@@ -59,7 +59,7 @@ class PostProposalArrangementsTest extends TestCase
     }
 
     /** @test */
-    public function users_can_only_create_arrangements_for_a_valid_proposal()
+    public function arrangements_cannot_be_created_for_invalid_proposals()
     {
         $badId = 123;
         $this->addArrangement($badId, $this->request)
@@ -67,7 +67,7 @@ class PostProposalArrangementsTest extends TestCase
     }
 
     /** @test */
-    public function an_arrangement_can_only_be_created_for_a_proposal_in_the_users_account()
+    public function arrangements_cannot_be_added_to_proposals_in_other_accounts()
     {
         $proposalInAnotherAccount = create('App\Proposal')->id;
         $this->addArrangement($proposalInAnotherAccount, $this->request)
