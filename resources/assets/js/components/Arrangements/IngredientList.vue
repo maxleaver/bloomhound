@@ -17,6 +17,7 @@
           <b-field v-bind:type="row.hasError ? 'is-danger' : ''">
             <b-input
               type="number"
+              step="any"
               v-model="row.quantity"
               @input="updateQuantity(row)"
               required
@@ -139,16 +140,12 @@ export default {
     },
 
     validate(data) {
-      const quantity = parseInt(data, 10);
-      const remainder = (data % 1);
+      const quantity = parseFloat(data);
+
+      console.log(quantity);
 
       if (!quantity) {
         // Quantity is empty
-        return false;
-      }
-
-      if (remainder > 0) {
-        // Quantity is a float
         return false;
       }
 
@@ -177,7 +174,7 @@ export default {
       this.store.dispatch('arrangement/updateIngredient', {
         arrangement_id: row.arrangement_id,
         ingredient_id: row.id,
-        quantity: parseInt(row.quantity, 10),
+        quantity: parseFloat(row.quantity),
       });
     },
   },

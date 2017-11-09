@@ -39,7 +39,7 @@ class ArrangementIngredientController extends Controller
         request()->validate([
             '*.id' => 'required|integer',
             '*.type' => ['required', 'string', 'max:255', new IsArrangeable],
-            '*.quantity' => 'required|integer|min:1',
+            '*.quantity' => 'required|numeric|min:0.1',
         ]);
 
         $accountId = Auth::user()->account->id;
@@ -152,7 +152,7 @@ class ArrangementIngredientController extends Controller
         }
 
         $data = request()->validate([
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'required|numeric|min:0.01'
         ]);
 
         $ingredient->update($data);

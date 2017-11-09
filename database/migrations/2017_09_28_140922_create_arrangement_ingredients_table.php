@@ -18,7 +18,7 @@ class CreateArrangementIngredientsTable extends Migration
             $table->integer('arrangement_id')->unsigned()->index();
             $table->integer('arrangeable_id')->unsigned();
             $table->string('arrangeable_type');
-            $table->integer('quantity')->unsigned();
+            $table->decimal('quantity', 15, 2)->unsigned();
             $table->timestamps();
 
             $table->foreign('arrangement_id')

@@ -24,6 +24,7 @@
       <b-input
         name="quantity"
         type="number"
+        step="any"
         v-model="form.quantity"
         :disabled="isSubmitting"
         @focus="handleFocus"
