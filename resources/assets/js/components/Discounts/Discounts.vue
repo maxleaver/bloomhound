@@ -22,7 +22,7 @@
         </b-table-column>
 
         <b-table-column label="" width="40" centered>
-          <span @click="deleteDiscount(props.row.id)">
+          <span @click="onDelete(id, props.row.id)">
             <b-icon icon="delete"></b-icon>
           </span>
         </b-table-column>
@@ -31,7 +31,7 @@
 
     <form
       method="POST"
-      @submit.prevent="onSubmit"
+      @submit.prevent="onSubmit(id)"
     >
       <b-field grouped>
         <b-field
@@ -90,8 +90,11 @@ export default {
   name: 'discounts',
   props: {
     discounts: Array,
+    form: Object,
     id: Number,
-    store: Object,
+    isSubmitting: Boolean,
+    onDelete: Function,
+    onSubmit: Function,
   },
 
   data() {
@@ -101,24 +104,7 @@ export default {
     };
   },
 
-  computed: {
-    form() {
-      return this.store.state.arrangement.discountForm;
-    },
-
-    isSubmitting() {
-      return this.store.state.arrangement.isSubmittingDiscount;
-    },
-  },
-
   methods: {
-    deleteDiscount(discountId) {
-      this.store.dispatch('arrangement/deleteDiscount', {
-        arrangement_id: this.id,
-        discount_id: discountId,
-      });
-    },
-
     formatAmount(amount, type) {
       if (type === 'fixed') {
         return Number(amount).toFixed(2);
@@ -129,13 +115,6 @@ export default {
       }
 
       return amount;
-    },
-
-    onSubmit() {
-      this.store.dispatch('arrangement/addDiscount', {
-        id: this.id,
-        discount: this.form.data(),
-      });
     },
   },
 };

@@ -18,7 +18,6 @@ class DeleteArrangementDiscountTest extends TestCase
 
         $this->arrangement = create('App\Arrangement');
         $this->discount = create('App\Discount', [
-            'account_id' => $this->arrangement->account->id,
             'discountable_id' => $this->arrangement->id,
             'discountable_type' => 'App\Arrangement'
         ]);
@@ -40,7 +39,6 @@ class DeleteArrangementDiscountTest extends TestCase
     {
         $anotherArrangement = create('App\Arrangement');
         $discount = create('App\Discount', [
-            'account_id' => $anotherArrangement->account->id,
             'discountable_id' => $anotherArrangement->id,
             'discountable_type' => 'App\Arrangement'
         ]);

@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import SetupForm from 'components/Events/SetupForm';
-import SetupList from 'components/Events/SetupList';
+import SetupForm from 'components/Setups/SetupForm';
+import SetupList from 'components/Setups/SetupList';
 import Form from 'helpers/Form';
 
 export default {

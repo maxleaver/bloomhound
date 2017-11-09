@@ -2,6 +2,7 @@ import Vuex from 'vuex';
 import moment from 'moment';
 import arrangementModule from './arrangementModule';
 import deliveryModule from './deliveryModule';
+import discountModule from './discountModule';
 import setupModule from './setupModule';
 import vendorModule from './vendorModule';
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
   modules: {
     arrangement: arrangementModule,
     delivery: deliveryModule,
+    discount: discountModule,
     setup: setupModule,
     vendor: vendorModule,
   },
@@ -109,6 +111,7 @@ export default new Vuex.Store({
       commit('setProposal', proposal);
       commit('arrangement/set', proposal.arrangements);
       commit('delivery/fetchSuccess', proposal.deliveries);
+      commit('discount/set', proposal.discounts);
       commit('setup/fetchSuccess', proposal.setups);
       commit('vendor/set', proposal.vendors);
     },

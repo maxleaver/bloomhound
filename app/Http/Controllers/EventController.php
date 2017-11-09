@@ -37,7 +37,7 @@ class EventController extends Controller
     public function show(Event $event)
     {
         $event = $event->load('customer', 'proposals');
-        $proposal = $event->active_proposal->load('arrangements', 'deliveries', 'setups', 'vendors');
+        $proposal = $event->active_proposal->load('arrangements', 'arrangements.discounts', 'deliveries', 'discounts', 'setups', 'vendors');
         $settings = Auth::user()->account->settings;
         $vendors = Auth::user()->account->vendors;
         $data = compact('event', 'proposal', 'settings', 'vendors');

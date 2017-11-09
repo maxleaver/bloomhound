@@ -102,8 +102,11 @@
           <div class="content">
             <discounts
               :discounts="props.row.discounts"
+              :form="store.state.arrangement.discountForm"
               :id="props.row.id"
-              :store="store"
+              :isSubmitting="store.state.arrangement.isSubmittingDiscount"
+              :onDelete="onDeleteDiscount"
+              :onSubmit="onSubmitDiscount"
             ></discounts>
           </div>
 
@@ -140,11 +143,11 @@
 </template>
 
 <script>
-import AddArrangement from 'components/Events/AddArrangement';
-import DeleteArrangementModal from 'components/Events/DeleteArrangementModal';
-import Discounts from 'components/Events/Discounts';
-import IngredientList from 'components/Events/IngredientList';
-import UpdateArrangement from 'components/Events/UpdateArrangement';
+import AddArrangement from 'components/Arrangements/AddArrangement';
+import DeleteArrangementModal from 'components/Arrangements/DeleteArrangementModal';
+import Discounts from 'components/Discounts/Discounts';
+import IngredientList from 'components/Arrangements/IngredientList';
+import UpdateArrangement from 'components/Arrangements/UpdateArrangement';
 
 export default {
   name: 'arrangement-list',
@@ -195,6 +198,20 @@ export default {
       });
 
       return array.join(', ');
+    },
+
+    onDeleteDiscount(id, discountId) {
+      this.store.dispatch('arrangement/deleteDiscount', {
+        arrangement_id: id,
+        discount_id: discountId,
+      });
+    },
+
+    onSubmitDiscount(id) {
+      this.store.dispatch('arrangement/addDiscount', {
+        id,
+        discount: this.store.state.arrangement.discountForm.data(),
+      });
     },
   },
 };

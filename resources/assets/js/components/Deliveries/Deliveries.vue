@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import DeliveryForm from 'components/Events/DeliveryForm';
-import DeliveryList from 'components/Events/DeliveryList';
+import DeliveryForm from 'components/Deliveries/DeliveryForm';
+import DeliveryList from 'components/Deliveries/DeliveryList';
 import Form from 'helpers/Form';
 
 export default {

@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import AddIngredient from 'components/Events/AddIngredient';
+import AddIngredient from 'components/Arrangements/AddIngredient';
 
 export default {
   name: 'ingredient-form',

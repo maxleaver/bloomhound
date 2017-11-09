@@ -110,7 +110,6 @@ class ArrangementTest extends TestCase
     public function an_arrangement_can_have_discounts()
     {
         create('App\Discount', [
-            'account_id' => $this->arrangement->account->id,
             'discountable_id' => $this->arrangement->id,
             'discountable_type' => 'App\Arrangement',
         ]);

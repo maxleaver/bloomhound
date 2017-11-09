@@ -4,7 +4,7 @@
       <div class="level-left">
         <div class="level-item">
           <p class="subtitle is-5">
-            <strong>{{ setups.length }}</strong> setups
+            <strong>{{ deliveries.length }}</strong> deliveries
           </p>
         </div>
       </div>
@@ -12,31 +12,31 @@
       <div class="level-right">
         <p class="level-item">
           <button class="button is-success is-pulled-right"
-            @click="store.commit('setup/toggleForm')">
+            @click="store.commit('delivery/toggleForm')">
             <span class="icon is-small">
               <i class="fa fa-plus"></i>
             </span>
-            <span>Add a Setup</span>
+            <span>Add a Delivery</span>
           </button>
         </p>
       </div>
     </nav>
 
     <b-table
-      default-sort="setup_on"
+      default-sort="deliver_on"
       detailed
-      :data="setups"
+      :data="deliveries"
       :default-sort-direction="defaultSortDirection"
       :loading="isLoading"
       :mobile-cards="hasMobileCards"
     >
       <template slot-scope="props">
-        <b-table-column field="setup_on" label="Date" sortable>
-          {{ getLocalTime(props.row.setup_on).format('MMM DD') }}
+        <b-table-column field="deliver_on" label="Date" sortable>
+          {{ getLocalTime(props.row.deliver_on).format('MMM DD') }}
         </b-table-column>
 
-        <b-table-column field="setup_on" label="Time" sortable>
-          {{ getLocalTime(props.row.setup_on).format('h:mm a') }}
+        <b-table-column field="deliver_on" label="Time" sortable>
+          {{ getLocalTime(props.row.deliver_on).format('h:mm a') }}
         </b-table-column>
 
         <b-table-column field="address" label="Address" sortable>
@@ -73,13 +73,13 @@
       </template>
 
       <template slot="detail" slot-scope="props">
-        <setup-form
+        <delivery-form
           :form="getUpdateForm(props.row)"
           :id="props.row.id"
           :isUpdateForm="true"
           :store="store"
           :timezone="timezone"
-        ></setup-form>
+        ></delivery-form>
       </template>
 
       <template slot="footer" v-if="store.state.showPrices">
@@ -92,13 +92,13 @@
 </template>
 
 <script>
-import SetupForm from 'components/Events/SetupForm';
+import DeliveryForm from 'components/Deliveries/DeliveryForm';
 import Form from 'helpers/Form';
 import moment from 'moment-timezone';
 
 export default {
-  name: 'setup-list',
-  components: { SetupForm },
+  name: 'delivery-list',
+  components: { DeliveryForm },
   props: {
     store: Object,
     timezone: String,
@@ -112,16 +112,16 @@ export default {
   },
 
   computed: {
-    isLoading() {
-      return this.store.state.setup.isLoading;
+    deliveries() {
+      return this.store.state.delivery.records;
     },
 
-    setups() {
-      return this.store.state.setup.records;
+    isLoading() {
+      return this.store.state.delivery.isLoading;
     },
 
     subtotal() {
-      return Number(this.store.getters['setup/subtotal']).toFixed(2);
+      return Number(this.store.getters['delivery/subtotal']).toFixed(2);
     },
   },
 
@@ -130,12 +130,12 @@ export default {
       return moment.utc(date).tz(this.timezone);
     },
 
-    getUpdateForm(setup) {
+    getUpdateForm(delivery) {
       return new Form({
-        address: setup.address,
-        setup_on: moment.utc(setup.setup_on).tz(this.timezone).toDate(),
-        description: setup.description,
-        fee: setup.fee,
+        address: delivery.address,
+        deliver_on: moment.utc(delivery.deliver_on).tz(this.timezone).toDate(),
+        description: delivery.description,
+        fee: delivery.fee,
       });
     },
 

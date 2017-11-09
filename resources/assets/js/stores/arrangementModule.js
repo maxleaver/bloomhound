@@ -181,7 +181,12 @@ export default {
       const arrangement = state.records.find(item => item.id === data.arrangement_id);
 
       arrangement.total_price = data.discount.discountable.total_price;
-      arrangement.discounts.unshift(data.discount);
+
+      if (Object.prototype.hasOwnProperty.call(arrangement, 'discounts')) {
+        arrangement.discounts.unshift(data.discount);
+      } else {
+        arrangement.discounts = [data.discount];
+      }
 
       state.isSubmittingDiscount = false;
 

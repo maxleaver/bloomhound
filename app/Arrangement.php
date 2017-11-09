@@ -60,11 +60,11 @@ class Arrangement extends Model
     }
 
     protected function percentOff() {
-        $percent = $this->discounts()->where('type', 'percent')->sum('amount');
+        $percent = $this->discounts->where('type', 'percent')->sum('amount');
         return ($this->price * $this->quantity) * ($percent / 100);
     }
 
     protected function amountOff() {
-        return $this->discounts()->where('type', 'fixed')->sum('amount');
+        return $this->discounts->where('type', 'fixed')->sum('amount');
     }
 }

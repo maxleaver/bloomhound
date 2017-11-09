@@ -42,12 +42,7 @@ Route::middleware('auth:api')->group(function () {
 				Route::delete('{discount}', 'ArrangementDiscountController@destroy');
 			});
 
-			Route::prefix('ingredients')->group(function () {
-				Route::get('/', 'ArrangementIngredientController@index');
-		    	Route::post('/', 'ArrangementIngredientController@store');
-				Route::patch('{ingredient}', 'ArrangementIngredientController@update');
-			    Route::delete('{ingredient}', 'ArrangementIngredientController@destroy');
-			});
+			Route::resource('ingredients', 'ArrangementIngredientController');
 		});
 	});
 
@@ -157,6 +152,8 @@ Route::middleware('auth:api')->group(function () {
 
 			Route::get('deliveries', 'DeliveryProposalController@index');
 			Route::post('deliveries', 'DeliveryProposalController@store');
+
+			Route::resource('discounts', 'DiscountProposalController');
 
 			Route::get('setups', 'ProposalSetupController@index');
 			Route::post('setups', 'ProposalSetupController@store');

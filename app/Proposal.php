@@ -9,12 +9,45 @@ class Proposal extends Model
 {
     use Cloneable;
 
+    protected $appends = ['subtotal', 'tax', 'total'];
+
     protected $casts = [
         'event_id' => 'integer',
         'version' => 'integer',
     ];
 
     protected $cloneable_relations = ['arrangements', 'deliveries', 'setups', 'vendors'];
+
+    public function getSubtotalAttribute()
+    {
+        $subtotal = $this->arrangements->sum('total_price');
+        $subtotal += $this->deliveries->sum('fee');
+        $subtotal += $this->setups->sum('fee');
+
+        $percentDiscount = $this->discounts->where('type', 'percent')->sum('amount');
+        $fixedDiscount = $this->discounts->where('type', 'fixed')->sum('amount');
+
+        $subtotal -= $subtotal * ($percentDiscount / 100);
+        $subtotal -= $fixedDiscount;
+
+        return $subtotal;
+    }
+
+    public function getTaxAttribute()
+    {
+        $settings = $this->event->account->settings;
+
+        if ($settings->use_tax) {
+            return $this->subtotal * ($settings->tax_amount / 100);
+        }
+
+        return 0;
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->subtotal + $this->tax;
+    }
 
     public function arrangements()
     {
@@ -24,6 +57,11 @@ class Proposal extends Model
     public function deliveries()
     {
         return $this->hasMany('App\Delivery');
+    }
+
+    public function discounts()
+    {
+        return $this->morphMany('App\Discount', 'discountable');
     }
 
 	public function event()

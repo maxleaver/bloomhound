@@ -27,6 +27,17 @@
         ></setups>
       </card-collapse>
 
+      <card-collapse :title="discountTitle">
+        <discounts
+          :discounts="store.state.discount.records"
+          :form="store.state.discount.form"
+          :id="store.state.proposal.id"
+          :isSubmitting="store.state.discount.isSubmitting"
+          :onDelete="onDeleteDiscount"
+          :onSubmit="onSubmitDiscount"
+        ></discounts>
+      </card-collapse>
+
       <card-collapse title="Payment History">
         <h1 class="title">Payment history will go here...</h1>
       </card-collapse>
@@ -38,9 +49,10 @@
           Arrangements: ${{ toTwoDigits(arrangementSubtotal) }}<br />
           Delivery: ${{ toTwoDigits(deliverySubtotal) }}<br />
           Setup: ${{ toTwoDigits(setupSubtotal) }}<br />
-          <strong>Subtotal:</strong> ${{ toTwoDigits(subtotal) }}<br />
-          Tax: ${{ toTwoDigits(tax) }}<br />
-          <strong>Total: ${{ toTwoDigits(total) }}</strong>
+          Discounts: ${{ toTwoDigits(discountSubtotal) }}<br />
+          <strong>Subtotal:</strong> ${{ toTwoDigits(store.state.proposal.subtotal) }}<br />
+          Tax: ${{ toTwoDigits(store.state.proposal.tax) }}<br />
+          <strong>Total: ${{ toTwoDigits(store.state.proposal.total) }}</strong>
         </div>
       </div>
     </section>
@@ -49,12 +61,13 @@
 
 <script>
 import moment from 'moment-timezone';
-import ArrangementList from 'components/Events/ArrangementList';
+import ArrangementList from 'components/Arrangements/ArrangementList';
 import CardCollapse from 'components/CardCollapse';
-import Deliveries from 'components/Events/Deliveries';
+import Deliveries from 'components/Deliveries/Deliveries';
+import Discounts from 'components/Discounts/Discounts';
 import EventHeader from 'components/Events/EventHeader';
 import Vendors from 'components/Events/Vendors';
-import Setups from 'components/Events/Setups';
+import Setups from 'components/Setups/Setups';
 import eventStore from '../../stores/eventStore';
 
 export default {
@@ -63,6 +76,7 @@ export default {
     ArrangementList,
     CardCollapse,
     Deliveries,
+    Discounts,
     EventHeader,
     Setups,
     Vendors,
@@ -115,6 +129,14 @@ export default {
       return this.store.getters['delivery/subtotal'];
     },
 
+    discountSubtotal: function () {
+      return this.store.getters['discount/subtotal'];
+    },
+
+    discountTitle: function () {
+      return `${this.store.state.discount.records.length} Discounts`;
+    },
+
     setupSubtotal: function () {
       return this.store.getters['setup/subtotal'];
     },
@@ -122,29 +144,17 @@ export default {
     setupTitle: function () {
       return `${this.store.state.setup.records.length} Setups`;
     },
-
-    subtotal: function () {
-      let subtotal = this.arrangementSubtotal;
-      subtotal += this.deliverySubtotal;
-      subtotal += this.setupSubtotal;
-
-      return subtotal;
-    },
-
-    tax: function () {
-      if (this.settings.use_tax) {
-        return this.subtotal * (this.settings.tax_amount / 100);
-      }
-
-      return 0;
-    },
-
-    total: function () {
-      return this.subtotal + this.tax;
-    },
   },
 
   methods: {
+    onDeleteDiscount(id, discountId) {
+      this.store.dispatch('discount/delete', discountId);
+    },
+
+    onSubmitDiscount() {
+      this.store.dispatch('discount/add', this.store.state.discount.form.data());
+    },
+
     toTwoDigits(number) {
       return Number(number).toFixed(2);
     },

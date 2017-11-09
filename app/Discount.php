@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Discount extends Model
 {
+    protected $casts = [
+        'amount' => 'float',
+        'discountable_id' => 'integer',
+    ];
     protected $guarded = [];
 
     public function account()

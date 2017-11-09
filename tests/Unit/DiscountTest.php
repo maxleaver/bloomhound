@@ -41,11 +41,6 @@ class DiscountTest extends TestCase
     }
 
     /** @test */
-    public function a_discount_belongs_to_an_account() {
-        $this->assertInstanceOf('App\Account', $this->discount->account);
-    }
-
-    /** @test */
     public function a_discount_has_a_discountable()
     {
         $this->assertInstanceOf('App\Arrangement', $this->discount->discountable);

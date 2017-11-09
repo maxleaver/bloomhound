@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import IngredientForm from 'components/Events/IngredientForm';
+import IngredientForm from 'components/Arrangements/IngredientForm';
 
 export default {
   name: 'ingredient-list',

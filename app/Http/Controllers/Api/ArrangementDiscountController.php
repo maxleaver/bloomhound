@@ -36,7 +36,6 @@ class ArrangementDiscountController extends Controller
         $discount = new Discount($data);
         $discount->discountable_id = $arrangement->id;
         $discount->discountable_type = 'App\Arrangement';
-        $discount->account()->associate(Auth::user()->account);
         $discount->save();
 
         return response()->json($discount->load('discountable'));
