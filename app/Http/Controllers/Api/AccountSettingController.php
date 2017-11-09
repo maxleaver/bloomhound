@@ -16,7 +16,7 @@ class AccountSettingController extends Controller
     {
         $data = request()->validate([
             'use_tax' => 'required|boolean',
-            'tax_amount' => 'nullable|numeric',
+            'tax_amount' => 'nullable|numeric|min:0.01',
         ]);
 
         Auth::user()->account->settings->update($data);

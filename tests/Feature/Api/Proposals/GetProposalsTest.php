@@ -68,7 +68,7 @@ class GetProposalsTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_get_a_specific_proposal()
     {
-        $this->getProposals($this->proposals[0], false)->assertStatus(401);
+        $this->getProposals($this->proposals[0]->id, false)->assertStatus(401);
     }
 
     protected function getProposals($id = null, $signIn = true)

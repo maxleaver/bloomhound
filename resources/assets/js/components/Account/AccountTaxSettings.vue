@@ -3,6 +3,7 @@
     method="PATCH"
     action="/api/account/settings"
     @submit.prevent="onSubmit"
+    @keydown="form.errors.clear($event.target.name)"
   >
     <h1 class="title">Tax</h1>
 
@@ -13,9 +14,15 @@
       >{{ switchText }}</b-switch>
     </div>
 
-    <b-field label="Tax Percent" v-if="form.use_tax">
+    <b-field
+      label="Tax Percent"
+      v-if="form.use_tax"
+      :type="form.errors.has('tax_amount') ? 'is-danger' : ''"
+      :message="form.errors.has('tax_amount') ? form.errors.get('tax_amount') : ''"
+    >
       <b-input
         type="number"
+        step="any"
         v-model="form.tax_amount"
         :disabled="isSubmitting"
       ></b-input>
