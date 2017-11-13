@@ -41,16 +41,14 @@ class GetProposalArrangementsTest extends TestCase
     public function users_can_only_get_arrangements_for_a_proposal_in_their_account()
     {
     	$someOtherProposal = create('App\Proposal')->id;
-
         $this->getArrangements($someOtherProposal)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */
     public function users_can_only_get_arrangements_for_a_proposal_that_exists()
     {
     	$badId = 123;
-
         $this->getArrangements($badId)
             ->assertStatus(404);
     }

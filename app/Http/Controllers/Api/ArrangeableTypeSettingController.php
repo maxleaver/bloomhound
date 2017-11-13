@@ -18,8 +18,8 @@ class ArrangeableTypeSettingController extends Controller
      */
     public function index()
     {
-        $account = Auth::user()->account;
-        return response()->json($account->arrangeable_type_settings->load('type'));
+        $settings = Auth::user()->account->arrangeable_type_settings->load('type');
+        return response()->json($settings);
     }
 
     /**
@@ -62,7 +62,7 @@ class ArrangeableTypeSettingController extends Controller
                     // Setting doesn't exist for the account
                     // Realistically this shouldn't happen,
                     // so if it happens, we definitely want to know.
-                    Log::error('Arrangeable setting ' . $record['arrangable_type_id'] .
+                    Log::error('Arrangeable setting ' . $record['arrangeable_type_id'] .
                         ' doesn\'t exist for account ' . $accountId);
 
                     abort(403);

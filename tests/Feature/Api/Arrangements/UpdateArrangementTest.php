@@ -93,7 +93,7 @@ class UpdateArrangementTest extends TestCase
     {
         $someOtherArrangement = create('App\Arrangement')->id;
         $this->update($someOtherArrangement, $this->request)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

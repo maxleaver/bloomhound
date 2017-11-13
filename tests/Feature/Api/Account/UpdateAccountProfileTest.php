@@ -9,27 +9,24 @@ class UpdateAccountProfileTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $account;
     protected $request;
-    protected $url;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->url = 'api/account';
+        $this->account = create('App\Account');
         $this->request = make('App\Account')->toArray();
     }
 
     /** @test */
     public function a_user_can_update_their_account_profile()
     {
-    	$response = $this->signIn($this->user)
-            ->patchJson($this->url, $this->request)
+    	$this->updateProfile()
     		->assertStatus(200);
 
-    	$account = $this->user->account->fresh();
+    	$account = $this->account->fresh();
     	$this->assertEquals($account->name, $this->request['name']);
     	$this->assertEquals($account->address, $this->request['address']);
     	$this->assertEquals($account->website, $this->request['website']);
@@ -40,7 +37,20 @@ class UpdateAccountProfileTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_update_account_profiles()
     {
-    	$response = $this->patchJson($this->url, $this->request)
+    	$this->updateProfile(false)
     		->assertStatus(401);
+    }
+
+    protected function updateProfile($signIn = true)
+    {
+        $url = 'api/account';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->account->id,
+            ]));
+        }
+
+        return $this->patchJson($url, $this->request);
     }
 }

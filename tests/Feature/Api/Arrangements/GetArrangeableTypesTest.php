@@ -10,23 +10,18 @@ class GetArrangeableTypesTest extends TestCase
     use RefreshDatabase;
 
     protected $types;
-    protected $url;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->types = create('App\ArrangeableType', ['model' => 'item'], 3);
-        $this->user = create('App\User');
-        $this->url = 'api/arrangeables/types';
     }
 
     /** @test */
     public function a_user_can_get_arrangeable_types()
     {
-        $this->signIn($this->user)
-            ->getJson($this->url)
+        $this->getTypes()
             ->assertStatus(200)
             ->assertJsonFragment([$this->types[0]->title])
     		->assertJsonFragment([$this->types[1]->title]);
@@ -37,8 +32,7 @@ class GetArrangeableTypesTest extends TestCase
     {
         $anotherModel = create('App\ArrangeableType', ['model' => 'flowervariety']);
 
-        $this->signIn($this->user)
-            ->getJson($this->url . '?type=item')
+        $this->getTypes('item')
             ->assertStatus(200)
             ->assertJsonFragment([$this->types[0]->title])
             ->assertJsonFragment([$this->types[1]->title])
@@ -48,7 +42,18 @@ class GetArrangeableTypesTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_get_arrangeable_types()
     {
-        $this->getJson($this->url)
+        $this->getTypes('item', false)
             ->assertStatus(401);
+    }
+
+    protected function getTypes($type = null, $signIn = true)
+    {
+        $url = $type ? 'api/arrangeables/types?type=' . $type : 'api/arrangeables/types';
+
+        if ($signIn) {
+            $this->signIn(create('App\User'));
+        }
+
+        return $this->getJson($url);
     }
 }

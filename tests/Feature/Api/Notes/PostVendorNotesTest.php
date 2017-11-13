@@ -11,15 +11,13 @@ class PostVendorNotesTest extends TestCase
 
     protected $vendor;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
+        $this->vendor = create('App\Vendor');
         $this->request = ['text' => 'This is my note'];
-        $this->user = create('App\User');
-        $this->vendor = create('App\Vendor', ['account_id' => $this->user->account->id]);
     }
 
     /** @test */
@@ -27,8 +25,7 @@ class PostVendorNotesTest extends TestCase
     {
     	$this->assertEquals($this->vendor->notes()->count(), 0);
 
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($this->vendor->id), $this->request)
+        $this->addNote($this->vendor->id)
     		->assertStatus(200);
 
         $this->assertEquals($this->vendor->notes()->count(), 1);
@@ -37,30 +34,35 @@ class PostVendorNotesTest extends TestCase
     /** @test */
     public function a_user_can_only_add_notes_to_vendors_assigned_to_their_account()
     {
-    	$vendor = create('App\Vendor');
-
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($vendor->id), $this->request)
+        $this->addNote(create('App\Vendor')->id)
     		->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_add_notes_to_vendors_that_exist()
     {
-        $this->signIn($this->user)
-            ->postJson($this->getUrl(123), $this->request)
+        $badId = 666;
+        $this->addNote($badId)
     		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_add_vendors()
     {
-        $this->postJson($this->getUrl($this->vendor->id), $this->request)
+        $this->addNote($this->vendor->id, false)
             ->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function addNote($id, $signIn = true)
     {
-        return '/api/vendors/' . $id . '/notes';
+        $url = '/api/vendors/' . $id . '/notes';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->vendor->account->id,
+            ]));
+        }
+
+        return $this->postJson($url, $this->request);
     }
 }

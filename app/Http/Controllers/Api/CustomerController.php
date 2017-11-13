@@ -37,9 +37,7 @@ class CustomerController extends Controller
         ]);
 
         // Add customer to account
-        $customers = Auth::user()->account->customers()->create([
-            'name' => $data['name']
-        ]);
+        $customers = Auth::user()->account->customers()->create($data);
 
         return response()->json($customers);
     }
@@ -52,10 +50,6 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(404);
-        }
-
         return response()->json($customer);
     }
 

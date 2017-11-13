@@ -11,15 +11,13 @@ class PostContactNotesTest extends TestCase
 
     protected $contact;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
+        $this->contact = create('App\Contact');
         $this->request = ['text' => 'This is my note'];
-        $this->user = create('App\User');
-        $this->contact = create('App\Contact', ['account_id' => $this->user->account->id]);
     }
 
     /** @test */
@@ -27,8 +25,7 @@ class PostContactNotesTest extends TestCase
     {
         $this->assertEquals($this->contact->notes()->count(), 0);
 
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($this->contact->id), $this->request)
+        $this->addNote($this->contact->id)
     		->assertStatus(200);
 
         $this->assertEquals($this->contact->notes()->count(), 1);
@@ -37,30 +34,35 @@ class PostContactNotesTest extends TestCase
     /** @test */
     public function a_user_can_only_add_notes_to_contacts_assigned_to_their_account()
     {
-        $contact = create('App\Contact');
-
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($contact->id), $this->request)
+        $this->addNote(create('App\Contact')->id)
     		->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_add_notes_to_contacts_that_exist()
     {
-        $this->signIn($this->user)
-            ->postJson($this->getUrl(123), $this->request)
+        $badId = 666;
+        $this->addNote($badId)
     		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticed_users_cant_post_notes()
     {
-        $this->postJson($this->getUrl($this->contact->id), $this->request)
+        $this->addNote($this->contact->id, false)
             ->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function addNote($id, $signIn = true)
     {
-        return '/api/contacts/' . $id . '/notes';
+        $url = '/api/contacts/' . $id . '/notes';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->contact->account->id,
+            ]));
+        }
+
+        return $this->postJson($url, $this->request);
     }
 }

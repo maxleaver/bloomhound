@@ -113,7 +113,7 @@ class PostArrangementDiscountTest extends TestCase
     {
         $someOtherArrangement = create('App\Arrangement')->id;
         $this->createDiscount([], $someOtherArrangement)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

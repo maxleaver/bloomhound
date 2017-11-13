@@ -9,27 +9,21 @@ class GetArrangeablesTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $account;
     protected $items;
-    protected $url;
-    protected $user;
     protected $varieties;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->url = 'api/arrangeables';
-        $this->user = create('App\User');
-        $this->items = create(
-        	'App\Item',
-        	['account_id' => $this->user->account->id],
-        	2
-       	);
-        $this->varieties = create(
-        	'App\FlowerVariety',
-        	['account_id' => $this->user->account->id],
-        	2
-       	);
+        $this->account = create('App\Account');
+        $this->items = create('App\Item', [
+            'account_id' => $this->account->id
+        ], 2);
+        $this->varieties = create('App\FlowerVariety', [
+            'account_id' => $this->account->id
+        ], 2);
     }
 
     /** @test */
@@ -37,8 +31,7 @@ class GetArrangeablesTest extends TestCase
     {
     	$itemInAnotherAccount = create('App\Item');
 
-        $this->signIn($this->user)
-            ->getJson($this->url)
+        $this->getArrangeables()
     		->assertStatus(200)
     		->assertJsonFragment([$this->items[0]->name])
     		->assertJsonFragment([$this->items[1]->name])
@@ -50,7 +43,20 @@ class GetArrangeablesTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_get_arrangeables()
     {
-    	$this->getJson($this->url)
+    	$this->getArrangeables(false)
     		->assertStatus(401);
+    }
+
+    protected function getArrangeables($signIn = true)
+    {
+        $url = 'api/arrangeables';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->account->id,
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

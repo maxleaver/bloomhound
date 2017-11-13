@@ -43,7 +43,7 @@ class DeleteArrangementDiscountTest extends TestCase
             'discountable_type' => 'App\Arrangement'
         ]);
         $this->deleteDiscount($anotherArrangement->id, $discount->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

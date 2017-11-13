@@ -11,14 +11,12 @@ class GetContactNotesTest extends TestCase
 
     protected $contact;
     protected $notes;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->contact = create('App\Contact', ['account_id' => $this->user->account->id]);
+        $this->contact = create('App\Contact');
         $this->notes = create('App\Note', [
             'notable_id' => $this->contact->id,
             'notable_type' => 'App\Contact'
@@ -30,8 +28,7 @@ class GetContactNotesTest extends TestCase
     {
     	$someOtherNote = create('App\Note');
 
-        $this->signIn($this->user)
-            ->get($this->getUrl($this->contact->id))
+        $this->getNotes($this->contact->id)
     		->assertStatus(200)
     		->assertJsonFragment([$this->notes[0]->text])
     		->assertJsonFragment([$this->notes[1]->text])
@@ -41,10 +38,11 @@ class GetContactNotesTest extends TestCase
     /** @test */
     public function a_user_gets_an_empty_array_if_there_are_no_notes()
     {
-        $newContact = create('App\Contact', ['account_id' => $this->user->account->id]);
+        $newContact = create('App\Contact', [
+            'account_id' => $this->contact->account->id
+        ])->id;
 
-        $this->signIn($this->user)
-            ->getJson($this->getUrl($newContact->id))
+        $this->getNotes($newContact)
             ->assertStatus(200)
             ->assertJson([]);
     }
@@ -52,23 +50,27 @@ class GetContactNotesTest extends TestCase
     /** @test */
     public function a_user_can_only_view_notes_for_contacts_in_their_account()
     {
-        $otherContact = create('App\Contact');
-        $otherNotes = create('App\Note', ['notable_id' => $otherContact->id, 'notable_type' => 'App\Contact'], 3);
-
-        $this->signIn($this->user)
-            ->getJson($this->getUrl($otherContact->id))
+        $this->getNotes(create('App\Contact')->id)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_view_notes()
     {
-        $this->getJson($this->getUrl($this->contact->id))
+        $this->getNotes($this->contact->id, false)
             ->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function getNotes($id, $signIn = true)
     {
-        return '/api/contacts/' . $id . '/notes';
+        $url = '/api/contacts/' . $id . '/notes';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->contact->account->id,
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

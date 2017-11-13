@@ -9,36 +9,59 @@ class PostVendorsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $account;
     protected $request;
-    protected $user;
-    protected $url;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->url = 'api/vendors';
+        $this->account = create('App\Account');
         $this->request = ['name' => 'Vendor Name'];
     }
 
     /** @test */
     public function a_user_can_add_a_vendor()
     {
-        $this->assertEquals($this->user->account->vendors()->count(), 0);
+        $this->assertEquals($this->account->vendors()->count(), 0);
 
-    	$this->signIn($this->user)
-            ->postJson($this->url, $this->request)
+        $this->createVendor()
     		->assertStatus(200)
     		->assertJsonFragment([$this->request['name']]);
 
-    	$this->assertEquals($this->user->account->vendors()->count(), 1);
+    	$this->assertEquals($this->account->vendors()->count(), 1);
+    }
+
+    /** @test */
+    public function a_vendor_requires_a_name()
+    {
+        $this->request['name'] = null;
+
+        $this->createVendor()
+            ->assertSessionHasErrors('name');
     }
 
     /** @test */
     public function unauthenticated_users_cannot_add_vendors()
     {
-    	$this->postJson($this->url, $this->request)
+    	$this->createVendor(false, true)
     		->assertStatus(401);
+    }
+
+    protected function createVendor($signIn = true, $withJson = false)
+    {
+        $url = 'api/vendors';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->account->id,
+            ]));
+        }
+
+        if ($withJson) {
+            return $this->postJson($url, $this->request);
+        }
+
+        return $this->post($url, $this->request);
     }
 }

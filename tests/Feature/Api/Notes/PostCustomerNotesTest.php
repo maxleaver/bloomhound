@@ -11,15 +11,13 @@ class PostCustomerNotesTest extends TestCase
 
     protected $customer;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
+        $this->customer = create('App\Customer');
         $this->request = ['text' => 'This is my note'];
-        $this->user = create('App\User');
-        $this->customer = create('App\Customer', ['account_id' => $this->user->account->id]);
     }
 
     /** @test */
@@ -27,40 +25,44 @@ class PostCustomerNotesTest extends TestCase
     {
     	$this->assertEquals($this->customer->notes()->count(), 0);
 
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($this->customer->id), $this->request)
+        $this->addNote($this->customer->id)
     		->assertStatus(200);
 
         $this->assertEquals($this->customer->notes()->count(), 1);
     }
 
     /** @test */
-    public function a_user_can_only_add_notes_to_customers_assigned_to_their_account()
+    public function users_cannot_add_notes_to_customers_in_other_accounts()
     {
-    	$customer = create('App\Customer');
-
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($customer->id), $this->request)
+        $this->addNote(create('App\Customer')->id)
     		->assertStatus(404);
     }
 
     /** @test */
-    public function a_user_can_only_add_notes_to_customers_that_exist()
+    public function users_cannot_add_notes_to_customers_that_dont_exist()
     {
-        $this->signIn($this->user)
-            ->postJson($this->getUrl(123), $this->request)
+        $badId = 666;
+        $this->addNote($badId)
     		->assertStatus(404);
     }
 
     /** @test */
-    public function unauthenticed_users_cant_post_notes()
+    public function unauthenticated_users_cannot_post_notes()
     {
-        $this->postJson($this->getUrl($this->customer->id), $this->request)
+        $this->addNote($this->customer->id, false)
             ->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function addNote($id, $signIn = true)
     {
-    	return '/api/customers/' . $id . '/notes';
+        $url = '/api/customers/' . $id . '/notes';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->customer->account->id,
+            ]));
+        }
+
+        return $this->postJson($url, $this->request);
     }
 }

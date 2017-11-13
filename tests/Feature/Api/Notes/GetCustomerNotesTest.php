@@ -11,14 +11,12 @@ class GetCustomerNotesTest extends TestCase
 
     protected $customer;
     protected $notes;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->customer = create('App\Customer', ['account_id' => $this->user->account->id]);
+        $this->customer = create('App\Customer');
         $this->notes = create('App\Note', [
         	'notable_id' => $this->customer->id,
         	'notable_type' => 'App\Customer'
@@ -30,8 +28,7 @@ class GetCustomerNotesTest extends TestCase
     {
     	$someOtherNote = create('App\Note');
 
-        $this->signIn($this->user)
-            ->getJson($this->getUrl($this->customer->id))
+        $this->getNotes($this->customer->id)
     		->assertStatus(200)
     		->assertJsonFragment([$this->notes[0]->text])
     		->assertJsonFragment([$this->notes[1]->text])
@@ -41,23 +38,27 @@ class GetCustomerNotesTest extends TestCase
     /** @test */
     public function a_user_can_only_view_notes_for_customers_in_their_account()
     {
-        $otherCustomer = create('App\Customer');
-        $otherNotes = create('App\Note', ['notable_id' => $otherCustomer->id, 'notable_type' => 'App\Customer'], 3);
-
-        $this->signIn($this->user)
-            ->getJson($this->getUrl($otherCustomer->id))
+        $this->getNotes(create('App\Customer')->id)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_view_notes()
     {
-        $this->getJson($this->getUrl($this->customer->id))
+        $this->getNotes($this->customer->id, false)
             ->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function getNotes($id, $signIn = true)
     {
-        return '/api/customers/' . $id . '/notes';
+        $url = '/api/customers/' . $id . '/notes';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->customer->account->id,
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

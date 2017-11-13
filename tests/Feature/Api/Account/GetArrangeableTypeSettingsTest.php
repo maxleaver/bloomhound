@@ -10,17 +10,14 @@ class GetArrangeableTypeSettingsTest extends TestCase
     use RefreshDatabase;
 
     protected $settings;
-    protected $url;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->url = 'api/arrangeables/settings';
-        $this->user = create('App\User');
+        $account = create('App\Account');
         $this->settings = create('App\ArrangeableTypeSetting', [
-            'account_id' => $this->user->account->id
+            'account_id' => $account->id,
         ], 3);
     }
 
@@ -29,18 +26,31 @@ class GetArrangeableTypeSettingsTest extends TestCase
     {
         $otherSetting = create('App\ArrangeableTypeSetting');
 
-        $this->signIn($this->user)
-            ->getJson($this->url)
+        $this->getSettings()
             ->assertStatus(200)
             ->assertJsonFragment([$this->settings[0]->type->name])
             ->assertJsonFragment([$this->settings[1]->type->name])
+            ->assertJsonFragment([$this->settings[2]->type->name])
             ->assertJsonMissing([$otherSetting->type->name]);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_arrangeable_type_settings()
     {
-        $this->getJson($this->url)
+        $this->getSettings(false)
             ->assertStatus(401);
+    }
+
+    protected function getSettings($signIn = true)
+    {
+        $url = 'api/arrangeables/settings';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->settings[0]->account->id,
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

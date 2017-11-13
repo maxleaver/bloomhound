@@ -11,9 +11,8 @@ class UploadAccountLogoTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $account;
     protected $original;
-    protected $request;
-    protected $url;
     protected $user;
 
     protected function setUp()
@@ -22,24 +21,20 @@ class UploadAccountLogoTest extends TestCase
 
         Storage::fake('local');
 
-        $this->original = Storage::putFile('local', UploadedFile::fake()->image('original_logo.jpg', 150, 150));
-        $this->account = create('App\Account', [
-        	'logo' => $this->original
-        ]);
-        $this->user = create('App\User', ['account_id' => $this->account->id]);
-        $this->request = ['logo' => UploadedFile::fake()->image('new_logo.jpg', 150, 150)];
-        $this->url = 'api/account/logo';
+        $originalLogo = UploadedFile::fake()->image('original_logo.jpg', 150, 150);
+        $newLogo = UploadedFile::fake()->image('new_logo.jpg', 150, 150);
+
+        $this->original = Storage::putFile('local', $originalLogo);
+        $this->account = create('App\Account', ['logo' => $this->original]);
+        $this->request = ['logo' => $newLogo];
     }
 
     /** @test */
     public function a_user_can_upload_a_logo_for_their_account()
     {
-    	$this->withoutExceptionHandling();
-
         Storage::disk('local')->assertExists($this->account->logo);
 
-    	$response = $this->signIn($this->user)
-    		->postJson($this->url, $this->request)
+        $this->uploadLogo()
     		->assertSuccessful();
 
         Storage::disk('local')->assertExists($this->account->fresh()->logo);
@@ -50,26 +45,35 @@ class UploadAccountLogoTest extends TestCase
     public function a_user_can_only_upload_image_files()
     {
     	$this->request['logo'] = UploadedFile::fake()->create('anInvalidFileType.pdf');
-
-    	$this->signIn($this->user)
-    		->postJson($this->url, $this->request)
+        $this->uploadLogo()
     		->assertStatus(422);
     }
 
     /** @test */
     public function a_user_can_only_upload_images_that_meet_the_minimum_size_requirements()
     {
-        $tinyImage = UploadedFile::fake()->image('new_logo.jpg', 50, 50);
-
-        $this->signIn($this->user)
-    		->postJson($this->url, ['logo' => $tinyImage])
+        $this->request['logo'] = UploadedFile::fake()->image('new_logo.jpg', 50, 50);
+        $this->uploadLogo()
     		->assertStatus(422);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_upload_a_logo()
     {
-    	$this->postJson($this->url, $this->request)
+    	$this->uploadLogo(false)
     		->assertStatus(401);
+    }
+
+    protected function uploadLogo($signIn = true)
+    {
+        $url = 'api/account/logo';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->account->id,
+            ]));
+        }
+
+        return $this->postJson($url, $this->request);
     }
 }

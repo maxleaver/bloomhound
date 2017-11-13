@@ -12,15 +12,13 @@ class PostEventNotesTest extends TestCase
 
     protected $event;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
+        $this->event = create('App\Event');
         $this->request = ['text' => 'This is my note'];
-        $this->user = create('App\User');
-        $this->event = create('App\Event', ['account_id' => $this->user->account->id]);
     }
 
     /** @test */
@@ -28,8 +26,7 @@ class PostEventNotesTest extends TestCase
     {
     	$this->assertEquals($this->event->notes()->count(), 0);
 
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($this->event->id), $this->request)
+        $this->addNote($this->event->id)
     		->assertStatus(200);
 
         $this->assertEquals($this->event->notes()->count(), 1);
@@ -39,29 +36,35 @@ class PostEventNotesTest extends TestCase
     public function a_user_can_only_add_notes_to_events_assigned_to_their_account()
     {
     	$event = create('App\Event');
-
-        $this->signIn($this->user)
-            ->postJson($this->getUrl($event->id), $this->request)
+        $this->addNote(create('App\Event')->id)
     		->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_add_notes_to_events_that_exist()
     {
-        $this->signIn($this->user)
-            ->postJson($this->getUrl(123), $this->request)
+        $badId = 666;
+        $this->addNote($badId)
     		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_post_events()
     {
-        $this->postJson($this->getUrl($this->event->id), $this->request)
+        $this->addNote($this->event->id, false)
             ->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function addNote($id, $signIn = true)
     {
-        return '/api/events/' . $id . '/notes';
+        $url = '/api/events/' . $id . '/notes';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->event->account->id,
+            ]));
+        }
+
+        return $this->postJson($url, $this->request);
     }
 }

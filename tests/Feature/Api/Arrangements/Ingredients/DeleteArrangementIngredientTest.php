@@ -22,19 +22,6 @@ class DeleteArrangementIngredientTest extends TestCase
         ], 3);
     }
 
-    protected function deleteIngredient($arrangementId, $ingredientId, $signIn = true)
-    {
-        $url = '/api/arrangements/' . $arrangementId . '/ingredients/' . $ingredientId;
-
-        if ($signIn) {
-            $this->signIn(create('App\User', [
-                'account_id' => $this->arrangement->account->id
-            ]));
-        }
-
-        return $this->deleteJson($url);
-    }
-
     /** @test */
     public function a_user_can_delete_an_ingredient_from_an_arrangement()
     {
@@ -70,7 +57,7 @@ class DeleteArrangementIngredientTest extends TestCase
         ]);
 
         $this->deleteIngredient($someOtherArrangement->id, $someOtherIngredient->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */
@@ -78,5 +65,18 @@ class DeleteArrangementIngredientTest extends TestCase
     {
         $this->deleteIngredient($this->arrangement->id, $this->ingredients[0]->id, false)
             ->assertStatus(401);
+    }
+
+    protected function deleteIngredient($arrangementId, $ingredientId, $signIn = true)
+    {
+        $url = '/api/arrangements/' . $arrangementId . '/ingredients/' . $ingredientId;
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->arrangement->account->id
+            ]));
+        }
+
+        return $this->deleteJson($url);
     }
 }

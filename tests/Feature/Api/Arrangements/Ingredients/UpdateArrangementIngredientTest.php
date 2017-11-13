@@ -68,7 +68,7 @@ class UpdateArrangementIngredientTest extends TestCase
     {
         $someOtherArrangement = create('App\Arrangement');
         $this->updateIngredient($someOtherArrangement->id, $this->ingredient->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

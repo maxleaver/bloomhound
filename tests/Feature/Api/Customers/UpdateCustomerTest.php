@@ -9,49 +9,35 @@ class UpdateCustomerTest extends TestCase
 {
 	use RefreshDatabase;
 
-    protected $user;
     protected $customer;
+    protected $request;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->customer = create('App\Customer', ['account_id' => $this->user->account->id]);
-    }
-
-    protected function url($id)
-    {
-        return 'api/customers/' . $id;
+        $this->customer = create('App\Customer');
+        $this->request = make('App\Customer')->toArray();
     }
 
     /** @test */
     public function users_can_update_a_customer_profile()
     {
-        $name = 'new name';
-        $email = 'email@test.com';
-        $address = '123 Fake Street, Town, ND USA';
-        $phone = '(555) 555-5555';
-        $request = compact('name', 'email', 'address', 'phone');
-
-        $this->signIn($this->user)
-            ->patchJson($this->url($this->customer->id), $request)
+        $this->updateCustomer($this->customer->id)
             ->assertStatus(200);
 
         $customer = $this->customer->fresh();
-        $this->assertEquals($name, $customer->name);
-        $this->assertEquals($email, $customer->email);
-        $this->assertEquals($address, $customer->address);
-        $this->assertEquals($phone, $customer->phone);
+        $this->assertEquals($this->request['name'], $customer->name);
+        $this->assertEquals($this->request['email'], $customer->email);
+        $this->assertEquals($this->request['address'], $customer->address);
+        $this->assertEquals($this->request['phone'], $customer->phone);
     }
 
     /** @test */
     public function users_can_only_update_customers_in_their_account()
     {
-        $customerInAnotherAccount = create('App\Customer');
-
-        $this->signIn($this->user)
-            ->patchJson($this->url($customerInAnotherAccount->id), ['name' => 'a name'])
+        $customerInAnotherAccount = create('App\Customer')->id;
+        $this->updateCustomer($customerInAnotherAccount)
             ->assertStatus(404);
     }
 
@@ -59,17 +45,31 @@ class UpdateCustomerTest extends TestCase
     public function users_can_only_update_customers_that_exist()
     {
         $badId = 123;
-        $name = 'some customer';
-
-        $this->signIn($this->user)
-            ->patchJson($this->url($badId), compact('name'))
+        $this->updateCustomer($badId)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_update_customers()
     {
-        $this->patchJson($this->url($this->customer->id), ['name' => 'a name'])
+        $this->updateCustomer($this->customer->id, false, true)
             ->assertStatus(401);
+    }
+
+    protected function updateCustomer($id, $signIn = true, $withJson = false)
+    {
+        $url = 'api/customers/' . $id;
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->customer->account->id
+            ]));
+        }
+
+        if ($withJson) {
+            return $this->patchJson($url, $this->request);
+        }
+
+        return $this->patch($url, $this->request);
     }
 }

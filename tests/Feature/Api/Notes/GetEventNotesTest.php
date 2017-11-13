@@ -11,14 +11,12 @@ class GetEventNotesTest extends TestCase
 
     protected $event;
     protected $notes;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->event = create('App\Event', ['account_id' => $this->user->account->id]);
+        $this->event = create('App\Event');
         $this->notes = create('App\Note', [
         	'notable_id' => $this->event->id,
         	'notable_type' => 'App\Event'
@@ -30,8 +28,9 @@ class GetEventNotesTest extends TestCase
     {
     	$someOtherNote = create('App\Note');
 
-        $this->signIn($this->user)
-            ->getJson($this->getUrl($this->event->id))
+        $this->getNotes($this->event->id)
+        // $this->signIn($this->user)
+        //     ->getJson($this->getUrl($this->event->id))
     		->assertStatus(200)
     		->assertJsonFragment([$this->notes[0]->text])
     		->assertJsonFragment([$this->notes[1]->text])
@@ -41,23 +40,27 @@ class GetEventNotesTest extends TestCase
     /** @test */
     public function a_user_can_only_view_notes_for_events_in_their_account()
     {
-        $otherEvent = create('App\Event');
-        $otherNotes = create('App\Note', ['notable_id' => $otherEvent->id, 'notable_type' => 'App\Event'], 3);
-
-        $this->signIn($this->user)
-            ->getJson($this->getUrl($otherEvent->id))
+        $this->getNotes(create('App\Event')->id)
             ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_view_notes()
     {
-        $this->getJson($this->getUrl($this->event->id))
+        $this->getNotes($this->event->id, false)
             ->assertStatus(401);
     }
 
-    protected function getUrl($id)
+    protected function getNotes($id, $signIn = true)
     {
-        return '/api/events/' . $id . '/notes';
+        $url = '/api/events/' . $id . '/notes';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->event->account->id,
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

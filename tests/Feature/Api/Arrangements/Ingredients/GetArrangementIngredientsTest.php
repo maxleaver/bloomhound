@@ -11,22 +11,15 @@ class GetArrangementIngredientsTest extends TestCase
 
     protected $arrangement;
     protected $ingredients;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->arrangement = create('App\Arrangement', ['account_id' => $this->user->account->id]);
+        $this->arrangement = create('App\Arrangement');
         $this->ingredients = create('App\ArrangementIngredient', [
             'arrangement_id' => $this->arrangement->id
         ], 3);
-    }
-
-    protected function getUrl($id)
-    {
-    	return 'api/arrangements/' . $id . '/ingredients';
     }
 
     /** @test */
@@ -34,8 +27,7 @@ class GetArrangementIngredientsTest extends TestCase
     {
     	$someOtherIngredient = create('App\ArrangementIngredient');
 
-        $this->signIn($this->user)
-            ->getJson($this->getUrl($this->arrangement->id))
+        $this->getIngredients($this->arrangement->id)
     		->assertStatus(200)
     		->assertJsonFragment([$this->ingredients[0]->arrangeable->name])
     		->assertJsonFragment([$this->ingredients[1]->arrangeable->name])
@@ -45,17 +37,28 @@ class GetArrangementIngredientsTest extends TestCase
     /** @test */
     public function a_user_can_only_get_ingredients_for_arrangements_in_their_account()
     {
-    	$arrangementInAnotherAccount = create('App\Arrangement');
-
-    	$this->signIn($this->user)
-            ->getJson($this->getUrl($arrangementInAnotherAccount->id))
-    		->assertStatus(403);
+    	$arrangementInAnotherAccount = create('App\Arrangement')->id;
+        $this->getIngredients($arrangementInAnotherAccount)
+    		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_a_list_of_ingredients()
     {
-    	$this->getJson($this->getUrl($this->arrangement->id))
+    	$this->getIngredients($this->arrangement->id, false)
     		->assertStatus(401);
+    }
+
+    protected function getIngredients($id, $signIn = true)
+    {
+        $url = 'api/arrangements/' . $id . '/ingredients';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->arrangement->account->id
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

@@ -29,7 +29,7 @@ class PostProposalArrangementsTest extends TestCase
     {
     	$this->assertEquals($this->proposal->arrangements()->count(), 0);
 
-        $this->addArrangement($this->proposal->id, $this->request)
+        $this->addArrangement($this->proposal->id)
             ->assertStatus(200);
 
         $arrangement = $this->proposal->arrangements()->first();
@@ -43,18 +43,21 @@ class PostProposalArrangementsTest extends TestCase
     /** @test */
     public function an_arrangement_requires_a_name_and_a_quantity()
     {
-        $this->addArrangement($this->proposal->id, ['quantity' => 1])
+        $this->request['name'] = null;
+        $this->addArrangement($this->proposal->id)
             ->assertSessionHasErrors('name');
 
-        $this->addArrangement($this->proposal->id, ['name' => 'test'])
+        $this->request['name'] = 'test';
+        $this->request['quantity'] = null;
+        $this->addArrangement($this->proposal->id)
             ->assertSessionHasErrors('quantity');
     }
 
     /** @test */
     public function an_arrangement_requires_a_quantity_greater_than_zero()
     {
-        $request = ['name' => 'test', 'quantity' => 0];
-        $this->addArrangement($this->proposal->id, $request)
+        $this->request['quantity'] = 0;
+        $this->addArrangement($this->proposal->id)
             ->assertSessionHasErrors('quantity');
     }
 
@@ -62,7 +65,7 @@ class PostProposalArrangementsTest extends TestCase
     public function arrangements_cannot_be_created_for_invalid_proposals()
     {
         $badId = 123;
-        $this->addArrangement($badId, $this->request)
+        $this->addArrangement($badId)
             ->assertStatus(404);
     }
 
@@ -70,30 +73,31 @@ class PostProposalArrangementsTest extends TestCase
     public function arrangements_cannot_be_added_to_proposals_in_other_accounts()
     {
         $proposalInAnotherAccount = create('App\Proposal')->id;
-        $this->addArrangement($proposalInAnotherAccount, $this->request)
-            ->assertStatus(403);
+        $this->addArrangement($proposalInAnotherAccount)
+            ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_create_arrangements()
     {
-        $this->postJson($this->url($this->proposal->id), $this->request)
+        $this->addArrangement($this->proposal->id, false, true)
             ->assertStatus(401);
     }
 
-    protected function url($id)
+    protected function addArrangement($id, $signIn = true, $withJson = false)
     {
-        return 'api/proposals/' . $id . '/arrangements';
-    }
+        $url = 'api/proposals/' . $id . '/arrangements';
 
-    protected function addArrangement($id, $request, $signIn = true)
-    {
         if ($signIn) {
             $this->signIn(create('App\User', [
                 'account_id' => $this->proposal->event->account->id,
             ]));
         }
 
-        return $this->post($this->url($id), $request);
+        if ($withJson) {
+            return $this->postJson($url, $this->request);
+        }
+
+        return $this->post($url, $this->request);
     }
 }
