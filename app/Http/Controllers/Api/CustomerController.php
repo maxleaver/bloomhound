@@ -8,6 +8,12 @@ use App\Http\Controllers\Controller;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:customer')
+            ->except(['index','store']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -67,10 +73,6 @@ class CustomerController extends Controller
             'address' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
         ]);
-
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
 
         $customer->update($data);
     }

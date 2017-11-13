@@ -9,6 +9,15 @@ use App\Http\Controllers\Controller;
 
 class ArrangementController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:proposal.event')
+            ->only(['index', 'store']);
+
+        $this->middleware('in_account:arrangement')
+            ->only(['show', 'update','destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +26,6 @@ class ArrangementController extends Controller
      */
     public function index(Proposal $proposal)
     {
-        $this->proposalIsValid($proposal);
-
         return response()->json($proposal->arrangements);
     }
 
@@ -34,8 +41,6 @@ class ArrangementController extends Controller
             'description' => 'nullable|string|max:255',
             'quantity' => 'required|integer|min:1',
         ]);
-
-        $this->proposalIsValid($proposal);
 
         $arrangement = new Arrangement($data);
         $arrangement->account()->associate(Auth::user()->account);
@@ -72,10 +77,6 @@ class ArrangementController extends Controller
             'price' => 'required_if:override_price,true|numeric|min:0.01',
         ]);
 
-        if ($arrangement->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $arrangement->update($data);
 
         return response()->json($arrangement->fresh());
@@ -89,17 +90,6 @@ class ArrangementController extends Controller
      */
     public function destroy(Arrangement $arrangement)
     {
-        if ($arrangement->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $arrangement->delete();
-    }
-
-    protected function proposalIsValid(Proposal $proposal)
-    {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
     }
 }

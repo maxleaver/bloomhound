@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -11,52 +12,83 @@ class PostCustomerEventsTest extends TestCase
 
     protected $customer;
     protected $request;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->customer = create('App\Customer');
-        $this->user = create('App\User', ['account_id' => $this->customer->account->id]);
         $this->request = [
         	'customer_id' => $this->customer->id,
-        	'date' => '2017-09-12T12:37:55.729Z',
+        	'date' => Carbon::now()->addWeek(2)->toRfc3339String(),
             'name' => 'Event Name',
         ];
     }
 
-    protected function getUrl($id)
-    {
-    	return 'api/customers/' . $id . '/events';
-    }
-
     /** @test */
-    public function authenticated_users_can_add_an_event_for_existing_customers()
+    public function users_can_add_an_event_for_a_customer()
     {
     	$this->assertEquals($this->customer->events->count(), 0);
 
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($this->customer->id), $this->request)
+        $this->createEvent($this->customer->id)
     		->assertStatus(200);
 
     	$this->assertEquals($this->customer->fresh()->events->count(), 1);
     }
 
     /** @test */
-    public function authenticated_users_can_only_add_events_for_existing_customers_in_their_account()
+    public function an_event_requires_a_name()
     {
-    	$someOtherCustomer = create('App\Customer');
-
-    	$this->signIn($this->user)
-            ->postJson($this->getUrl($someOtherCustomer->id), $this->request)
-    		->assertStatus(403);
+        $this->request['name'] = null;
+        $this->createEvent($this->customer->id, true, false)
+            ->assertSessionHasErrors('name');
     }
 
     /** @test */
-    public function unauthenticated_users_cannot_add_events_for_existing_customers()
+    public function an_event_requires_a_date()
     {
-    	$this->postJson($this->getUrl($this->customer->id), $this->request)
+        $this->request['date'] = null;
+        $this->createEvent($this->customer->id, true, false)
+            ->assertSessionHasErrors('date');
+    }
+
+    /** @test */
+    public function an_event_date_must_be_in_the_future()
+    {
+        $this->request['date'] = Carbon::now()->subWeek(2)->toRfc3339String();
+        $this->createEvent($this->customer->id, true, false)
+            ->assertSessionHasErrors('date');
+    }
+
+    /** @test */
+    public function users_cannot_add_events_to_other_accounts()
+    {
+    	$someOtherCustomer = create('App\Customer')->id;
+        $this->createEvent($someOtherCustomer)
+    		->assertStatus(404);
+    }
+
+    /** @test */
+    public function unauthenticated_users_cannot_add_events_for_customers()
+    {
+    	$this->createEvent($this->customer->id, false)
     		->assertStatus(401);
+    }
+
+    protected function createEvent($id, $signIn = true, $withJson = true)
+    {
+        $url = 'api/customers/' . $id . '/events';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->customer->account->id,
+            ]));
+        }
+
+        if ($withJson) {
+            return $this->postJson($url, $this->request);
+        }
+
+        return $this->post($url, $this->request);
     }
 }

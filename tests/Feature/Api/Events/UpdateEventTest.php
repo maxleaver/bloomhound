@@ -41,7 +41,7 @@ class UpdateEventTest extends TestCase
         $eventInAnotherAccount = create('App\Event')->id;
 
         $this->updateEvent($eventInAnotherAccount)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

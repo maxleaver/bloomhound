@@ -54,7 +54,7 @@ class UpdateProposalTest extends TestCase
         ], 2);
 
         $this->activateProposal($eventInOtherAccount, $otherProposals[0]->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

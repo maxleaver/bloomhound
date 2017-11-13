@@ -49,16 +49,14 @@ class PostProposalSetupsTest extends TestCase
     public function users_can_only_add_setups_to_a_proposal_in_their_account()
     {
         $someOtherProposal = create('App\Proposal')->id;
-
         $this->createSetup($someOtherProposal)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */
     public function user_can_only_add_setups_to_an_existing_proposal()
     {
         $badId = 666;
-
         $this->createSetup($badId)
             ->assertStatus(404);
     }

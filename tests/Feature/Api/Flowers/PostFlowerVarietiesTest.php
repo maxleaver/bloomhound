@@ -58,9 +58,8 @@ class PostFlowerVarietiesTest extends TestCase
     public function users_can_only_add_varieties_to_flowers_in_their_account()
     {
         $someOtherFlower = create('App\Flower')->id;
-
         $this->createVariety($someOtherFlower, $this->request)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

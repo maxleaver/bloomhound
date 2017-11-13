@@ -168,7 +168,7 @@ class ProposalTest extends TestCase
     }
 
     /** @test */
-    public function a_proposal_belongs_to_many_vendors()
+    public function a_proposal_has_many_vendors()
     {
         $vendors = create('App\Vendor', [], 10);
         $this->proposal->vendors()->attach($vendors);

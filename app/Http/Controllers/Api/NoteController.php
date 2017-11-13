@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:note.user')->except(['index', 'store']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -67,10 +72,6 @@ class NoteController extends Controller
             'text' => 'required|string',
         ]);
 
-        if ($note->user->account->id !== Auth::user()->account->id) {
-            abort(404);
-        }
-
         $note->update($data);
     }
 
@@ -82,10 +83,6 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        if ($note->user->account->id !== Auth::user()->account->id) {
-            abort(404);
-        }
-
         $note->delete();
 
         return response()->json();

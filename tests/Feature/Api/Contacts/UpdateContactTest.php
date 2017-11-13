@@ -57,7 +57,7 @@ class UpdateContactTest extends TestCase
 
         $this->signIn($this->user)
             ->patchJson($this->url($contactInAnotherAccount->id), $request)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

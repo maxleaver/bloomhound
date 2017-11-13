@@ -41,16 +41,14 @@ class GetProposalDeliveriesTest extends TestCase
     public function a_user_can_only_get_deliveries_for_a_proposal_in_their_account()
     {
         $someOtherProposal = create('App\Proposal');
-
         $this->getDeliveries($someOtherProposal->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_get_deliveries_for_an_existing_proposal()
     {
     	$badId = 666;
-
         $this->getDeliveries($badId)
             ->assertStatus(404);
     }

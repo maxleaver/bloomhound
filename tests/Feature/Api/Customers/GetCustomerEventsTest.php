@@ -12,31 +12,25 @@ class GetCustomerEventsTest extends TestCase
     protected $customer;
     protected $events;
     protected $otherEvents;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->customer = create('App\Customer', ['account_id' => $this->user->account->id]);
+        $this->customer = create('App\Customer');
         $this->events = create('App\Event', [
-        	'account_id' => $this->user->account->id,
+        	'account_id' => $this->customer->account->id,
         	'customer_id' => $this->customer->id,
         ], 3);
-        $this->otherEvents = create('App\Event', ['account_id' => $this->user->account->id], 3);
-    }
-
-    protected function getUrl($id)
-    {
-    	return 'api/customers/' . $id . '/events';
+        $this->otherEvents = create('App\Event', [
+            'account_id' => $this->customer->account->id
+        ], 3);
     }
 
     /** @test */
-    public function an_authenticated_user_can_get_a_customers_events()
+    public function a_user_can_get_a_list_of_events_for_a_customer()
     {
-    	$this->signIn($this->user)
-            ->getJson($this->getUrl($this->customer->id))
+    	$this->getEvents($this->customer->id)
     		->assertStatus(200)
     		->assertJsonFragment([$this->events[0]->name])
     		->assertJsonFragment([$this->events[1]->name])
@@ -47,21 +41,33 @@ class GetCustomerEventsTest extends TestCase
     /** @test */
     public function an_authenticated_user_cannot_get_events_for_customers_in_other_accounts()
     {
-    	$customerInAnotherAccount = create('App\Customer');
+    	$inAnotherAccount = create('App\Customer');
     	$otherEvents = create('App\Event', [
-    		'account_id' => $customerInAnotherAccount->account->id,
-    		'customer_id' => $customerInAnotherAccount->id
+    		'account_id' => $inAnotherAccount->account->id,
+    		'customer_id' => $inAnotherAccount->id
     	]);
 
-    	$this->signIn($this->user)
-            ->getJson($this->getUrl($customerInAnotherAccount->id))
-    		->assertStatus(403);
+        $this->getEvents($inAnotherAccount->id)
+    		->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_customers_events()
     {
-    	$this->getJson($this->getUrl($this->customer->id))
+    	$this->getEvents($this->customer->id, false)
     		->assertStatus(401);
+    }
+
+    protected function getEvents($id, $signIn = true)
+    {
+        $url = 'api/customers/' . $id . '/events';
+
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->customer->account->id,
+            ]));
+        }
+
+        return $this->getJson($url);
     }
 }

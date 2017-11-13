@@ -46,7 +46,7 @@ class DeleteProposalDiscountTest extends TestCase
             ->id;
 
         $this->deleteDiscount($otherProposal, $discount)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

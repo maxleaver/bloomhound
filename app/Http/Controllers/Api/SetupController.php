@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class SetupController extends Controller
 {
+	public function __construct()
+    {
+        $this->middleware('in_account:setup');
+    }
+
 	/**
 	 * Updates an event setup
 	 *
@@ -17,10 +22,6 @@ class SetupController extends Controller
 	 */
 	public function update(Setup $setup)
 	{
-		if ($setup->account->id !== Auth::user()->account->id) {
-			abort(403);
-		}
-
 		$data = request()->validate([
             'address' => 'required|string',
             'description' => 'nullable|string',

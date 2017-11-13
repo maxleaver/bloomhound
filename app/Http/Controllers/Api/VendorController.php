@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 
 class VendorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:vendor')->only('update');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -56,10 +61,6 @@ class VendorController extends Controller
      */
     public function update(Vendor $vendor)
     {
-        if ($vendor->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $data = request()->validate([
             'name' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255',

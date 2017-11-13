@@ -12,6 +12,11 @@ use Illuminate\Validation\Rule;
 
 class ProposalVendorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:proposal.event');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,10 +25,6 @@ class ProposalVendorController extends Controller
      */
     public function index(Proposal $proposal)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return response()->json($proposal->vendors);
     }
 
@@ -53,10 +54,6 @@ class ProposalVendorController extends Controller
         ];
 
         $data = Validator::make($request->all(), $rules, $messages)->validate();
-
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
 
         if (isset($request->vendor_id)) {
             // Find an existing vendor
@@ -91,10 +88,6 @@ class ProposalVendorController extends Controller
      */
     public function destroy(Proposal $proposal, Vendor $vendor)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         if (!$vendor->proposals->contains($proposal)) {
             abort(404);
         }

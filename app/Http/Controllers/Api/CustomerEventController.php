@@ -11,6 +11,11 @@ use Carbon\Carbon;
 
 class CustomerEventController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:customer');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,10 +24,6 @@ class CustomerEventController extends Controller
      */
     public function index(Customer $customer)
     {
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return response()->json($customer->events->load('status'));
     }
 
@@ -35,13 +36,9 @@ class CustomerEventController extends Controller
     public function store(Customer $customer)
     {
         $data = request()->validate([
-            'date' => 'required|date',
+            'date' => 'required|date|after:now',
             'name' => 'required|string',
         ]);
-
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
 
         // Create event
         $event = new Event;

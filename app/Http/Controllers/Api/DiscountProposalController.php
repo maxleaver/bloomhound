@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use App\Proposal;
 use App\Discount;
 use App\Http\Controllers\Controller;
@@ -11,6 +10,11 @@ use Illuminate\Http\Request;
 
 class DiscountProposalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:proposal.event');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,10 +23,6 @@ class DiscountProposalController extends Controller
      */
     public function index(Proposal $proposal)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return response()->json($proposal->discounts);
     }
 
@@ -34,10 +34,6 @@ class DiscountProposalController extends Controller
      */
     public function store(Proposal $proposal)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $data = request()->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:fixed,percent|max:255',
@@ -61,10 +57,6 @@ class DiscountProposalController extends Controller
      */
     public function update(Proposal $proposal, Discount $discount)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         if ($discount->discountable_id !== $proposal->id) {
             abort(403);
         }
@@ -89,10 +81,6 @@ class DiscountProposalController extends Controller
      */
     public function destroy(Proposal $proposal, Discount $discount)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         if ($discount->discountable_id !== $proposal->id) {
             abort(404);
         }

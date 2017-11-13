@@ -102,7 +102,7 @@ class PostProposalsTest extends TestCase
     {
         $someOtherEvent = create('App\Event')->id;
         $this->createProposal($someOtherEvent)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

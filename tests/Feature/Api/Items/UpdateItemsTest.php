@@ -65,7 +65,7 @@ class UpdateItemsTest extends TestCase
         $itemInAnotherAccount = create('App\Item');
 
         $this->updateItem($itemInAnotherAccount->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

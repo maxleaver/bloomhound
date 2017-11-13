@@ -50,7 +50,7 @@ class GetItemsTest extends TestCase
         $someOtherItem = create('App\Item')->id;
 
         $this->getItems($someOtherItem)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use App\Event;
 use App\Proposal;
 use App\Http\Controllers\Controller;
@@ -11,6 +10,12 @@ use Illuminate\Http\Request;
 
 class ProposalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:event')->only(['store', 'update']);
+        $this->middleware('in_account:proposal.event')->only(['show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,10 +35,6 @@ class ProposalController extends Controller
      */
     public function store(Request $request, Event $event)
     {
-        if ($event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $event->active_proposal->duplicate();
 
         return response()->json($event->fresh()->active_proposal);
@@ -47,10 +48,6 @@ class ProposalController extends Controller
      */
     public function show(Proposal $proposal)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return new ProposalResource($proposal);
     }
 
@@ -64,10 +61,6 @@ class ProposalController extends Controller
     public function update(Event $event, Proposal $proposal)
     {
         if ($proposal->event->id !== $event->id) {
-            abort(403);
-        }
-
-        if ($event->account->id !== Auth::user()->account->id) {
             abort(403);
         }
 

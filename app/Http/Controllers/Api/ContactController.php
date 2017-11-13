@@ -9,6 +9,12 @@ use App\Http\Controllers\Controller;
 
 class ContactController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:contact')
+        ->except(['index', 'store']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -58,10 +64,6 @@ class ContactController extends Controller
      */
     public function show(Contact $contact)
     {
-        if ($contact->account->id !== Auth::user()->account->id) {
-            abort(404);
-        }
-
         return response()->json($contact);
     }
 
@@ -81,10 +83,6 @@ class ContactController extends Controller
             'phone' => 'nullable|string|max:255',
             'relationship' => 'nullable|string|max:255',
         ]);
-
-        if ($contact->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
 
         $contact->update($data);
     }

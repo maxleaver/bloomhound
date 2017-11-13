@@ -79,16 +79,14 @@ class PostProposalDeliveriesTest extends TestCase
     public function users_can_only_add_deliveries_to_proposals_in_their_account()
     {
         $someOtherProposal = create('App\Proposal')->id;
-
         $this->createDelivery($someOtherProposal)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */
     public function users_can_only_add_deliveries_to_existing_proposals()
     {
         $badId = 666;
-
         $this->createDelivery($badId)
             ->assertStatus(404);
     }

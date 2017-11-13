@@ -22,11 +22,11 @@ class GetFlowerVarietySourcesTest extends TestCase
         ]);
 
         $this->vendor = create('App\Vendor', [
-            'account_id' => $this->variety->flower->account->id
+            'account_id' => $this->variety->account->id
         ]);
 
         $this->sources = create('App\FlowerVarietySource', [
-        	'account_id' => $this->variety->flower->account->id,
+        	'account_id' => $this->variety->account->id,
         	'flower_variety_id' => $this->variety->id,
         	'vendor_id' => $this->vendor->id,
         ], 10);
@@ -35,9 +35,11 @@ class GetFlowerVarietySourcesTest extends TestCase
     /** @test */
     public function users_can_get_a_list_of_sources_for_a_flower_variety()
     {
-    	$anotherVariety = create('App\FlowerVariety');
+    	$anotherVariety = create('App\FlowerVariety', [
+            'account_id' => $this->variety->account->id,
+        ]);
     	$otherSources = create('App\FlowerVarietySource', [
-    		'account_id' => $this->variety->flower->account->id,
+    		'account_id' => $this->variety->account->id,
         	'flower_variety_id' => create('App\FlowerVariety')->id,
         	'vendor_id' => $this->vendor->id,
     	], 10);
@@ -59,7 +61,7 @@ class GetFlowerVarietySourcesTest extends TestCase
     	], 10);
 
         $this->getSources($someOtherVariety->id)
-    		->assertStatus(403);
+    		->assertStatus(404);
     }
 
     /** @test */
@@ -75,7 +77,7 @@ class GetFlowerVarietySourcesTest extends TestCase
 
         if ($signIn) {
             $this->signIn(create('App\User', [
-                'account_id' => $this->variety->flower->account->id,
+                'account_id' => $this->variety->account->id,
             ]));
         }
 

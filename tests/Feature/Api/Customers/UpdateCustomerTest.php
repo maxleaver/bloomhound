@@ -52,7 +52,7 @@ class UpdateCustomerTest extends TestCase
 
         $this->signIn($this->user)
             ->patchJson($this->url($customerInAnotherAccount->id), ['name' => 'a name'])
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

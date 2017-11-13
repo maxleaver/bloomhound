@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use App\Customer;
 use App\Http\Controllers\Controller;
 
 class ContactCustomerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:customer');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,10 +19,6 @@ class ContactCustomerController extends Controller
      */
     public function index(Customer $customer)
     {
-        if ($customer->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return response()->json($customer->contacts);
     }
 }

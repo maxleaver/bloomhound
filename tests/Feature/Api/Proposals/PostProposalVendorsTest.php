@@ -74,7 +74,7 @@ class PostProposalVendorsTest extends TestCase
         $proposalInAnotherAccount = create('App\Proposal')->id;
 
         $this->addVendor($proposalInAnotherAccount, $this->request)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

@@ -41,16 +41,14 @@ class GetProposalSetupsTest extends TestCase
     public function a_user_can_only_get_setups_for_a_proposal_in_their_account()
     {
         $someOtherProposal = create('App\Proposal');
-
         $this->getSetups($someOtherProposal->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_only_get_setups_for_an_existing_proposal()
     {
     	$badId = 123;
-
         $this->getSetups($badId)
             ->assertStatus(404);
     }

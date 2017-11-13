@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use App\Delivery;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 
 class DeliveryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:delivery');
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -17,10 +21,6 @@ class DeliveryController extends Controller
      */
     public function update(Delivery $delivery)
     {
-        if ($delivery->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $data = request()->validate([
             'address' => 'required|string',
             'description' => 'nullable|string',

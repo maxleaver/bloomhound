@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use App\Arrangement;
 use App\Discount;
 use App\Rules\IsLessThanValue;
@@ -10,6 +9,11 @@ use App\Http\Controllers\Controller;
 
 class ArrangementDiscountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:arrangement');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -18,10 +22,6 @@ class ArrangementDiscountController extends Controller
      */
     public function store(Arrangement $arrangement)
     {
-        if ($arrangement->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $data = request()->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:fixed,percent|max:255',
@@ -50,10 +50,6 @@ class ArrangementDiscountController extends Controller
      */
     public function destroy(Arrangement $arrangement, Discount $discount)
     {
-        if ($arrangement->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $discount->delete();
 
         return response()->json($arrangement->fresh()->load('discounts'));

@@ -9,6 +9,11 @@ use App\Http\Controllers\Controller;
 
 class ItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:item')->except('index', 'store');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -58,10 +63,6 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        if ($item->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return response()->json($item);
     }
 
@@ -73,10 +74,6 @@ class ItemController extends Controller
      */
     public function update(Item $item)
     {
-        if ($item->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $data = request()->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',

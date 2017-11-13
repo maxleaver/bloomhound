@@ -15,6 +15,11 @@ use Illuminate\Validation\Rule;
 
 class DeliveryProposalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:proposal.event');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,10 +28,6 @@ class DeliveryProposalController extends Controller
      */
     public function index(Proposal $proposal)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return response()->json($proposal->deliveries);
     }
 
@@ -39,10 +40,6 @@ class DeliveryProposalController extends Controller
      */
     public function store(Request $request, Proposal $proposal)
     {
-        if ($proposal->event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         Validator::make($request->all(), [
             'address' => 'required|string',
             'deliver_on' => 'required|date',

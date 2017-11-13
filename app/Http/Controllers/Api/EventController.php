@@ -11,6 +11,11 @@ use Carbon\Carbon;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:event')->only(['update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -76,10 +81,6 @@ class EventController extends Controller
             'name' => 'required|string|max:255',
             'date' => 'required|date',
         ]);
-
-        if ($event->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
 
         $event->update([
             'name' => $data['name'],

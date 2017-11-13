@@ -62,7 +62,7 @@ class GetProposalsTest extends TestCase
         $otherProposal = create('App\Proposal');
 
         $this->getProposals($otherProposal->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

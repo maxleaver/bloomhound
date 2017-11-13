@@ -13,6 +13,11 @@ use App\Http\Controllers\Controller;
 
 class FlowerVarietySourceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:flower_variety');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,10 +26,6 @@ class FlowerVarietySourceController extends Controller
      */
     public function index(FlowerVariety $flower_variety)
     {
-        if ($flower_variety->flower->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $sources = FlowerVarietySource::where([
             'account_id' => Auth::user()->account->id,
             'flower_variety_id' => $flower_variety->id,
@@ -42,10 +43,6 @@ class FlowerVarietySourceController extends Controller
      */
     public function store(FlowerVariety $flower_variety, StoreFlowerVarietySource $request)
     {
-        if ($flower_variety->flower->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $sources = array();
 
         DB::transaction(function () use ($flower_variety, $request, &$sources) {

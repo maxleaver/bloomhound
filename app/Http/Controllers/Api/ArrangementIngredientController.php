@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 
 class ArrangementIngredientController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:arrangement');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,10 +25,6 @@ class ArrangementIngredientController extends Controller
      */
     public function index(Arrangement $arrangement)
     {
-        if ($arrangement->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         return response()->json($arrangement->ingredients);
     }
 
@@ -43,10 +44,6 @@ class ArrangementIngredientController extends Controller
         ]);
 
         $accountId = Auth::user()->account->id;
-
-        if ($arrangement->account->id !== $accountId) {
-            abort(403);
-        }
 
         $ingredients = [];
         $idsByModel = [];
@@ -100,6 +97,49 @@ class ArrangementIngredientController extends Controller
         return response()->json($arrangement->fresh()->load('ingredients'));
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Arrangement  $arrangement
+     * @param  \App\ArrangementIngredient  $ingredient
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Arrangement $arrangement, ArrangementIngredient $ingredient)
+    {
+        $data = request()->validate([
+            'quantity' => 'required|numeric|min:0.01'
+        ]);
+
+        $ingredient->update($data);
+
+        return response()->json($arrangement->fresh()->load('ingredients'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  App\Arrangement              $arrangement
+     * @param  App\ArrangementIngredient    $ingredient
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Arrangement $arrangement, ArrangementIngredient $ingredient)
+    {
+        $ingredient->delete();
+
+        return response()->json($arrangement->fresh()->load('ingredients'));
+    }
+
     protected function getArrangeableClass($type)
     {
         switch ($type) {
@@ -125,56 +165,5 @@ class ArrangementIngredientController extends Controller
         });
 
         return count($inAnotherAccount) === 0;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Arrangement  $arrangement
-     * @param  \App\ArrangementIngredient  $ingredient
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Arrangement $arrangement, ArrangementIngredient $ingredient)
-    {
-        if ($arrangement->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
-        $data = request()->validate([
-            'quantity' => 'required|numeric|min:0.01'
-        ]);
-
-        $ingredient->update($data);
-
-        return response()->json($arrangement->fresh()->load('ingredients'));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  App\Arrangement              $arrangement
-     * @param  App\ArrangementIngredient    $ingredient
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Arrangement $arrangement, ArrangementIngredient $ingredient)
-    {
-        if ($arrangement->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
-        $ingredient->delete();
-
-        return response()->json($arrangement->fresh()->load('ingredients'));
     }
 }

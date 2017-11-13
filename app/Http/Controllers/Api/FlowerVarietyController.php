@@ -10,6 +10,12 @@ use App\Http\Controllers\Controller;
 
 class FlowerVarietyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('in_account:flower')->except('update');
+        $this->middleware('in_account:flower_variety')->only('update');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,10 +23,6 @@ class FlowerVarietyController extends Controller
      */
     public function index(Flower $flower)
     {
-        if ($flower->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $varieties = $flower->varieties->load('sources', 'sources.vendor', 'best_source');
         return response()->json($varieties);
     }
@@ -32,10 +34,6 @@ class FlowerVarietyController extends Controller
      */
     public function store(Flower $flower)
     {
-        if ($flower->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $data = request()->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -63,10 +61,6 @@ class FlowerVarietyController extends Controller
      */
     public function update(FlowerVariety $flower_variety)
     {
-        if ($flower_variety->account->id !== Auth::user()->account->id) {
-            abort(403);
-        }
-
         $data = request()->validate([
             'name' => 'required|string|max:255',
             'markup_id' => 'nullable|integer|exists:markups,id',

@@ -79,7 +79,7 @@ class UpdateProposalDiscountTest extends TestCase
     	]);
 
     	$this->updateDiscount($otherProposal->id, $otherDiscount->id, $this->request)
-    		->assertStatus(403);
+    		->assertStatus(404);
     }
 
     /** @test */

@@ -45,7 +45,7 @@ class DeleteProposalVendorsTest extends TestCase
         $someOtherProposal->vendors()->attach($vendor);
 
         $this->deleteVendor($someOtherProposal->id, $vendor->id)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */

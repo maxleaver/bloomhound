@@ -40,7 +40,7 @@ class GetFlowerVarietiesTest extends TestCase
         ], 10);
 
         $this->getVarieties($anotherFlower->id)
-    		->assertStatus(403);
+    		->assertStatus(404);
     }
 
     /** @test */

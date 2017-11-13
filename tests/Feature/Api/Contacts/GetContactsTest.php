@@ -11,16 +11,14 @@ class GetContactsTest extends TestCase
 
     protected $contacts;
     protected $customer;
-    protected $user;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = create('App\User');
-        $this->customer = create('App\Customer', ['account_id' => $this->user->account->id]);
+        $this->customer = create('App\Customer');
         $this->contacts = create('App\Contact', [
-            'account_id' => $this->user->account->id,
+            'account_id' => $this->customer->account->id,
             'customer_id' => $this->customer->id
         ], 3);
     }
@@ -30,8 +28,7 @@ class GetContactsTest extends TestCase
     {
     	$someOtherContact = create('App\Contact');
 
-        $this->signIn($this->user)
-            ->getJson('api/contacts')
+        $this->getAccountContacts()
     		->assertStatus(200)
     		->assertJsonFragment([$this->contacts[0]->email])
     		->assertJsonFragment([$this->contacts[1]->email])
@@ -39,18 +36,23 @@ class GetContactsTest extends TestCase
     }
 
     /** @test */
+    public function an_unauthenticated_user_cannot_get_contacts()
+    {
+        $this->getAccountContacts(false)
+            ->assertStatus(401);
+    }
+
+    /** @test */
     public function a_user_can_get_a_list_of_contacts_for_a_specific_customer()
     {
-    	$anotherCustomer = create('App\Customer', ['account_id' => $this->user->account->id]);
     	$otherContact = create('App\Contact', [
-    		'account_id' => $this->user->account->id,
-    		'customer_id' => $anotherCustomer->id
+    		'account_id' => $this->customer->account->id,
+    		'customer_id' => create('App\Customer', [
+                'account_id' => $this->customer->account->id
+            ])->id
     	]);
 
-    	$url = 'api/customers/' . $this->customer->id . '/contacts';
-
-    	$this->signIn($this->user)
-            ->getJson($url)
+        $this->getCustomerContacts($this->customer->id)
     		->assertStatus(200)
     		->assertJsonFragment([$this->contacts[0]->email])
     		->assertJsonFragment([$this->contacts[1]->email])
@@ -60,33 +62,65 @@ class GetContactsTest extends TestCase
     /** @test */
     public function a_user_can_only_get_contacts_for_customers_in_their_account()
     {
-        $anotherAccount = create('App\Account');
-        $anotherCustomer = create('App\Customer', ['account_id' => $anotherAccount->id]);
+        $anotherCustomer = create('App\Customer');
         $otherContacts = create('App\Contact', [
-            'account_id' => $anotherAccount->id,
+            'account_id' => $anotherCustomer->account->id,
             'customer_id' => $anotherCustomer->id,
         ]);
 
-        $url = 'api/customers/' . $anotherAccount->id . '/contacts';
-
-        $this->signIn($this->user)
-            ->getJson($url)
-            ->assertStatus(403);
+        $this->getCustomerContacts($anotherCustomer->id)
+            ->assertStatus(404);
     }
 
     /** @test */
     public function a_user_can_get_a_specific_contact()
     {
-        $this->signIn($this->user)
-            ->getJson('api/contacts/' . $this->contacts[0]->id)
+        $this->getContact($this->contacts[0]->id)
             ->assertStatus(200)
             ->assertJsonFragment([$this->contacts[0]->name]);
     }
 
     /** @test */
-    public function an_unauthenticated_user_cannot_get_contacts()
+    public function users_cannot_get_specific_contacts_in_other_accounts()
     {
-    	$this->getJson('api/contacts')
-    		->assertStatus(401);
+        $otherContact = create('App\Contact')->id;
+        $this->getContact($otherContact, false)
+            ->assertStatus(401);
+    }
+
+    protected function getAccountContacts($signIn = true)
+    {
+        $url = 'api/contacts';
+
+        $this->authenticate($signIn);
+
+        return $this->getJson($url);
+    }
+
+    protected function getCustomerContacts($id, $signIn = true)
+    {
+        $url = 'api/customers/' . $id . '/contacts';
+
+        $this->authenticate($signIn);
+
+        return $this->getJson($url);
+    }
+
+    protected function getContact($id, $signIn = true)
+    {
+        $url = 'api/contacts/' . $id;
+
+        $this->authenticate($signIn);
+
+        return $this->getJson($url);
+    }
+
+    protected function authenticate($signIn)
+    {
+        if ($signIn) {
+            $this->signIn(create('App\User', [
+                'account_id' => $this->customer->account->id,
+            ]));
+        }
     }
 }

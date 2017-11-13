@@ -49,7 +49,7 @@ class UpdateFlowerVarietyTest extends TestCase
         $varietyInAnotherAccount = create('App\FlowerVariety')->id;
 
         $this->updateVariety($varietyInAnotherAccount)
-            ->assertStatus(403);
+            ->assertStatus(404);
     }
 
     /** @test */
