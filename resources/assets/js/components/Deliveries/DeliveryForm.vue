@@ -55,11 +55,12 @@
         </b-field>
 
         <b-field label="Delivery Time">
-          <time-picker
-            :format="dateFormat"
-            hide-clear-button
-            v-model="deliveryTime"
-          ></time-picker>
+          <b-timepicker
+            placeholder="Click to select..."
+            icon="clock"
+            hour-format="12"
+            v-model="deliveryTime">
+          </b-timepicker>
         </b-field>
       </div>
     </div>
@@ -87,12 +88,8 @@
 </template>
 
 <script>
-import TimePicker from 'components/TimePicker';
-import moment from 'moment';
-
 export default {
   name: 'delivery-form',
-  components: { TimePicker },
   props: {
     form: Object,
     id: Number,
@@ -103,19 +100,13 @@ export default {
 
   data() {
     return {
-      dateFormat: 'hh:mm A',
-      deliveryTime: {
-        hh: '04',
-        mm: '00',
-        ss: '00',
-        A: 'PM',
-      },
+      deliveryTime: new Date(),
     };
   },
 
   created() {
     if (this.isUpdateForm) {
-      this.setTime();
+      this.deliveryTime = this.form.deliver_on;
     }
   },
 
@@ -135,19 +126,8 @@ export default {
 
   methods: {
     appendTimeToDate() {
-      const date = moment(this.form.deliver_on);
-      const hour = this.convertTo24Hour(this.deliveryTime.hh, this.deliveryTime.A);
-
-      date.hour(hour);
-      date.minute(this.deliveryTime.mm);
-      date.second(0);
-
-      this.form.deliver_on = date.utc().toDate();
-    },
-
-    convertTo24Hour(hour, ampm) {
-      const time = Number.parseInt(hour, 10);
-      return ampm === 'PM' ? time + 12 : time;
+      this.form.deliver_on.setHours(this.deliveryTime.getHours());
+      this.form.deliver_on.setMinutes(this.deliveryTime.getMinutes());
     },
 
     onSubmit() {
@@ -161,16 +141,6 @@ export default {
       } else {
         this.store.dispatch('delivery/submit', this.form.data());
       }
-    },
-
-    setTime() {
-      let hours = this.form.deliver_on.getHours();
-      const minutes = this.form.deliver_on.getMinutes();
-
-      hours = hours % 12 || 12;
-      this.deliveryTime.hh = hours < 10 ? `0${hours}` : hours;
-      this.deliveryTime.mm = minutes < 10 ? `0${minutes}` : minutes;
-      this.deliveryTime.A = hours >= 12 ? 'PM' : 'AM';
     },
   },
 };

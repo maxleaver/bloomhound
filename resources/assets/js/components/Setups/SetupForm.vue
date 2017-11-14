@@ -55,11 +55,12 @@
         </b-field>
 
         <b-field label="Setup Time">
-          <time-picker
-            :format="dateFormat"
-            hide-clear-button
-            v-model="setupTime"
-          ></time-picker>
+          <b-timepicker
+            placeholder="Click to select..."
+            icon="clock"
+            hour-format="12"
+            v-model="setupTime">
+          </b-timepicker>
         </b-field>
       </div>
     </div>
@@ -87,12 +88,8 @@
 </template>
 
 <script>
-import TimePicker from 'components/TimePicker';
-import moment from 'moment';
-
 export default {
   name: 'setup-form',
-  components: { TimePicker },
   props: {
     form: Object,
     id: Number,
@@ -103,19 +100,13 @@ export default {
 
   data() {
     return {
-      dateFormat: 'hh:mm A',
-      setupTime: {
-        hh: '04',
-        mm: '00',
-        ss: '00',
-        A: 'PM',
-      },
+      setupTime: new Date(),
     };
   },
 
   created() {
     if (this.isUpdateForm) {
-      this.setTime();
+      this.setupTime = this.form.setup_on;
     }
   },
 
@@ -135,19 +126,8 @@ export default {
 
   methods: {
     appendTimeToDate() {
-      const date = moment(this.form.setup_on);
-      const hour = this.convertTo24Hour(this.setupTime.hh, this.setupTime.A);
-
-      date.hour(hour);
-      date.minute(this.setupTime.mm);
-      date.second(0);
-
-      this.form.setup_on = date.utc().toDate();
-    },
-
-    convertTo24Hour(hour, ampm) {
-      const time = Number.parseInt(hour, 10);
-      return ampm === 'PM' ? time + 12 : time;
+      this.form.setup_on.setHours(this.setupTime.getHours());
+      this.form.setup_on.setMinutes(this.setupTime.getMinutes());
     },
 
     onSubmit() {
@@ -161,16 +141,6 @@ export default {
       } else {
         this.store.dispatch('setup/submit', this.form.data());
       }
-    },
-
-    setTime() {
-      let hours = this.form.setup_on.getHours();
-      const minutes = this.form.setup_on.getMinutes();
-
-      hours = hours % 12 || 12;
-      this.setupTime.hh = hours < 10 ? `0${hours}` : hours;
-      this.setupTime.mm = minutes < 10 ? `0${minutes}` : minutes;
-      this.setupTime.A = hours >= 12 ? 'PM' : 'AM';
     },
   },
 };
