@@ -13,12 +13,30 @@
 
   <div class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item" href="{{ route('customers.index') }}">Customers</a>
-      <a class="navbar-item" href="{{ route('contacts.index') }}">Contacts</a>
-      <a class="navbar-item" href="{{ route('events.index') }}">Events</a>
-      <a class="navbar-item" href="{{ route('vendors.index') }}">Vendors</a>
-      <a class="navbar-item" href="{{ route('flowers.index') }}">Flowers</a>
-      <a class="navbar-item" href="{{ route('items.index') }}">Items</a>
+      <a href="{{ route('customers.index') }}"
+        class="navbar-item {{ request()->is('customers*') ? 'is-active' : '' }}">
+        Customers
+      </a>
+      <a href="{{ route('contacts.index') }}"
+        class="navbar-item {{ request()->is('contacts*') ? 'is-active' : '' }}" >
+        Contacts
+      </a>
+      <a href="{{ route('events.index') }}"
+        class="navbar-item {{ request()->is('events*') ? 'is-active' : '' }}" >
+        Events
+      </a>
+      <a href="{{ route('vendors.index') }}"
+        class="navbar-item {{ request()->is('vendors*') ? 'is-active' : '' }}" >
+        Vendors
+      </a>
+      <a href="{{ route('flowers.index') }}"
+        class="navbar-item {{ request()->is('flowers*') ? 'is-active' : '' }}" >
+        Flowers
+      </a>
+      <a href="{{ route('items.index') }}"
+        class="navbar-item {{ request()->is('items*') ? 'is-active' : '' }}" >
+        Items
+      </a>
     </div>
 
     <div class="navbar-end">
@@ -28,14 +46,15 @@
         </a>
 
         <div class="navbar-dropdown is-right">
-          <a class="navbar-item" href="{{ route('my.profile') }}">Profile</a>
-          <a class="navbar-item" href="{{ route('account.settings') }}">Account Settings</a>
+          <a href="{{ route('my.profile') }}" class="navbar-item" >Profile</a>
+          <a href="{{ route('account.settings') }}" class="navbar-item" >Account Settings</a>
 
           <hr class="navbar-divider">
 
-          <a class="navbar-item" href="{{ url('/logout') }}"
+          <a href="{{ url('/logout') }}"
+            class="navbar-item"
             onclick="event.preventDefault();
-                     document.getElementById('logout-form').submit();">
+            document.getElementById('logout-form').submit();">
             Logout
           </a>
         </div>
