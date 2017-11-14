@@ -26,7 +26,6 @@
       default-sort="name"
       default-sort-direction="asc"
       :data="vendors"
-      :focusable="true"
       :hoverable="true"
       :loading="false"
       :mobile-cards="true"

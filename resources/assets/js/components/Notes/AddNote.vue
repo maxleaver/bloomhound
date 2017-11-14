@@ -1,19 +1,20 @@
 <template>
   <form
     method="POST"
-    @submit.prevent="onSubmit"
     @keydown="form.errors.clear($event.target.name)"
+    @submit.prevent="onSubmit"
   >
     <b-field
       label="Add a Note"
-      :type="form.errors.has('text') ? 'is-danger' : ''"
       :message="form.errors.has('text') ? form.errors.get('text') : ''"
+      :type="form.errors.has('text') ? 'is-danger' : ''"
     >
       <b-input
+        name="text"
+        required
         type="textarea"
         v-model="form.text"
         :disabled="isSubmitting"
-        required
       ></b-input>
     </b-field>
 

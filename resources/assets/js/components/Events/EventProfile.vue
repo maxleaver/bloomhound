@@ -5,7 +5,7 @@
     </section>
 
     <div class="container">
-      <card-collapse title="Vendors">
+      <card-collapse :title="vendorTitle">
         <vendors :store="store"></vendors>
       </card-collapse>
 
@@ -145,6 +145,10 @@ export default {
 
     setupTitle: function () {
       return `${this.store.state.setup.records.length} Setups`;
+    },
+
+    vendorTitle: function () {
+      return `${this.store.state.vendor.records.length} Vendors`;
     },
   },
 

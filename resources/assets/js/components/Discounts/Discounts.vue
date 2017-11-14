@@ -6,7 +6,6 @@
       default-sort="name"
       :data="discounts"
       :default-sort-direction="defaultSortDirection"
-      :focusable="true"
       :mobile-cards="hasMobileCards"
     >
       <template slot-scope="props">

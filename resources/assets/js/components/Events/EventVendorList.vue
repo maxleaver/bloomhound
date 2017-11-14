@@ -30,7 +30,6 @@
       default-sort="name"
       :data="items"
       :default-sort-direction="defaultSortDirection"
-      :focusable="true"
       :hoverable="true"
       :loading="isLoading"
       :mobile-cards="hasMobileCards"

@@ -27,7 +27,6 @@
       detailed
       :data="setups"
       :default-sort-direction="defaultSortDirection"
-      :focusable="true"
       :hoverable="true"
       :loading="isLoading"
       :mobile-cards="hasMobileCards"

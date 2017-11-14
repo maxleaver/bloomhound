@@ -39,7 +39,6 @@
       detailed
       :data="items"
       :default-sort-direction="defaultSortDirection"
-      :focusable="true"
       :hoverable="true"
       :mobile-cards="hasMobileCards"
     >

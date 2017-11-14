@@ -2,7 +2,6 @@
   <div>
     <b-table
       :data="this.sourceList"
-      :focusable="true"
       :mobile-cards="hasMobileCards"
     >
       <template slot-scope="props">
