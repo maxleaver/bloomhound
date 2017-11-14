@@ -1,19 +1,23 @@
 <template>
-  <div>
-    <note
-      v-for="(item, index) in items"
-      :key="item.id"
-      :id="item.id"
-      :index="index"
-      :submitted_by="item.user.name"
-      :created_at="item.created_at"
-      :text="item.text"
-      @deleted="remove"
-      @updated="update"
-    ></note>
+  <div class="section">
+    <div class="container">
+      <div class="box">
+        <h1 class="title is-size-4">Notes</h1>
 
-    <div class="box">
-      <add-note @created="add" :url="path"></add-note>
+        <note
+          v-for="(item, index) in items"
+          :key="item.id"
+          :id="item.id"
+          :index="index"
+          :submitted_by="item.user.name"
+          :created_at="item.created_at"
+          :text="item.text"
+          @deleted="remove"
+          @updated="update"
+        ></note>
+
+        <add-note @created="add" :url="path"></add-note>
+      </div>
     </div>
   </div>
 </template>

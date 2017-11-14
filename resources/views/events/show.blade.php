@@ -8,10 +8,5 @@
 	:vendors="{{ $vendors }}"
 ></event-profile>
 
-<section class="section">
-  <div class="container">
-    <h1 class="title">Notes</h1>
-    <note-list></note-list>
-  </div>
-</section>
+<note-list></note-list>
 @endsection
