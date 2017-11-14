@@ -80,7 +80,7 @@
 
     <div v-else>
       <button
-        class="button is-link is-pulled-right"
+        class="button is-text is-pulled-right"
         @click="showForm = !showForm"
       >Edit</button>
 

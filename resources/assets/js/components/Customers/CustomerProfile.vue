@@ -5,7 +5,10 @@
         <h1 class="title">Profile</h1>
       </div>
       <div class="level-right">
-        <button class="button is-link" @click="showForm = !showForm">{{ editButtonText }}</button>
+        <button
+          class="button is-text"
+          @click="showForm = !showForm"
+        >{{ editButtonText }}</button>
       </div>
     </div>
 

@@ -6,16 +6,16 @@
     </section>
 
     <footer class="modal-card-foot">
-        <button
-          class="button is-danger"
-          @click="store.dispatch('arrangement/delete')"
-        >Yep, I'm sure!</button>
+      <button
+        class="button is-danger"
+        @click="store.dispatch('arrangement/delete')"
+      >Yep, I'm sure!</button>
 
-        <button
-          class="button"
-          type="button"
-          @click="store.commit('arrangement/hideDeleteConfirmation')"
-        >Nevermind</button>
+      <button
+        class="button"
+        type="button"
+        @click="store.commit('arrangement/hideDeleteConfirmation')"
+      >Nevermind</button>
     </footer>
   </div>
 </template>

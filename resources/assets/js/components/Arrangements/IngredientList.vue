@@ -88,7 +88,7 @@
     </b-table>
 
     <button
-      class="button is-link"
+      class="button is-text"
       type="button"
       @click="store.commit('arrangement/toggleIngredientForm')"
       v-if="!showIngredientForm"

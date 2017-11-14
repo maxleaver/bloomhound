@@ -39,7 +39,7 @@
             autofocus
           />
           <span class="icon is-medium is-left">
-            <i class="fa fa-envelope"></i>
+            <i class="mdi mdi-email"></i>
           </span>
 
           @if ($errors->has('email'))
@@ -62,7 +62,7 @@
             autofocus
           />
           <span class="icon is-medium is-left">
-            <i class="fa fa-lock"></i>
+            <i class="mdi mdi-lock"></i>
           </span>
 
           @if ($errors->has('password'))

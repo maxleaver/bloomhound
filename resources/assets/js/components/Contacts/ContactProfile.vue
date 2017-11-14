@@ -8,7 +8,7 @@
           </div>
           <div class="level-right">
             <button
-              class="button is-link"
+              class="button is-text"
               @click="showForm = !showForm"
             >{{ editButtonText }}</button>
           </div>

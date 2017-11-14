@@ -37,10 +37,6 @@
           :onSubmit="onSubmitDiscount"
         ></discounts>
       </card-collapse>
-
-      <card-collapse title="Payment History">
-        <h1 class="title">Payment history will go here...</h1>
-      </card-collapse>
     </div>
 
     <section class="section" v-if="store.state.showPrices">
@@ -54,6 +50,12 @@
           Tax: ${{ toTwoDigits(store.state.proposal.tax) }}<br />
           <strong>Total: ${{ toTwoDigits(store.state.proposal.total) }}</strong>
         </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Invoices will go here...</h1>
       </div>
     </section>
   </div>

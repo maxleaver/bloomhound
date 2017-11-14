@@ -14,7 +14,7 @@
         <b-field label="Customer" v-if="showCustomerList">
           <b-select
             placeholder="Select a customer"
-            icon="person"
+            icon="account"
             v-model="form.customer_id"
             expanded
             required
@@ -109,7 +109,13 @@
       </section>
 
       <footer class="modal-card-foot">
-        <button class="button" type="button" @click="$parent.close()" :disabled="isSubmitting">Close</button>
+        <button
+          class="button"
+          type="button"
+          @click="$parent.close()"
+          :disabled="isSubmitting"
+        >Close</button>
+
         <button
           class="button is-primary"
           type="submit"

@@ -9,9 +9,7 @@
       <div v-if="path" class="account_logo image is-128x128">
         <img v-bind:src="path" v-bind:alt="name">
         <span class="logo-change-prompt">
-        <b-icon
-          icon="camera_alt"
-          size="is-medium">
+        <b-icon icon="camera" size="is-large">
         </b-icon>
         Change Logo
         </span>
@@ -21,10 +19,7 @@
         <div class="content has-text-centered is-clipped is-vcentered">
           <p class="is-size-7 is-marginless">Drop your logo here</p>
           <p class="is-marginless">
-            <b-icon
-              icon="file_upload"
-              size="is-large">
-            </b-icon>
+            <b-icon icon="upload" size="is-large"></b-icon>
           </p>
           <p class="is-size-7 is-marginless">or click to upload</p>
         </div>

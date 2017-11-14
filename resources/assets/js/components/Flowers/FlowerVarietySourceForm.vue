@@ -31,7 +31,10 @@
       </div>
 
       <div class="control">
-        <button class="button" @click.prevent="toggleForm">
+        <button
+          class="button"
+          @click.prevent="toggleForm"
+        >
           Nevermind
         </button>
       </div>

@@ -59,7 +59,13 @@
       </section>
 
       <footer class="modal-card-foot">
-        <button class="button" type="button" @click="$parent.close()" :disabled="isSubmitting">Close</button>
+        <button
+          class="button"
+          type="button"
+          @click="$parent.close()"
+          :disabled="isSubmitting"
+        >Close</button>
+
         <button
           class="button is-primary"
           type="submit"

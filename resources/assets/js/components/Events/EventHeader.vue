@@ -26,7 +26,7 @@
           <b-field label="Select a Date">
             <b-datepicker
               v-model="form.date"
-              icon="today"
+              icon="calendar-today"
             ></b-datepicker>
           </b-field>
         </div>
@@ -92,8 +92,11 @@
             </b-field>
 
             <b-field>
-              <button class="button" @click="store.dispatch('addVersion')">
-                <b-icon icon="add"></b-icon>
+              <button
+                class="button"
+                @click="store.dispatch('addVersion')"
+              >
+                <b-icon icon="plus"></b-icon>
                 <span>New Version</span>
               </button>
             </b-field>

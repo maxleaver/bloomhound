@@ -11,11 +11,11 @@
 
       <div class="level-right">
         <p class="level-item">
-          <button class="button is-success is-pulled-right"
-            @click="isModalActive = true">
-            <span class="icon is-small">
-              <i class="fa fa-plus"></i>
-            </span>
+          <button
+            class="button is-success is-pulled-right"
+            @click="isModalActive = true"
+          >
+            <b-icon icon="plus"></b-icon>
             <span>Add a Vendor</span>
           </button>
         </p>

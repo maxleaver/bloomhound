@@ -11,11 +11,11 @@
 
       <div class="level-right">
         <p class="level-item">
-          <button class="button is-success is-pulled-right"
-            @click="store.commit('delivery/toggleForm')">
-            <span class="icon is-small">
-              <i class="fa fa-plus"></i>
-            </span>
+          <button
+            class="button is-success is-pulled-right"
+            @click="store.commit('delivery/toggleForm')"
+          >
+            <b-icon icon="plus"></b-icon>
             <span>Add a Delivery</span>
           </button>
         </p>

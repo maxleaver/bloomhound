@@ -140,7 +140,7 @@
     <div v-else>
       <div>
         <button
-          class="button is-link is-pulled-right"
+          class="button is-text is-pulled-right"
           @click="showForm = !showForm"
         >Edit</button>
         <h1 class="title">{{ form.name }} <b-tag>{{ item.type.name }}</b-tag></h1>
