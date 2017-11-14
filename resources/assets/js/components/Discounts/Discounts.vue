@@ -4,9 +4,9 @@
 
     <b-table
       default-sort="name"
-      focusable="true"
       :data="discounts"
       :default-sort-direction="defaultSortDirection"
+      :focusable="true"
       :mobile-cards="hasMobileCards"
     >
       <template slot-scope="props">

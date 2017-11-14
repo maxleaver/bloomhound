@@ -25,10 +25,10 @@
     <b-table
       default-sort="setup_on"
       detailed
-      focusable="true"
-      hoverable="true"
       :data="setups"
       :default-sort-direction="defaultSortDirection"
+      :focusable="true"
+      :hoverable="true"
       :loading="isLoading"
       :mobile-cards="hasMobileCards"
     >
@@ -65,7 +65,7 @@
           <div class="content has-text-grey has-text-centered">
             <p>
               <b-icon
-                icon="sentiment_very_dissatisfied"
+                icon="emoticon-sad"
                 size="is-large">
               </b-icon>
             </p>

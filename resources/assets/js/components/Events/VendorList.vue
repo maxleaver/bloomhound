@@ -25,9 +25,9 @@
     <b-table
       default-sort="name"
       default-sort-direction="asc"
-      focusable="true"
-      hoverable="true"
       :data="vendors"
+      :focusable="true"
+      :hoverable="true"
       :loading="false"
       :mobile-cards="true"
     >
@@ -52,7 +52,7 @@
           <div class="content has-text-grey has-text-centered">
             <p>
               <b-icon
-                icon="sentiment_very_dissatisfied"
+                icon="emoticon-sad"
                 size="is-large">
               </b-icon>
             </p>
