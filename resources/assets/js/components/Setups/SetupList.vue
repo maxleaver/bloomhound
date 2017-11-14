@@ -25,6 +25,8 @@
     <b-table
       default-sort="setup_on"
       detailed
+      focusable="true"
+      hoverable="true"
       :data="setups"
       :default-sort-direction="defaultSortDirection"
       :loading="isLoading"

@@ -11,12 +11,14 @@
     </nav>
 
     <b-table
+      default-sort="date"
+      detailed
+      focusable="true"
+      hoverable="true"
       :data="items"
       :default-sort-direction="defaultSortDirection"
-      :mobile-cards="hasMobileCards"
-      default-sort="date"
       :loading="isLoading"
-      detailed
+      :mobile-cards="hasMobileCards"
     >
       <template slot-scope="props">
         <b-table-column field="name" label="Name" sortable>

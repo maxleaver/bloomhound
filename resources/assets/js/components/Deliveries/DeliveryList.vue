@@ -25,6 +25,8 @@
     <b-table
       default-sort="deliver_on"
       detailed
+      focusable="true"
+      hoverable="true"
       :data="deliveries"
       :default-sort-direction="defaultSortDirection"
       :loading="isLoading"

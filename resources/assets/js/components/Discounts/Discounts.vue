@@ -4,6 +4,7 @@
 
     <b-table
       default-sort="name"
+      focusable="true"
       :data="discounts"
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"

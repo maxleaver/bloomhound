@@ -26,12 +26,14 @@
     </b-modal>
 
     <b-table
+      default-sort="name"
+      focusable="true"
+      hoverable="true"
       :data="items"
       :default-sort-direction="defaultSortDirection"
-      :mobile-cards="hasMobileCards"
-      default-sort="name"
-      @click="onClick"
       :loading="isLoading"
+      :mobile-cards="hasMobileCards"
+      @click="onClick"
     >
       <template slot-scope="props">
         <b-table-column field="name" label="Name" sortable>

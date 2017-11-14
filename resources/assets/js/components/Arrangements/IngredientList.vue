@@ -4,6 +4,8 @@
 
     <b-table
       default-sort="name"
+      focusable="true"
+      hoverable="true"
       :data="ingredients"
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"

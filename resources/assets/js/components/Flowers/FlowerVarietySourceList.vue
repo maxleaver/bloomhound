@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-table
+      focusable="true"
       :data="this.sourceList"
       :mobile-cards="hasMobileCards"
     >

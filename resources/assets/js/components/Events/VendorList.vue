@@ -25,6 +25,8 @@
     <b-table
       default-sort="name"
       default-sort-direction="asc"
+      focusable="true"
+      hoverable="true"
       :data="vendors"
       :loading="false"
       :mobile-cards="true"

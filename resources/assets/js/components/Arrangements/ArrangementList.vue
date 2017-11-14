@@ -37,6 +37,8 @@
     <b-table
       default-sort="name"
       detailed
+      focusable="true"
+      hoverable="true"
       :data="items"
       :default-sort-direction="defaultSortDirection"
       :mobile-cards="hasMobileCards"
