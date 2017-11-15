@@ -17,7 +17,7 @@ class PostVendorsTest extends TestCase
         parent::setUp();
 
         $this->account = create('App\Account');
-        $this->request = ['name' => 'Vendor Name'];
+        $this->request = make('App\Vendor')->toArray();
     }
 
     /** @test */
@@ -27,7 +27,11 @@ class PostVendorsTest extends TestCase
 
         $this->createVendor()
     		->assertStatus(200)
-    		->assertJsonFragment([$this->request['name']]);
+    		->assertJsonFragment([$this->request['name']])
+            ->assertJsonFragment([$this->request['address']])
+            ->assertJsonFragment([$this->request['email']])
+            ->assertJsonFragment([$this->request['phone']])
+            ->assertJsonFragment([$this->request['website']]);
 
     	$this->assertEquals($this->account->vendors()->count(), 1);
     }
@@ -39,6 +43,15 @@ class PostVendorsTest extends TestCase
 
         $this->createVendor()
             ->assertSessionHasErrors('name');
+    }
+
+    /** @test */
+    public function the_email_must_be_in_a_valid_format()
+    {
+        $this->request['email'] = 'test';
+
+        $this->createVendor()
+            ->assertSessionHasErrors('email');
     }
 
     /** @test */
