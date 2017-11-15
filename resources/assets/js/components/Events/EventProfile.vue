@@ -5,42 +5,62 @@
     </section>
 
     <div class="container">
-      <card-collapse :title="vendorTitle">
-        <vendors :store="store"></vendors>
-      </card-collapse>
+      <b-tabs position="is-centered" type="is-boxed" v-model="activeTab">
+        <b-tab-item icon="worker" label="Vendors">
+          <section class="section">
+            <vendors :store="store"></vendors>
+          </section>
+        </b-tab-item>
 
-      <card-collapse :title="arrangementTitle">
-        <arrangement-list :store="store"></arrangement-list>
-      </card-collapse>
+        <b-tab-item icon="flower" label="Arrangements">
+          <section class="section">
+            <arrangement-list :store="store"></arrangement-list>
+          </section>
+        </b-tab-item>
 
-      <card-collapse :title="deliveryTitle">
-        <deliveries
-          :store="store"
-          :timezone="timezone"
-        ></deliveries>
-      </card-collapse>
+        <b-tab-item icon="truck-delivery" label="Deliveries">
+          <section class="section">
+            <deliveries
+              :store="store"
+              :timezone="timezone"
+            ></deliveries>
+          </section>
+        </b-tab-item>
 
-      <card-collapse :title="setupTitle">
-        <setups
-          :store="store"
-          :timezone="timezone"
-        ></setups>
-      </card-collapse>
+        <b-tab-item icon="wrench" label="Setups">
+          <section class="section">
+            <setups
+              :store="store"
+              :timezone="timezone"
+            ></setups>
+          </section>
+        </b-tab-item>
 
-      <card-collapse :title="discountTitle">
-        <discounts
-          :discounts="store.state.discount.records"
-          :form="store.state.discount.form"
-          :id="store.state.proposal.id"
-          :isSubmitting="store.state.discount.isSubmitting"
-          :onDelete="onDeleteDiscount"
-          :onSubmit="onSubmitDiscount"
-        ></discounts>
-      </card-collapse>
+        <b-tab-item icon="sale" label="Discounts">
+          <section class="section">
+            <discounts
+              :discounts="store.state.discount.records"
+              :form="store.state.discount.form"
+              :id="store.state.proposal.id"
+              :isSubmitting="store.state.discount.isSubmitting"
+              :onDelete="onDeleteDiscount"
+              :onSubmit="onSubmitDiscount"
+            ></discounts>
+          </section>
+        </b-tab-item>
+
+        <b-tab-item icon="settings" label="Settings">
+          <section class="section">
+            <settings :store="store"></settings>
+          </section>
+        </b-tab-item>
+      </b-tabs>
     </div>
 
     <section class="section" v-if="store.state.showPrices">
       <div class="container">
+        <hr>
+
         <div class="has-text-right content">
           Arrangements: ${{ toTwoDigits(arrangementSubtotal) }}<br />
           Delivery: ${{ toTwoDigits(deliverySubtotal) }}<br />
@@ -52,23 +72,17 @@
         </div>
       </div>
     </section>
-
-    <section class="section">
-      <div class="container">
-        <h1 class="title">Invoices will go here...</h1>
-      </div>
-    </section>
   </div>
 </template>
 
 <script>
 import moment from 'moment-timezone';
 import ArrangementList from 'components/Arrangements/ArrangementList';
-import CardCollapse from 'components/CardCollapse';
 import Deliveries from 'components/Deliveries/Deliveries';
 import Discounts from 'components/Discounts/Discounts';
 import EventHeader from 'components/Events/EventHeader';
 import Vendors from 'components/Events/Vendors';
+import Settings from 'components/Events/Settings';
 import Setups from 'components/Setups/Setups';
 import eventStore from '../../stores/eventStore';
 
@@ -76,10 +90,10 @@ export default {
   name: 'event-profile',
   components: {
     ArrangementList,
-    CardCollapse,
     Deliveries,
     Discounts,
     EventHeader,
+    Settings,
     Setups,
     Vendors,
   },
@@ -93,6 +107,7 @@ export default {
 
   data() {
     return {
+      activeTab: 0,
       arrangements: this.proposal.arrangements,
       deliveries: this.proposal.deliveries,
       setups: this.proposal.setups,
@@ -115,16 +130,8 @@ export default {
       return this.store.getters['arrangement/subtotal'];
     },
 
-    arrangementTitle: function () {
-      return `${this.store.state.arrangement.records.length} Arrangements`;
-    },
-
     costToggleText: function () {
       return this.showCosts ? 'Show Costs' : 'Hide Costs';
-    },
-
-    deliveryTitle: function () {
-      return `${this.store.state.delivery.records.length} Deliveries`;
     },
 
     deliverySubtotal: function () {
@@ -135,20 +142,8 @@ export default {
       return this.store.getters['discount/subtotal'];
     },
 
-    discountTitle: function () {
-      return `${this.store.state.discount.records.length} Discounts`;
-    },
-
     setupSubtotal: function () {
       return this.store.getters['setup/subtotal'];
-    },
-
-    setupTitle: function () {
-      return `${this.store.state.setup.records.length} Setups`;
-    },
-
-    vendorTitle: function () {
-      return `${this.store.state.vendor.records.length} Vendors`;
     },
   },
 

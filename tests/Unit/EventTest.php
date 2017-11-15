@@ -31,9 +31,9 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_belongs_to_a_status()
+    public function an_event_belongs_to_an_account()
     {
-        $this->assertInstanceOf('App\EventStatus', $this->event->status);
+        $this->assertInstanceOf('App\Account', $this->event->account);
     }
 
     /** @test */
@@ -43,13 +43,7 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_belongs_to_an_account()
-    {
-        $this->assertInstanceOf('App\Account', $this->event->account);
-    }
-
-    /** @test */
-    public function an_event_can_have_many_notes()
+    public function an_event_has_many_notes()
     {
         create('App\Note', [
             'user_id' => create('App\User', ['account_id' => $this->event->account->id]),
@@ -62,7 +56,7 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function an_event_can_have_many_proposals()
+    public function an_event_has_many_proposals()
     {
         create('App\Proposal', [
             'event_id' => $this->event->id,
@@ -101,5 +95,11 @@ class EventTest extends TestCase
         $this->event->fresh()->setActiveProposal($firstProposal);
         $this->assertTrue($firstProposal->isActive);
         $this->assertFalse($secondProposal->isActive);
+    }
+
+    /** @test */
+    public function an_event_belongs_to_a_status()
+    {
+        $this->assertInstanceOf('App\EventStatus', $this->event->status);
     }
 }

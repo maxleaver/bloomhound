@@ -23,11 +23,6 @@ class Event extends Model
     protected $hidden = ['account_id'];
     protected $guarded = ['id', 'account_id', 'created_at', 'updated_at'];
 
-    public function setActiveProposal(Proposal $proposal)
-    {
-        $this->update(['active_proposal_id' => $proposal->id]);
-    }
-
 	public function account()
     {
         return $this->belongsTo('App\Account');
@@ -51,5 +46,10 @@ class Event extends Model
     public function status()
     {
         return $this->belongsTo('App\EventStatus');
+    }
+
+    public function setActiveProposal(Proposal $proposal)
+    {
+        $this->update(['active_proposal_id' => $proposal->id]);
     }
 }
