@@ -34,14 +34,13 @@ class ArrangeableTypeSettingController extends Controller
         $rules = [
             '*.arrangeable_type_id' => 'required|integer|exists:arrangeable_types,id',
             '*.markup_id' => 'required|integer|exists:markups,id',
-            '*.markup_value' => 'nullable|numeric',
         ];
 
-        foreach ($request->all() as $index => $entry) {
-            if (isset($exists['markup_value']) || array_key_exists('markup_value', $entry)) {
-                $rules[$index . '.markup_value'] = [
-                    new \App\Rules\RequiresMarkupValue($entry['markup_id']),
-                ];
+        // Add rules to markup_value field for markups that require entry
+        $valueRequired = \App\Markup::where('allow_entry', true)->pluck('id')->toArray();
+        foreach($request->all() as $index => $entry) {
+            if (in_array($entry['markup_id'], $valueRequired)) {
+                $rules[$index . '.markup_value'] = 'required|numeric|min:0.1';
             }
         }
 

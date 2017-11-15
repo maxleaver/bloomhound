@@ -23,6 +23,7 @@
       :type="form.errors.has('markup_value') ? 'is-danger' : ''"
     >
       <b-input
+        step="any"
         type="number"
         v-model="form.markup_value"
         :disabled="isSubmitting"

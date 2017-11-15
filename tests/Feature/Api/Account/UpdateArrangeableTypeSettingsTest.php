@@ -22,22 +22,16 @@ class UpdateArrangeableTypeSettingsTest extends TestCase
         $this->settings = create('App\ArrangeableTypeSetting', [
             'account_id' => $this->account->id,
             'markup_id' => $this->markup->id,
-        ], 4);
+        ], 2);
     }
 
     /** @test */
     public function a_user_can_update_arrangeable_type_settings()
     {
-        $otherMarkup = create('App\Markup');
+        $otherMarkup = create('App\Markup', ['allow_entry' => false])->id;
         $request = [
-            [
-                'arrangeable_type_id' => $this->settings[0]->type->id,
-                'markup_id' => $otherMarkup->id,
-            ],
-            [
-                'arrangeable_type_id' => $this->settings[1]->type->id,
-                'markup_id' => $otherMarkup->id,
-            ]
+            $this->createSetting($this->settings[0]->type->id, $otherMarkup),
+            $this->createSetting($this->settings[1]->type->id, $otherMarkup),
         ];
 
         $this->assertEquals($this->markup->id, $this->settings[0]->markup->id);
@@ -46,20 +40,16 @@ class UpdateArrangeableTypeSettingsTest extends TestCase
         $this->updateSettings($request)
             ->assertStatus(200);
 
-        $this->assertEquals($otherMarkup->id, $this->settings[0]->fresh()->markup->id);
-        $this->assertEquals($otherMarkup->id, $this->settings[1]->fresh()->markup->id);
+        $this->assertEquals($otherMarkup, $this->settings[0]->fresh()->markup->id);
+        $this->assertEquals($otherMarkup, $this->settings[1]->fresh()->markup->id);
     }
 
     /** @test */
     public function a_user_can_provide_a_value_for_markups_that_support_an_amount()
     {
-        $otherMarkup = create('App\Markup', ['allow_entry' => true]);
+        $newMarkup = create('App\Markup', ['allow_entry' => true])->id;
         $request = [
-            [
-                'arrangeable_type_id' => $this->settings[0]->type->id,
-                'markup_id' => $otherMarkup->id,
-                'markup_value' => 10,
-            ],
+            $this->createSetting($this->settings[0]->type->id, $newMarkup, 10),
         ];
 
         $this->assertNotEquals($this->settings[0]->markup_value, 10);
@@ -71,19 +61,27 @@ class UpdateArrangeableTypeSettingsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_must_provide_a_value_if_the_markup_requires_it()
+    public function a_value_is_required_if_the_markup_allows_value_entry()
     {
-        $otherMarkup = create('App\Markup', ['allow_entry' => true]);
+        $newMarkup = create('App\Markup', ['allow_entry' => true])->id;
         $request = [
-            [
-                'arrangeable_type_id' => $this->settings[0]->type->id,
-                'markup_id' => $otherMarkup->id,
-                'markup_value' => null,
-            ],
+            $this->createSetting($this->settings[0]->type->id, $newMarkup, null),
         ];
 
         $this->updateSettings($request)
-            ->assertStatus(422);
+            ->assertSessionHasErrors('0.markup_value');
+    }
+
+    /** @test */
+    public function a_markup_value_must_be_greater_than_zero()
+    {
+        $newMarkup = create('App\Markup', ['allow_entry' => true])->id;
+        $request = [
+            $this->createSetting($this->settings[0]->type->id, $newMarkup, 0),
+        ];
+
+        $this->updateSettings($request)
+            ->assertSessionHasErrors('0.markup_value');
     }
 
     /** @test */
@@ -91,14 +89,11 @@ class UpdateArrangeableTypeSettingsTest extends TestCase
     {
         $badSettingId = 123;
         $request = [
-            [
-                'arrangeable_type_id' => $badSettingId,
-                'markup_id' => create('App\Markup')->id,
-            ]
+            $this->createSetting($badSettingId, create('App\Markup')->id),
         ];
 
         $this->updateSettings($request)
-            ->assertStatus(422);
+            ->assertSessionHasErrors('0.arrangeable_type_id');
     }
 
     /** @test */
@@ -106,14 +101,11 @@ class UpdateArrangeableTypeSettingsTest extends TestCase
     {
         $badMarkupId = 123;
         $request = [
-            [
-                'arrangeable_type_id' => $this->settings[0]->type->id,
-                'markup_id' => $badMarkupId,
-            ]
+            $this->createSetting($this->settings[0]->type->id, $badMarkupId),
         ];
 
         $this->updateSettings($request)
-            ->assertStatus(422);
+            ->assertSessionHasErrors('0.markup_id');
     }
 
     /** @test */
@@ -121,17 +113,25 @@ class UpdateArrangeableTypeSettingsTest extends TestCase
     {
         $otherMarkup = create('App\Markup')->id;
         $request = [
-            [
-                'arrangeable_type_id' => $this->settings[0]->type->id,
-                'markup_id' => $otherMarkup,
-            ]
+            $this->createSetting($this->settings[0]->type->id, create('App\Markup')->id),
         ];
 
-        $this->updateSettings($request, false)
+        $this->updateSettings($request, false, true)
             ->assertStatus(401);
     }
 
-    protected function updateSettings($request, $signIn = true)
+    protected function createSetting($typeId, $markupId, $value = null)
+    {
+        $data = [
+            'arrangeable_type_id' => $typeId,
+            'markup_id' => $markupId,
+            'markup_value' => $value,
+        ];
+
+        return make('App\ArrangeableTypeSetting', $data)->toArray();
+    }
+
+    protected function updateSettings($request, $signIn = true, $withJson = false)
     {
         $url = 'api/arrangeables/settings';
 
@@ -141,6 +141,10 @@ class UpdateArrangeableTypeSettingsTest extends TestCase
             ]));
         }
 
-        return $this->patchJson($url, $request);
+        if ($withJson) {
+            return $this->patchJson($url, $request);
+        }
+
+        return $this->patch($url, $request);
     }
 }
