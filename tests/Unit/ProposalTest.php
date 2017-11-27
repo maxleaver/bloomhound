@@ -11,9 +11,9 @@ class ProposalTest extends TestCase
 
     protected $proposal;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->proposal = create('App\Proposal');
     }

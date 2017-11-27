@@ -31,9 +31,9 @@ class GetProposalDeliveriesTest extends TestCase
         ]);
 
         $this->getDeliveries($this->proposal->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$deliveries[0]->description])
-    		->assertJsonFragment([$deliveries[1]->description])
+            ->assertStatus(200)
+            ->assertJsonFragment([$deliveries[0]->description])
+            ->assertJsonFragment([$deliveries[1]->description])
             ->assertJsonMissing([$someOtherDelivery->description]);
     }
 
@@ -48,7 +48,7 @@ class GetProposalDeliveriesTest extends TestCase
     /** @test */
     public function a_user_can_only_get_deliveries_for_an_existing_proposal()
     {
-    	$badId = 666;
+        $badId = 666;
         $this->getDeliveries($badId)
             ->assertStatus(404);
     }

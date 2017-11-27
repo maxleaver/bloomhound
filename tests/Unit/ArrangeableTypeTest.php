@@ -7,18 +7,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ArrangeableTypeTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	protected $type;
+    protected $type;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->type = create('App\ArrangeableType');
     }
 
-	/** @test */
+    /** @test */
     public function an_arrangeable_type_has_a_name()
     {
         $this->assertNotNull($this->type->name);

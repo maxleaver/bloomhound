@@ -28,10 +28,10 @@ class GetCustomersTest extends TestCase
         $otherCustomers = create('App\Customer', [], 3);
 
         $this->getCustomerList()
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->customers[0]->name])
-    		->assertJsonFragment([$this->customers[1]->name])
-    		->assertJsonFragment([$this->customers[2]->name])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->customers[0]->name])
+            ->assertJsonFragment([$this->customers[1]->name])
+            ->assertJsonFragment([$this->customers[2]->name])
             ->assertJsonMissing([$otherCustomers[0]->name]);
     }
 
@@ -42,19 +42,19 @@ class GetCustomersTest extends TestCase
             ->assertStatus(401);
     }
 
-	/** @test */
+    /** @test */
     public function a_user_can_get_a_specific_customer()
     {
         $this->getCustomer($this->customers[0]->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->customers[0]->name])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->customers[0]->name])
             ->assertJsonMissing([$this->customers[1]->name]);
     }
 
     /** @test */
     public function users_cannot_get_a_customer_in_another_account()
     {
-    	$customerInOtherAccount = create('App\Customer')->id;
+        $customerInOtherAccount = create('App\Customer')->id;
 
         $this->getCustomer($customerInOtherAccount)
             ->assertStatus(404);

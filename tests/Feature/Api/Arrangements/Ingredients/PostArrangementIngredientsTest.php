@@ -92,7 +92,7 @@ class PostArrangementIngredientsTest extends TestCase
     /** @test */
     public function users_cannot_add_ingredients_to_arrangements_in_other_accounts()
     {
-    	$someOtherArrangement = create('App\Arrangement')->id;
+        $someOtherArrangement = create('App\Arrangement')->id;
 
         $this->addIngredient($someOtherArrangement, $this->makeRequest())
             ->assertStatus(404);
@@ -101,13 +101,13 @@ class PostArrangementIngredientsTest extends TestCase
     /** @test */
     public function users_can_only_add_arrangeable_ingredients_to_arrangements()
     {
-    	$badRequest = [
-    		[
-    			'id' => create('App\User')->id,
-        		'type' => 'user',
-        		'quantity' => 5,
-    		]
-    	];
+        $badRequest = [
+            [
+                'id' => create('App\User')->id,
+                'type' => 'user',
+                'quantity' => 5,
+            ]
+        ];
 
         $this->addIngredient($this->arrangement->id, $badRequest)
             ->assertSessionHasErrors('0.type');
@@ -116,13 +116,13 @@ class PostArrangementIngredientsTest extends TestCase
     /** @test */
     public function users_cannot_add_ingredients_from_other_accounts_to_arrangements()
     {
-    	$badRequest = [
-    		[
-    			'id' => create('App\Item')->id,
-    			'type' => 'item',
-    			'quantity' => 5,
-    		]
-    	];
+        $badRequest = [
+            [
+                'id' => create('App\Item')->id,
+                'type' => 'item',
+                'quantity' => 5,
+            ]
+        ];
 
         $this->addIngredient($this->arrangement->id, $badRequest)
             ->assertStatus(403);
@@ -132,13 +132,13 @@ class PostArrangementIngredientsTest extends TestCase
     public function users_can_only_add_existing_ingredients_to_arrangements()
     {
         $clearlyInvalidId = 123;
-    	$badRequest = [
-    		[
-    			'id' => $clearlyInvalidId,
-    			'type' => 'item',
-    			'quantity' => 5,
-    		]
-    	];
+        $badRequest = [
+            [
+                'id' => $clearlyInvalidId,
+                'type' => 'item',
+                'quantity' => 5,
+            ]
+        ];
 
         $this->addIngredient($this->arrangement->id, $badRequest)
             ->assertStatus(403);
@@ -148,7 +148,7 @@ class PostArrangementIngredientsTest extends TestCase
     public function unauthenticated_users_cannot_add_ingredients_to_arrangements()
     {
         $this->postJson($this->url($this->arrangement->id), $this->makeRequest())
-    		->assertStatus(401);
+            ->assertStatus(401);
     }
 
     protected function makeRequest()

@@ -23,7 +23,7 @@ abstract class AbstractArrangeable extends Model
         return $this->belongsTo('App\ArrangeableTypeSetting', 'arrangeable_type_id');
     }
 
-	public function used()
+    public function used()
     {
         return $this->morphMany('App\ArrangementIngredient', 'arrangeable');
     }
@@ -44,33 +44,33 @@ abstract class AbstractArrangeable extends Model
         return strtolower($reflect->getShortName());
     }
 
-	protected function calculatePrice()
+    protected function calculatePrice()
     {
-        switch($this->markup->name) {
-    		case 'no_charge':
-    			$calculator = new \App\NoChargePriceCalculator($this);
-    			break;
-    		case 'cost':
-    			$calculator = new \App\CostPriceCalculator($this);
-    			break;
-    		case 'cost_plus_percent':
-    			$calculator = new \App\CostPlusPercentPriceCalculator($this);
-    			break;
-    		case 'cost_plus_amount':
-    			$calculator = new \App\CostPlusAmountPriceCalculator($this);
-    			break;
-    		case 'fixed_price':
-    			$calculator = new \App\FixedPriceCalculator($this);
-    			break;
-    		case 'amount_times_event_days':
-    			$calculator = new \App\RentalPriceCalculator($this);
-    			break;
-    		default:
-    			throw new Exception('Could not find price calculator for '. $this->markup->name);
-    			return;
-    	}
+        switch ($this->markup->name) {
+            case 'no_charge':
+                $calculator = new \App\NoChargePriceCalculator($this);
+                break;
+            case 'cost':
+                $calculator = new \App\CostPriceCalculator($this);
+                break;
+            case 'cost_plus_percent':
+                $calculator = new \App\CostPlusPercentPriceCalculator($this);
+                break;
+            case 'cost_plus_amount':
+                $calculator = new \App\CostPlusAmountPriceCalculator($this);
+                break;
+            case 'fixed_price':
+                $calculator = new \App\FixedPriceCalculator($this);
+                break;
+            case 'amount_times_event_days':
+                $calculator = new \App\RentalPriceCalculator($this);
+                break;
+            default:
+                throw new Exception('Could not find price calculator for ' . $this->markup->name);
+                return;
+        }
 
-    	return $calculator->calculate();
+        return $calculator->calculate();
     }
 
     /**

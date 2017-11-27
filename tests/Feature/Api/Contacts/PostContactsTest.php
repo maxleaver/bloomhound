@@ -28,10 +28,10 @@ class PostContactsTest extends TestCase
         $this->assertEquals($this->customer->contacts()->count(), 0);
 
         $this->createContact()
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->request['email']]);
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->request['email']]);
 
-    	$this->assertEquals($this->customer->contacts()->count(), 1);
+        $this->assertEquals($this->customer->contacts()->count(), 1);
     }
 
     /** @test */
@@ -39,7 +39,7 @@ class PostContactsTest extends TestCase
     {
         $this->request['customer_id'] = 555;
         $this->createContact()
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */

@@ -13,37 +13,43 @@ class AccountTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
         $this->account = create('App\Account');
     }
 
     /** @test */
-    public function an_account_has_a_name() {
+    public function an_account_has_a_name()
+    {
         $this->assertNotNull($this->account->name);
     }
 
     /** @test */
-    public function an_account_has_an_address() {
+    public function an_account_has_an_address()
+    {
         $this->assertNotNull($this->account->address);
     }
 
     /** @test */
-    public function an_account_has_a_website() {
+    public function an_account_has_a_website()
+    {
         $this->assertNotNull($this->account->website);
     }
 
     /** @test */
-    public function an_account_has_an_email() {
+    public function an_account_has_an_email()
+    {
         $this->assertNotNull($this->account->email);
     }
 
     /** @test */
-    public function an_account_has_a_phone_number() {
+    public function an_account_has_a_phone_number()
+    {
         $this->assertNotNull($this->account->phone);
     }
 
     /** @test */
-    public function an_account_has_a_logo() {
+    public function an_account_has_a_logo()
+    {
         $this->assertNotNull($this->account->logo);
     }
 

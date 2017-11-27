@@ -7,18 +7,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ItemTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	protected $item;
+    protected $item;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->item = create('App\Item');
     }
 
-	/** @test */
+    /** @test */
     public function it_has_a_name()
     {
         $this->assertNotNull($this->item->name);

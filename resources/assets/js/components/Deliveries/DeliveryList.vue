@@ -108,7 +108,7 @@ export default {
   data() {
     return {
       defaultSortDirection: 'asc',
-      hasMobileCards: true,
+      hasMobileCards: false,
     };
   },
 

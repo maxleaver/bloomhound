@@ -3,7 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Arrangement;
-use App\ArrangementIngredient;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

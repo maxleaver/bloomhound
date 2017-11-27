@@ -27,11 +27,11 @@ class GetEventsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_events_for_their_account()
     {
-    	$this->getEvents()
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->events[0]->name])
-    		->assertJsonFragment([$this->events[1]->name])
-    		->assertJsonFragment([$this->events[2]->name])
+        $this->getEvents()
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->events[0]->name])
+            ->assertJsonFragment([$this->events[1]->name])
+            ->assertJsonFragment([$this->events[2]->name])
             ->assertJsonMissing([$this->otherEvents[0]->name]);
     }
 
@@ -39,7 +39,7 @@ class GetEventsTest extends TestCase
     public function unauthorized_users_cannot_get_events()
     {
         $this->getEvents(false, true)
-    		->assertStatus(401);
+            ->assertStatus(401);
     }
 
     protected function getEvents($signIn = true, $withJson = false)

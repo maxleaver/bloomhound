@@ -30,9 +30,9 @@ class GetItemsTest extends TestCase
         $this->getItems()
             ->assertStatus(200)
             ->assertJsonFragment([$this->items[0]->name])
-    		->assertJsonFragment([$this->items[1]->name])
-    		->assertJsonMissing([$otherItems[0]->name])
-    		->assertJsonMissing([$otherItems[1]->name]);
+            ->assertJsonFragment([$this->items[1]->name])
+            ->assertJsonMissing([$otherItems[0]->name])
+            ->assertJsonMissing([$otherItems[1]->name]);
     }
 
     /** @test */

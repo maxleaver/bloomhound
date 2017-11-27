@@ -11,9 +11,9 @@ class InviteTest extends TestCase
 
     protected $invite;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->invite = create('App\Invite');
     }
@@ -21,13 +21,13 @@ class InviteTest extends TestCase
     /** @test */
     public function an_invite_generates_a_unique_token_on_creation()
     {
-    	$invite = make('App\Invite');
-    	$this->assertNull($invite->token);
-    	$invite->save();
-    	$this->assertNotNull($invite->token);
+        $invite = make('App\Invite');
+        $this->assertNull($invite->token);
+        $invite->save();
+        $this->assertNotNull($invite->token);
     }
 
-	/** @test */
+    /** @test */
     public function an_invite_has_a_path()
     {
         $this->assertNotNull($this->invite->url);

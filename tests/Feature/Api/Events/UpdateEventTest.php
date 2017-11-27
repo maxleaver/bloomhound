@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateEventTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $event;
     protected $request;

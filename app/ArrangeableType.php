@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArrangeableType extends Model
 {
-	public $timestamps = false;
+    public $timestamps = false;
     protected $hidden = ['model'];
 
     public function markup()
@@ -14,7 +14,7 @@ class ArrangeableType extends Model
         return $this->belongsTo('App\Markup', 'default_markup_id');
     }
 
-	public function items()
+    public function items()
     {
         return $this->hasMany('App\Item');
     }

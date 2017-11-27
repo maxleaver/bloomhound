@@ -26,14 +26,14 @@ class PostVendorsTest extends TestCase
         $this->assertEquals($this->account->vendors()->count(), 0);
 
         $this->createVendor()
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->request['name']])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->request['name']])
             ->assertJsonFragment([$this->request['address']])
             ->assertJsonFragment([$this->request['email']])
             ->assertJsonFragment([$this->request['phone']])
             ->assertJsonFragment([$this->request['website']]);
 
-    	$this->assertEquals($this->account->vendors()->count(), 1);
+        $this->assertEquals($this->account->vendors()->count(), 1);
     }
 
     /** @test */
@@ -57,8 +57,8 @@ class PostVendorsTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_add_vendors()
     {
-    	$this->createVendor(false, true)
-    		->assertStatus(401);
+        $this->createVendor(false, true)
+            ->assertStatus(401);
     }
 
     protected function createVendor($signIn = true, $withJson = false)

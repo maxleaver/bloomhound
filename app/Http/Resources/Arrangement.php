@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Discount;
-use App\Http\Resources\Ingredient;
 use Illuminate\Http\Resources\Json\Resource;
 
 class Arrangement extends Resource

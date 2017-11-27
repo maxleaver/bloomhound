@@ -31,16 +31,16 @@ class GetProposalArrangementsTest extends TestCase
         ]);
 
         $this->getArrangements($this->proposal->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->arrangements[0]->name])
-    		->assertJsonFragment([$this->arrangements[1]->name])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->arrangements[0]->name])
+            ->assertJsonFragment([$this->arrangements[1]->name])
             ->assertJsonMissing([$someOtherArrangement->name]);
     }
 
     /** @test */
     public function users_can_only_get_arrangements_for_a_proposal_in_their_account()
     {
-    	$someOtherProposal = create('App\Proposal')->id;
+        $someOtherProposal = create('App\Proposal')->id;
         $this->getArrangements($someOtherProposal)
             ->assertStatus(404);
     }
@@ -48,7 +48,7 @@ class GetProposalArrangementsTest extends TestCase
     /** @test */
     public function users_can_only_get_arrangements_for_a_proposal_that_exists()
     {
-    	$badId = 123;
+        $badId = 123;
         $this->getArrangements($badId)
             ->assertStatus(404);
     }

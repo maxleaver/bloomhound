@@ -1,6 +1,5 @@
 <?php
 
-use App\EventStatus;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 

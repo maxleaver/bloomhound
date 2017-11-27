@@ -26,7 +26,7 @@ class PostContactNotesTest extends TestCase
         $this->assertEquals($this->contact->notes()->count(), 0);
 
         $this->addNote($this->contact->id)
-    		->assertStatus(200);
+            ->assertStatus(200);
 
         $this->assertEquals($this->contact->notes()->count(), 1);
     }
@@ -35,7 +35,7 @@ class PostContactNotesTest extends TestCase
     public function a_user_can_only_add_notes_to_contacts_assigned_to_their_account()
     {
         $this->addNote(create('App\Contact')->id)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */
@@ -43,7 +43,7 @@ class PostContactNotesTest extends TestCase
     {
         $badId = 666;
         $this->addNote($badId)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */

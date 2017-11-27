@@ -6,8 +6,8 @@ $factory->define(App\User::class, function (Faker $faker) {
     static $password;
 
     return [
-    	'account_id' => function () {
-        	return factory('App\Account')->create()->id;
+        'account_id' => function () {
+            return factory('App\Account')->create()->id;
         },
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,

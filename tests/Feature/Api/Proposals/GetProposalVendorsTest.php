@@ -32,10 +32,10 @@ class GetProposalVendorsTest extends TestCase
         $inAnotherAccount = create('App\Vendor');
 
         $this->getProposals($this->proposal->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->vendors[0]->name])
-    		->assertJsonFragment([$this->vendors[1]->name])
-    		->assertJsonFragment([$this->vendors[2]->name])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->vendors[0]->name])
+            ->assertJsonFragment([$this->vendors[1]->name])
+            ->assertJsonFragment([$this->vendors[2]->name])
             ->assertJsonMissing([$unassignedVendor->name])
             ->assertJsonMissing([$inAnotherAccount->name]);
     }
@@ -52,8 +52,8 @@ class GetProposalVendorsTest extends TestCase
     /** @test */
     public function unauthorized_users_cannot_get_vendors_for_a_proposal()
     {
-    	$this->getProposals($this->proposal->id, false)
-    		->assertStatus(401);
+        $this->getProposals($this->proposal->id, false)
+            ->assertStatus(401);
     }
 
     protected function getProposals($id, $signIn = true)

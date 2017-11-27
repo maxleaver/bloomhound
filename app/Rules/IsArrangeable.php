@@ -25,8 +25,7 @@ class IsArrangeable implements Rule
      */
     public function passes($attribute, $value)
     {
-        switch ($value)
-        {
+        switch ($value) {
             case 'flowervariety':
             case 'item':
                 return true;

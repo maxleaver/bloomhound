@@ -13,23 +13,26 @@ class ArrangementTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->arrangement = factory('App\Arrangement')->states('delivery')->create();
     }
 
     /** @test */
-    public function an_arrangement_has_a_name() {
+    public function an_arrangement_has_a_name()
+    {
         $this->assertNotNull($this->arrangement->name);
     }
 
     /** @test */
-    public function an_arrangement_has_a_quantity() {
+    public function an_arrangement_has_a_quantity()
+    {
         $this->assertNotNull($this->arrangement->quantity);
     }
 
     /** @test */
-    public function an_arrangement_has_a_description() {
+    public function an_arrangement_has_a_description()
+    {
         $this->assertNotNull($this->arrangement->description);
     }
 

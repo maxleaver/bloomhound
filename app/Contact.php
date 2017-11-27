@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-	use Notable;
+    use Notable;
 
     protected $appends = ['name'];
-	protected $guarded = ['account_id', 'customer_id'];
+    protected $guarded = ['account_id', 'customer_id'];
 
-	public function account()
+    public function account()
     {
         return $this->belongsTo('App\Account');
     }
@@ -23,6 +23,6 @@ class Contact extends Model
 
     public function getNameAttribute()
     {
-    	return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

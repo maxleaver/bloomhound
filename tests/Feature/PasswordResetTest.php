@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Account;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -28,7 +27,8 @@ class PasswordResetTest extends TestCase
             ->assertStatus(302);
 
         Notification::assertSentTo(
-            [$user], ResetPassword::class
+            [$user],
+            ResetPassword::class
         );
     }
 
@@ -42,7 +42,8 @@ class PasswordResetTest extends TestCase
             ->assertStatus(302);
 
         Notification::assertNotSentTo(
-            [$user], ResetPassword::class
+            [$user],
+            ResetPassword::class
         );
     }
 

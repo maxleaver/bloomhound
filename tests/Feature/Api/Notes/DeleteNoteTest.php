@@ -24,18 +24,18 @@ class DeleteNoteTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_note()
     {
-    	$this->assertEquals(Note::count(), 3);
+        $this->assertEquals(Note::count(), 3);
 
         $this->deleteNote($this->notes[0]->id)
             ->assertStatus(200);
 
-    	$this->assertEquals(Note::count(), 2);
+        $this->assertEquals(Note::count(), 2);
     }
 
     /** @test */
     public function a_user_can_only_delete_notes_on_their_account()
     {
-    	$noteOnAnotherAccount = create('App\Note', [
+        $noteOnAnotherAccount = create('App\Note', [
             'user_id' => create('App\User')->id
         ]);
 

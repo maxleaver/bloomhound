@@ -34,9 +34,9 @@ class UpdatePasswordTest extends TestCase
     {
         $oldHash = $this->user->password;
 
-    	$this->signIn($this->user)
+        $this->signIn($this->user)
             ->patchJson($this->url, $this->request)
-    		->assertStatus(200);
+            ->assertStatus(200);
 
         $this->assertNotEquals($this->user->fresh()->password, $oldHash);
     }
@@ -54,7 +54,7 @@ class UpdatePasswordTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_update_passwords()
     {
-    	$this->patchJson($this->url, $this->request)
-    		->assertStatus(401);
+        $this->patchJson($this->url, $this->request)
+            ->assertStatus(401);
     }
 }

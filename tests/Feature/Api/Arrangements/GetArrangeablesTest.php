@@ -29,22 +29,22 @@ class GetArrangeablesTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_arrangeable_items()
     {
-    	$itemInAnotherAccount = create('App\Item');
+        $itemInAnotherAccount = create('App\Item');
 
         $this->getArrangeables()
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->items[0]->name])
-    		->assertJsonFragment([$this->items[1]->name])
-    		->assertJsonFragment([$this->varieties[0]->name])
-    		->assertJsonFragment([$this->varieties[1]->name])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->items[0]->name])
+            ->assertJsonFragment([$this->items[1]->name])
+            ->assertJsonFragment([$this->varieties[0]->name])
+            ->assertJsonFragment([$this->varieties[1]->name])
             ->assertJsonMissing([$itemInAnotherAccount->name]);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_arrangeables()
     {
-    	$this->getArrangeables(false)
-    		->assertStatus(401);
+        $this->getArrangeables(false)
+            ->assertStatus(401);
     }
 
     protected function getArrangeables($signIn = true)

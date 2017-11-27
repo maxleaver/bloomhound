@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\FlowerLibrary;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -26,21 +25,21 @@ class GetFlowersTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_get_a_list_of_flowers_for_their_account()
     {
-    	$flowersInAnotherAccount = create('App\Flower', [], 2);
+        $flowersInAnotherAccount = create('App\Flower', [], 2);
 
         $this->getFlowers()
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->flowers[0]->name])
-    		->assertJsonFragment([$this->flowers[1]->name])
-    		->assertJsonMissing([$flowersInAnotherAccount[0]->name])
-    		->assertJsonMissing([$flowersInAnotherAccount[1]->name]);
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->flowers[0]->name])
+            ->assertJsonFragment([$this->flowers[1]->name])
+            ->assertJsonMissing([$flowersInAnotherAccount[0]->name])
+            ->assertJsonMissing([$flowersInAnotherAccount[1]->name]);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_flowers()
     {
         $this->getFlowers(false)
-    		->assertStatus(401);
+            ->assertStatus(401);
     }
 
     protected function getFlowers($signIn = true)

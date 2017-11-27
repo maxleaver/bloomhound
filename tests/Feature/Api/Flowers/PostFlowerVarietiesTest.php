@@ -37,7 +37,7 @@ class PostFlowerVarietiesTest extends TestCase
     public function when_a_user_creates_a_variety_the_default_markup_is_set()
     {
         $defaultSetting = ArrangeableTypeSetting::whereAccountId($this->flower->account->id)
-            ->whereHas('type', function($query) {
+            ->whereHas('type', function ($query) {
                 return $query->whereName('flower');
             })
             ->first();

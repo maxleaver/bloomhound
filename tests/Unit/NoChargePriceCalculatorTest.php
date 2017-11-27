@@ -13,7 +13,7 @@ class NoChargePriceCalculatorTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->item = create('App\Item', [
             'markup_id' => create('App\Markup', ['name' => 'no_charge'])->id,

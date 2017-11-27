@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Proposal;
 use App\Discount;
 use App\Http\Controllers\Controller;
-use App\Rules\IsLessThanValue;
 use Illuminate\Http\Request;
 
 class DiscountProposalController extends Controller

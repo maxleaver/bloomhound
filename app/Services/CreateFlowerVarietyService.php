@@ -11,7 +11,8 @@ class CreateFlowerVarietyService
     protected $flower;
     protected $name;
 
-    function __construct($name, Flower $flower) {
+    public function __construct($name, Flower $flower)
+    {
         $this->name = $name;
         $this->flower = $flower;
     }
@@ -20,7 +21,7 @@ class CreateFlowerVarietyService
     {
         // Look up default markup setting for flowers
         $setting = ArrangeableTypeSetting::whereAccountId($this->flower->account->id)
-            ->whereHas('type', function($query) {
+            ->whereHas('type', function ($query) {
                 return $query->whereName('flower');
             })
             ->first();

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use App\Flower;
 use App\FlowerVariety;
 use App\Services\CreateFlowerVarietyService;

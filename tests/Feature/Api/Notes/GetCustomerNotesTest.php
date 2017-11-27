@@ -18,20 +18,20 @@ class GetCustomerNotesTest extends TestCase
 
         $this->customer = create('App\Customer');
         $this->notes = create('App\Note', [
-        	'notable_id' => $this->customer->id,
-        	'notable_type' => 'App\Customer'
+            'notable_id' => $this->customer->id,
+            'notable_type' => 'App\Customer'
         ], 3);
     }
 
     /** @test */
     public function a_user_can_view_notes_for_a_customer()
     {
-    	$someOtherNote = create('App\Note');
+        $someOtherNote = create('App\Note');
 
         $this->getNotes($this->customer->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->notes[0]->text])
-    		->assertJsonFragment([$this->notes[1]->text])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->notes[0]->text])
+            ->assertJsonFragment([$this->notes[1]->text])
             ->assertJsonMissing([$someOtherNote->text]);
     }
 

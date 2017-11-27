@@ -27,7 +27,7 @@ class PostProposalArrangementsTest extends TestCase
     /** @test */
     public function users_can_create_flower_arrangements_for_a_proposal()
     {
-    	$this->assertEquals($this->proposal->arrangements()->count(), 0);
+        $this->assertEquals($this->proposal->arrangements()->count(), 0);
 
         $this->addArrangement($this->proposal->id)
             ->assertStatus(200);

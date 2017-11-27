@@ -5,7 +5,7 @@ use Faker\Generator as Faker;
 $factory->define(App\Arrangement::class, function (Faker $faker) {
     return [
         'account_id' => function () {
-        	return factory('App\Account')->create()->id;
+            return factory('App\Account')->create()->id;
         },
         'proposal_id' => function (array $arrangement) {
             return factory('App\Proposal')->create([

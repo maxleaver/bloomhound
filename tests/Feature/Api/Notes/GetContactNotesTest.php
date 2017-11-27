@@ -26,12 +26,12 @@ class GetContactNotesTest extends TestCase
     /** @test */
     public function a_user_can_view_notes_for_a_contact()
     {
-    	$someOtherNote = create('App\Note');
+        $someOtherNote = create('App\Note');
 
         $this->getNotes($this->contact->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->notes[0]->text])
-    		->assertJsonFragment([$this->notes[1]->text])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->notes[0]->text])
+            ->assertJsonFragment([$this->notes[1]->text])
             ->assertJsonMissing([$someOtherNote->text]);
     }
 

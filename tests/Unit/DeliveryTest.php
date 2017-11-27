@@ -13,33 +13,38 @@ class DeliveryTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->delivery = create('App\Delivery');
     }
 
     /** @test */
-    public function a_delivery_has_an_address() {
+    public function a_delivery_has_an_address()
+    {
         $this->assertNotNull($this->delivery->address);
     }
 
     /** @test */
-    public function a_delivery_has_a_deliver_by_date_and_time() {
+    public function a_delivery_has_a_deliver_by_date_and_time()
+    {
         $this->assertNotNull($this->delivery->deliver_on);
     }
 
     /** @test */
-    public function a_delivery_may_have_a_description() {
+    public function a_delivery_may_have_a_description()
+    {
         $this->assertNotNull($this->delivery->description);
     }
 
     /** @test */
-    public function a_delivery_may_have_a_fee() {
+    public function a_delivery_may_have_a_fee()
+    {
         $this->assertNotNull($this->delivery->fee);
     }
 
     /** @test */
-    public function a_delivery_has_many_arrangements() {
+    public function a_delivery_has_many_arrangements()
+    {
         $arrangements = create('App\Arrangement', [
             'account_id' => $this->delivery->account->id,
             'delivery_id' => $this->delivery->id,
@@ -50,12 +55,14 @@ class DeliveryTest extends TestCase
     }
 
     /** @test */
-    public function a_delivery_belongs_to_an_account() {
+    public function a_delivery_belongs_to_an_account()
+    {
         $this->assertInstanceOf('App\Account', $this->delivery->account);
     }
 
     /** @test */
-    public function a_delivery_belongs_to_a_proposal() {
+    public function a_delivery_belongs_to_a_proposal()
+    {
         $this->assertInstanceOf('App\Proposal', $this->delivery->proposal);
     }
 }

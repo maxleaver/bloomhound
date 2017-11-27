@@ -22,12 +22,12 @@ class PostCustomersTest extends TestCase
     /** @test */
     public function a_user_can_add_a_customer_to_their_account()
     {
-    	$this->assertEquals(Customer::count(), 0);
+        $this->assertEquals(Customer::count(), 0);
 
         $this->createCustomer()
-    		->assertStatus(200);
+            ->assertStatus(200);
 
-    	$this->assertEquals(Customer::count(), 1);
+        $this->assertEquals(Customer::count(), 1);
     }
 
     /** @test */

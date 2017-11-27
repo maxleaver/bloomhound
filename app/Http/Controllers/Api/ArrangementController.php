@@ -15,7 +15,7 @@ class ArrangementController extends Controller
             ->only(['index', 'store']);
 
         $this->middleware('in_account:arrangement')
-            ->only(['show', 'update','destroy']);
+            ->only(['show', 'update', 'destroy']);
     }
 
     /**

@@ -2,13 +2,12 @@
 
 namespace Tests\Feature\Api;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateArrangementTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $arrangement;
     protected $request;

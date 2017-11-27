@@ -18,20 +18,20 @@ class GetVendorNotesTest extends TestCase
 
         $this->vendor = create('App\Vendor');
         $this->notes = create('App\Note', [
-        	'notable_id' => $this->vendor->id,
-        	'notable_type' => 'App\Vendor'
+            'notable_id' => $this->vendor->id,
+            'notable_type' => 'App\Vendor'
         ], 3);
     }
 
     /** @test */
     public function a_user_can_view_notes_for_a_vendor()
     {
-    	$someOtherNote = create('App\Note');
+        $someOtherNote = create('App\Note');
 
         $this->getNotes($this->vendor->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->notes[0]->text])
-    		->assertJsonFragment([$this->notes[1]->text])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->notes[0]->text])
+            ->assertJsonFragment([$this->notes[1]->text])
             ->assertJsonMissing([$someOtherNote->text]);
     }
 

@@ -14,7 +14,7 @@ class AccountSettingTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         Event::fake();
 

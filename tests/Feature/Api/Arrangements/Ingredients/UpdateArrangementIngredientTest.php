@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateArrangementIngredientTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $arrangement;
     protected $ingredient;

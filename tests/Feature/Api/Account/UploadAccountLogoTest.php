@@ -35,18 +35,18 @@ class UploadAccountLogoTest extends TestCase
         Storage::disk('local')->assertExists($this->account->logo);
 
         $this->uploadLogo()
-    		->assertSuccessful();
+            ->assertSuccessful();
 
         Storage::disk('local')->assertExists($this->account->fresh()->logo);
-    	Storage::disk('local')->assertMissing($this->original);
+        Storage::disk('local')->assertMissing($this->original);
     }
 
     /** @test */
     public function a_user_can_only_upload_image_files()
     {
-    	$this->request['logo'] = UploadedFile::fake()->create('anInvalidFileType.pdf');
+        $this->request['logo'] = UploadedFile::fake()->create('anInvalidFileType.pdf');
         $this->uploadLogo()
-    		->assertStatus(422);
+            ->assertStatus(422);
     }
 
     /** @test */
@@ -54,14 +54,14 @@ class UploadAccountLogoTest extends TestCase
     {
         $this->request['logo'] = UploadedFile::fake()->image('new_logo.jpg', 50, 50);
         $this->uploadLogo()
-    		->assertStatus(422);
+            ->assertStatus(422);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_upload_a_logo()
     {
-    	$this->uploadLogo(false)
-    		->assertStatus(401);
+        $this->uploadLogo(false)
+            ->assertStatus(401);
     }
 
     protected function uploadLogo($signIn = true)

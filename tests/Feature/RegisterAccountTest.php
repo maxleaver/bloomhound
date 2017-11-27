@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Account;
 use App\User;
-use App\Events\AccountRegistered;
 use App\Mail\NewAccountWelcome;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,7 +34,7 @@ class RegisterAccountTest extends TestCase
     public function an_unregistered_user_can_register_an_account()
     {
         $this->post(route('register'), $this->request)
-        	->assertRedirect(route('home'));
+            ->assertRedirect(route('home'));
 
         $account = Account::whereName('Company, Inc.')->first();
         $user = User::whereName('John Doe')->first();
@@ -62,7 +61,7 @@ class RegisterAccountTest extends TestCase
         $this->request['email'] = $user->email;
 
         $this->post(route('register'), $this->request)
-        	->assertStatus(302);
+            ->assertStatus(302);
     }
 
     /** @test */
@@ -80,6 +79,6 @@ class RegisterAccountTest extends TestCase
     {
         $this->post(route('register'), $this->request);
 
-    	Mail::assertSent(NewAccountWelcome::class);
+        Mail::assertSent(NewAccountWelcome::class);
     }
 }

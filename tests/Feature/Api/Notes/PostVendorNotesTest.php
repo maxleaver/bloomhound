@@ -23,10 +23,10 @@ class PostVendorNotesTest extends TestCase
     /** @test */
     public function a_user_can_add_notes_to_a_vendor()
     {
-    	$this->assertEquals($this->vendor->notes()->count(), 0);
+        $this->assertEquals($this->vendor->notes()->count(), 0);
 
         $this->addNote($this->vendor->id)
-    		->assertStatus(200);
+            ->assertStatus(200);
 
         $this->assertEquals($this->vendor->notes()->count(), 1);
     }
@@ -35,7 +35,7 @@ class PostVendorNotesTest extends TestCase
     public function a_user_can_only_add_notes_to_vendors_assigned_to_their_account()
     {
         $this->addNote(create('App\Vendor')->id)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */
@@ -43,7 +43,7 @@ class PostVendorNotesTest extends TestCase
     {
         $badId = 666;
         $this->addNote($badId)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */

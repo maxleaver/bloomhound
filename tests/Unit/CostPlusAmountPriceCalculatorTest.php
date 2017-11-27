@@ -13,12 +13,12 @@ class CostPlusAmountPriceCalculatorTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->item = create('App\Item', [
-        	'cost' => 100,
-        	'markup_id' => create('App\Markup', ['name' => 'cost_plus_amount'])->id,
-        	'markup_value' => 50,
+            'cost' => 100,
+            'markup_id' => create('App\Markup', ['name' => 'cost_plus_amount'])->id,
+            'markup_value' => 50,
             'use_default_markup' => false,
         ]);
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Vendor;
-use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {

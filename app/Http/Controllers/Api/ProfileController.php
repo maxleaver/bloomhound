@@ -29,7 +29,7 @@ class ProfileController extends Controller
 
         $data = request()->validate([
             'name' => 'required|string',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
         $user->update($data);

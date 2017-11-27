@@ -24,7 +24,7 @@ class GetMarkupsTest extends TestCase
         $this->getMarkups()
             ->assertStatus(200)
             ->assertJsonFragment([$this->markups[0]->title])
-    		->assertJsonFragment([$this->markups[1]->title]);
+            ->assertJsonFragment([$this->markups[1]->title]);
     }
 
     /** @test */

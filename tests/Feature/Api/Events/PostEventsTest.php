@@ -27,13 +27,13 @@ class PostEventsTest extends TestCase
     /** @test */
     public function a_user_can_create_an_event_for_a_new_customer()
     {
-    	$this->assertEquals(Event::count(), 0);
+        $this->assertEquals(Event::count(), 0);
         $this->assertEquals(Customer::count(), 0);
 
         $this->createEvent()
-    		->assertStatus(200);
+            ->assertStatus(200);
 
-    	$this->assertEquals(Event::count(), 1);
+        $this->assertEquals(Event::count(), 1);
         $this->assertEquals(Customer::count(), 1);
     }
 
@@ -67,8 +67,8 @@ class PostEventsTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_create_events()
     {
-    	$this->createEvent(false, true)
-    		->assertStatus(401);
+        $this->createEvent(false, true)
+            ->assertStatus(401);
     }
 
     protected function createEvent($signIn = true, $withJson = false)

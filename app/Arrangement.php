@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Arrangement extends Model
 {
-	protected $appends = ['cost', 'price', 'total_price'];
+    protected $appends = ['cost', 'price', 'total_price'];
     protected $casts = [
         'cost' => 'float',
         'override_price' => 'boolean',
@@ -34,7 +34,7 @@ class Arrangement extends Model
         return ($this->price * $this->quantity) - $this->percentOff() - $this->amountOff();
     }
 
-	public function account()
+    public function account()
     {
         return $this->belongsTo('App\Account');
     }
@@ -59,12 +59,14 @@ class Arrangement extends Model
         return $this->belongsTo('App\Proposal');
     }
 
-    protected function percentOff() {
+    protected function percentOff()
+    {
         $percent = $this->discounts->where('type', 'percent')->sum('amount');
         return ($this->price * $this->quantity) * ($percent / 100);
     }
 
-    protected function amountOff() {
+    protected function amountOff()
+    {
         return $this->discounts->where('type', 'fixed')->sum('amount');
     }
 }

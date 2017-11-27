@@ -31,9 +31,9 @@ class GetProposalSetupsTest extends TestCase
         ]);
 
         $this->getSetups($this->proposal->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$setups[0]->description])
-    		->assertJsonFragment([$setups[1]->description])
+            ->assertStatus(200)
+            ->assertJsonFragment([$setups[0]->description])
+            ->assertJsonFragment([$setups[1]->description])
             ->assertJsonMissing([$someOtherSetup->description]);
     }
 
@@ -48,7 +48,7 @@ class GetProposalSetupsTest extends TestCase
     /** @test */
     public function a_user_can_only_get_setups_for_an_existing_proposal()
     {
-    	$badId = 123;
+        $badId = 123;
         $this->getSetups($badId)
             ->assertStatus(404);
     }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Flower extends Model
 {
-	use Notable;
+    use Notable;
 
     /**
      * The attributes that should be hidden for arrays.
@@ -22,7 +22,7 @@ class Flower extends Model
         'created' => FlowerCreated::class,
     ];
 
-	public function varieties()
+    public function varieties()
     {
         return $this->hasMany('App\FlowerVariety');
     }

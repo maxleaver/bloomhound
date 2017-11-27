@@ -25,17 +25,17 @@ class DeleteArrangementIngredientTest extends TestCase
     /** @test */
     public function a_user_can_delete_an_ingredient_from_an_arrangement()
     {
-    	$this->assertEquals($this->arrangement->ingredients->count(), 3);
+        $this->assertEquals($this->arrangement->ingredients->count(), 3);
 
         $this->deleteIngredient($this->arrangement->id, $this->ingredients[0]->id)
             ->assertStatus(200);
 
-    	$this->assertEquals($this->arrangement->fresh()->ingredients->count(), 2);
+        $this->assertEquals($this->arrangement->fresh()->ingredients->count(), 2);
 
         $this->deleteIngredient($this->arrangement->id, $this->ingredients[1]->id)
             ->assertStatus(200);
 
-    	$this->assertEquals($this->arrangement->fresh()->ingredients->count(), 1);
+        $this->assertEquals($this->arrangement->fresh()->ingredients->count(), 1);
     }
 
     /** @test */
@@ -51,8 +51,8 @@ class DeleteArrangementIngredientTest extends TestCase
     /** @test */
     public function a_user_can_only_delete_ingredients_from_arrangements_on_their_account()
     {
-    	$someOtherArrangement = create('App\Arrangement');
-    	$someOtherIngredient = create('App\ArrangementIngredient', [
+        $someOtherArrangement = create('App\Arrangement');
+        $someOtherIngredient = create('App\ArrangementIngredient', [
             'arrangement_id' => $someOtherArrangement->id
         ]);
 

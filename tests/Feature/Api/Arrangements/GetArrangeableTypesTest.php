@@ -24,7 +24,7 @@ class GetArrangeableTypesTest extends TestCase
         $this->getTypes()
             ->assertStatus(200)
             ->assertJsonFragment([$this->types[0]->title])
-    		->assertJsonFragment([$this->types[1]->title]);
+            ->assertJsonFragment([$this->types[1]->title]);
     }
 
     /** @test */

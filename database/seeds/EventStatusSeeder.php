@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class EventStatusSeeder extends Seeder
 {
@@ -12,25 +11,25 @@ class EventStatusSeeder extends Seeder
      */
     public function run()
     {
-	    $data = [
-	    	[
-	    		'name' => 'draft',
-	            'title' => 'Draft',
-	    	],
-	    	[
-	    		'name' => 'sent',
-	            'title' => 'Proposal Sent',
-	    	],
-	    	[
-	    		'name' => 'accepted',
-	            'title' => 'Proposal Accepted',
-	    	],
-	    	[
-	    		'name' => 'completed',
-	            'title' => 'Event Completed',
-	    	],
-	    ];
+        $data = [
+            [
+                'name' => 'draft',
+                'title' => 'Draft',
+            ],
+            [
+                'name' => 'sent',
+                'title' => 'Proposal Sent',
+            ],
+            [
+                'name' => 'accepted',
+                'title' => 'Proposal Accepted',
+            ],
+            [
+                'name' => 'completed',
+                'title' => 'Event Completed',
+            ],
+        ];
 
-	    DB::table('event_statuses')->insert($data);
+        DB::table('event_statuses')->insert($data);
     }
 }

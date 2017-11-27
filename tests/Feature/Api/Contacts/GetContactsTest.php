@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GetContactsTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $contacts;
     protected $customer;
@@ -26,12 +26,12 @@ class GetContactsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_contacts_on_their_account()
     {
-    	$someOtherContact = create('App\Contact');
+        $someOtherContact = create('App\Contact');
 
         $this->getAccountContacts()
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->contacts[0]->email])
-    		->assertJsonFragment([$this->contacts[1]->email])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->contacts[0]->email])
+            ->assertJsonFragment([$this->contacts[1]->email])
             ->assertJsonMissing([$someOtherContact->email]);
     }
 
@@ -45,17 +45,17 @@ class GetContactsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_contacts_for_a_specific_customer()
     {
-    	$otherContact = create('App\Contact', [
-    		'account_id' => $this->customer->account->id,
-    		'customer_id' => create('App\Customer', [
+        $otherContact = create('App\Contact', [
+            'account_id' => $this->customer->account->id,
+            'customer_id' => create('App\Customer', [
                 'account_id' => $this->customer->account->id
             ])->id
-    	]);
+        ]);
 
         $this->getCustomerContacts($this->customer->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->contacts[0]->email])
-    		->assertJsonFragment([$this->contacts[1]->email])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->contacts[0]->email])
+            ->assertJsonFragment([$this->contacts[1]->email])
             ->assertJsonMissing([$otherContact->email]);
     }
 

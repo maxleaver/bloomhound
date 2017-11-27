@@ -13,48 +13,56 @@ class ContactTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->contact = create('App\Contact');
     }
 
     /** @test */
-    public function a_contact_has_a_first_name() {
+    public function a_contact_has_a_first_name()
+    {
         $this->assertNotNull($this->contact->first_name);
     }
 
     /** @test */
-    public function a_contact_has_a_last_name() {
+    public function a_contact_has_a_last_name()
+    {
         $this->assertNotNull($this->contact->last_name);
     }
 
     /** @test */
-    public function a_contact_has_an_email() {
+    public function a_contact_has_an_email()
+    {
         $this->assertNotNull($this->contact->email);
     }
 
     /** @test */
-    public function a_contact_has_a_phone_number() {
+    public function a_contact_has_a_phone_number()
+    {
         $this->assertNotNull($this->contact->phone);
     }
 
     /** @test */
-    public function a_contact_has_an_address() {
+    public function a_contact_has_an_address()
+    {
         $this->assertNotNull($this->contact->address);
     }
 
     /** @test */
-    public function a_contact_has_a_relationship() {
+    public function a_contact_has_a_relationship()
+    {
         $this->assertNotNull($this->contact->relationship);
     }
 
     /** @test */
-    public function a_contact_belongs_to_an_account() {
+    public function a_contact_belongs_to_an_account()
+    {
         $this->assertInstanceOf('App\Account', $this->contact->account);
     }
 
     /** @test */
-    public function a_contact_belongs_to_a_customer() {
+    public function a_contact_belongs_to_a_customer()
+    {
         $this->assertInstanceOf('App\Customer', $this->contact->customer);
     }
 

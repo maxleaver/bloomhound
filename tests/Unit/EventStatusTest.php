@@ -11,9 +11,9 @@ class EventStatusTest extends TestCase
 
     protected $status;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->status = create('App\EventStatus');
     }
@@ -21,7 +21,7 @@ class EventStatusTest extends TestCase
     /** @test */
     public function an_event_status_has_a_name()
     {
-    	$this->assertNotNull($this->status->name);
+        $this->assertNotNull($this->status->name);
     }
 
     /** @test */

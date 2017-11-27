@@ -13,38 +13,44 @@ class SetupTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->setup = create('App\Setup');
     }
 
     /** @test */
-    public function an_event_setup_has_an_address() {
+    public function an_event_setup_has_an_address()
+    {
         $this->assertNotNull($this->setup->address);
     }
 
     /** @test */
-    public function an_event_setup_has_a_setup_date_and_time() {
+    public function an_event_setup_has_a_setup_date_and_time()
+    {
         $this->assertNotNull($this->setup->setup_on);
     }
 
     /** @test */
-    public function an_event_setup_may_have_a_description() {
+    public function an_event_setup_may_have_a_description()
+    {
         $this->assertNotNull($this->setup->description);
     }
 
     /** @test */
-    public function an_event_setup_may_have_a_fee() {
+    public function an_event_setup_may_have_a_fee()
+    {
         $this->assertNotNull($this->setup->fee);
     }
 
     /** @test */
-    public function an_event_setup_belongs_to_an_account() {
+    public function an_event_setup_belongs_to_an_account()
+    {
         $this->assertInstanceOf('App\Account', $this->setup->account);
     }
 
     /** @test */
-    public function an_event_setup_belongs_to_a_proposal() {
+    public function an_event_setup_belongs_to_a_proposal()
+    {
         $this->assertInstanceOf('App\Proposal', $this->setup->proposal);
     }
 }

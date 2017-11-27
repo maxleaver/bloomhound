@@ -7,18 +7,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	protected $user;
+    protected $user;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->user = create('App\User');
     }
 
-	/** @test */
+    /** @test */
     public function a_user_has_a_name()
     {
         $this->assertNotNull($this->user->name);

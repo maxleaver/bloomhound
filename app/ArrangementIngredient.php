@@ -6,22 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArrangementIngredient extends Model
 {
-	protected $appends = ['cost', 'price'];
+    protected $appends = ['cost', 'price'];
     protected $casts = [
         'cost' => 'float',
         'price' => 'float',
     ];
     protected $guarded = [];
-	protected $with = ['arrangeable'];
+    protected $with = ['arrangeable'];
 
-	public function arrangement()
+    public function arrangement()
     {
         return $this->belongsTo('App\Arrangement');
     }
 
     public function arrangeable()
     {
-    	return $this->morphTo();
+        return $this->morphTo();
     }
 
     public function getCostAttribute()

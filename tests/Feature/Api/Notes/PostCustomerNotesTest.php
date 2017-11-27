@@ -23,10 +23,10 @@ class PostCustomerNotesTest extends TestCase
     /** @test */
     public function a_user_can_add_notes_to_a_customer()
     {
-    	$this->assertEquals($this->customer->notes()->count(), 0);
+        $this->assertEquals($this->customer->notes()->count(), 0);
 
         $this->addNote($this->customer->id)
-    		->assertStatus(200);
+            ->assertStatus(200);
 
         $this->assertEquals($this->customer->notes()->count(), 1);
     }
@@ -35,7 +35,7 @@ class PostCustomerNotesTest extends TestCase
     public function users_cannot_add_notes_to_customers_in_other_accounts()
     {
         $this->addNote(create('App\Customer')->id)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */
@@ -43,7 +43,7 @@ class PostCustomerNotesTest extends TestCase
     {
         $badId = 666;
         $this->addNote($badId)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */

@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\AbstractArrangeable;
-
 class FlowerVariety extends AbstractArrangeable
 {
     /**
@@ -26,7 +24,7 @@ class FlowerVariety extends AbstractArrangeable
         return $this->hasMany('App\FlowerVarietySource');
     }
 
-	public function flower()
+    public function flower()
     {
         return $this->belongsTo('App\Flower');
     }

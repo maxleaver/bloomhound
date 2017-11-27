@@ -13,7 +13,7 @@ class FlowerVarietySource extends Model
     ];
     protected $appends = ['isBestPrice'];
 
-	public function variety()
+    public function variety()
     {
         return $this->belongsTo('App\FlowerVariety', 'flower_variety_id');
     }
@@ -25,7 +25,7 @@ class FlowerVarietySource extends Model
 
     public function account()
     {
-    	return $this->belongsTo('App\Account');
+        return $this->belongsTo('App\Account');
     }
 
     protected function isBestPrice()

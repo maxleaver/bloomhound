@@ -34,7 +34,7 @@ class GetUsersTest extends TestCase
 
         $this->signIn($this->users[0])
             ->getJson($this->url)
-        	->assertStatus(200)
+            ->assertStatus(200)
             ->assertJsonFragment([$this->users[0]->name])
             ->assertJsonFragment([$this->users[1]->name])
             ->assertJsonFragment([$this->users[2]->name])

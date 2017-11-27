@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vendor extends Model
 {
-	use Notable;
+    use Notable;
 
     protected $guarded = ['id', 'account_id', 'created_at', 'updated_at'];
 
-	public function account()
+    public function account()
     {
         return $this->belongsTo('App\Account');
     }

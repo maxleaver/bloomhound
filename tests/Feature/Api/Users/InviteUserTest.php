@@ -34,7 +34,7 @@ class InviteUserTest extends TestCase
 
         $this->signIn($this->user)
             ->postJson($this->url, $this->request)
-        	->assertStatus(200);
+            ->assertStatus(200);
 
         $this->assertEquals(Invite::count(), 1);
 

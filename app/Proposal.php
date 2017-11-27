@@ -64,7 +64,7 @@ class Proposal extends Model
         return $this->morphMany('App\Discount', 'discountable');
     }
 
-	public function event()
+    public function event()
     {
         return $this->belongsTo('App\Event');
     }
@@ -88,6 +88,7 @@ class Proposal extends Model
     {
         return $this->event->fresh()->active_proposal_id == $this->id;
     }
+
     /**
      *
      * Determine if the current proposal is set as the active one.

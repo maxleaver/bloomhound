@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Auth;
 use App\Flower;
-use App\FlowerLibrary;
 use App\Http\Controllers\Controller;
 
 class FlowerController extends Controller

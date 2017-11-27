@@ -2,23 +2,21 @@
 
 namespace App;
 
-use App\AbstractArrangeable;
-
 abstract class AbstractPriceCalculator
 {
     protected $arrangeable;
     protected $markup_value;
 
-    function __construct(AbstractArrangeable $arrangeable)
+    public function __construct(AbstractArrangeable $arrangeable)
     {
         $this->arrangeable = $arrangeable;
 
         if ($this->arrangeable->use_default_markup) {
-        	// Use account setting markup value
-        	$this->markup_value = $this->arrangeable->markup_setting->markup_value;
+            // Use account setting markup value
+            $this->markup_value = $this->arrangeable->markup_setting->markup_value;
         } else {
-        	// Use arrangeables markup value
-        	$this->markup_value = $this->arrangeable->markup_value;
+            // Use arrangeables markup value
+            $this->markup_value = $this->arrangeable->markup_value;
         }
     }
 

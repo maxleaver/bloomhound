@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\ArrangeableType;
 use App\Item;
 use App\Markup;
-use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {

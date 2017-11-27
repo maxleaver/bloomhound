@@ -11,9 +11,9 @@ class CustomerTest extends TestCase
 
     protected $customer;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->customer = create('App\Customer');
     }
@@ -21,7 +21,7 @@ class CustomerTest extends TestCase
     /** @test */
     public function a_customer_has_a_name()
     {
-    	$this->assertNotNull($this->customer->name);
+        $this->assertNotNull($this->customer->name);
     }
 
     /** @test */

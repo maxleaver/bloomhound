@@ -19,8 +19,8 @@ class GetCustomerEventsTest extends TestCase
 
         $this->customer = create('App\Customer');
         $this->events = create('App\Event', [
-        	'account_id' => $this->customer->account->id,
-        	'customer_id' => $this->customer->id,
+            'account_id' => $this->customer->account->id,
+            'customer_id' => $this->customer->id,
         ], 3);
         $this->otherEvents = create('App\Event', [
             'account_id' => $this->customer->account->id
@@ -30,32 +30,32 @@ class GetCustomerEventsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_events_for_a_customer()
     {
-    	$this->getEvents($this->customer->id)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->events[0]->name])
-    		->assertJsonFragment([$this->events[1]->name])
-    		->assertJsonFragment([$this->events[2]->name])
+        $this->getEvents($this->customer->id)
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->events[0]->name])
+            ->assertJsonFragment([$this->events[1]->name])
+            ->assertJsonFragment([$this->events[2]->name])
             ->assertJsonMissing([$this->otherEvents[0]->name]);
     }
 
     /** @test */
     public function an_authenticated_user_cannot_get_events_for_customers_in_other_accounts()
     {
-    	$inAnotherAccount = create('App\Customer');
-    	$otherEvents = create('App\Event', [
-    		'account_id' => $inAnotherAccount->account->id,
-    		'customer_id' => $inAnotherAccount->id
-    	]);
+        $inAnotherAccount = create('App\Customer');
+        $otherEvents = create('App\Event', [
+            'account_id' => $inAnotherAccount->account->id,
+            'customer_id' => $inAnotherAccount->id
+        ]);
 
         $this->getEvents($inAnotherAccount->id)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_customers_events()
     {
-    	$this->getEvents($this->customer->id, false)
-    		->assertStatus(401);
+        $this->getEvents($this->customer->id, false)
+            ->assertStatus(401);
     }
 
     protected function getEvents($id, $signIn = true)

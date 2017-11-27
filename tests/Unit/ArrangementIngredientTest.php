@@ -13,13 +13,14 @@ class ArrangementIngredientTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->ingredient = create('App\ArrangementIngredient');
     }
 
     /** @test */
-    public function an_ingredient_has_a_quantity() {
+    public function an_ingredient_has_a_quantity()
+    {
         $this->assertNotNull($this->ingredient->quantity);
     }
 

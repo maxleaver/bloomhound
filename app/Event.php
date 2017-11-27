@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Proposal;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
@@ -23,7 +22,7 @@ class Event extends Model
     protected $hidden = ['account_id'];
     protected $guarded = ['id', 'account_id', 'created_at', 'updated_at'];
 
-	public function account()
+    public function account()
     {
         return $this->belongsTo('App\Account');
     }

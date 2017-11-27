@@ -11,9 +11,9 @@ class EventTest extends TestCase
 
     protected $event;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->event = create('App\Event');
     }
@@ -21,7 +21,7 @@ class EventTest extends TestCase
     /** @test */
     public function an_event_has_a_name()
     {
-    	$this->assertNotNull($this->event->name);
+        $this->assertNotNull($this->event->name);
     }
 
     /** @test */

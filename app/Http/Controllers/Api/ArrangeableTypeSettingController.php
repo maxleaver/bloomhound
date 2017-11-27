@@ -38,7 +38,7 @@ class ArrangeableTypeSettingController extends Controller
 
         // Add rules to markup_value field for markups that require entry
         $valueRequired = \App\Markup::where('allow_entry', true)->pluck('id')->toArray();
-        foreach($request->all() as $index => $entry) {
+        foreach ($request->all() as $index => $entry) {
             if (in_array($entry['markup_id'], $valueRequired)) {
                 $rules[$index . '.markup_value'] = 'required|numeric|min:0.1';
             }
@@ -46,7 +46,7 @@ class ArrangeableTypeSettingController extends Controller
 
         $request->validate($rules);
 
-        $settings = array();
+        $settings = [];
 
         DB::transaction(function () use ($request, &$settings) {
             $accountId = Auth::user()->account->id;

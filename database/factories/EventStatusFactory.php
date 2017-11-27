@@ -8,4 +8,3 @@ $factory->define(App\EventStatus::class, function (Faker $faker) {
         'title' => $faker->word,
     ];
 });
-

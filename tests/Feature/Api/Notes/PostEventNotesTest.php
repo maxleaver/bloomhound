@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use Laravel\Passport\Passport;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -24,10 +23,10 @@ class PostEventNotesTest extends TestCase
     /** @test */
     public function a_user_can_add_notes_to_an_event()
     {
-    	$this->assertEquals($this->event->notes()->count(), 0);
+        $this->assertEquals($this->event->notes()->count(), 0);
 
         $this->addNote($this->event->id)
-    		->assertStatus(200);
+            ->assertStatus(200);
 
         $this->assertEquals($this->event->notes()->count(), 1);
     }
@@ -35,9 +34,9 @@ class PostEventNotesTest extends TestCase
     /** @test */
     public function a_user_can_only_add_notes_to_events_assigned_to_their_account()
     {
-    	$event = create('App\Event');
+        $event = create('App\Event');
         $this->addNote(create('App\Event')->id)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */
@@ -45,7 +44,7 @@ class PostEventNotesTest extends TestCase
     {
         $badId = 666;
         $this->addNote($badId)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */

@@ -11,9 +11,9 @@ class FlowerVarietySourceTest extends TestCase
 
     protected $source;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->source = create('App\FlowerVarietySource');
     }
@@ -72,7 +72,7 @@ class FlowerVarietySourceTest extends TestCase
     /** @test */
     public function a_flower_variety_source_belongs_to_a_flower_variety()
     {
-    	$this->assertInstanceOf('App\FlowerVariety', $this->source->variety);
+        $this->assertInstanceOf('App\FlowerVariety', $this->source->variety);
     }
 
     /** @test */

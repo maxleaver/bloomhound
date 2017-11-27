@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setup extends Model
 {
-	protected $casts = [
+    protected $casts = [
         'fee' => 'double',
     ];
     protected $dates = [
@@ -14,9 +14,9 @@ class Setup extends Model
         'setup_on',
         'updated_at'
     ];
-	protected $guarded = ['account_id', 'event_id'];
+    protected $guarded = ['account_id', 'event_id'];
 
-	public function account()
+    public function account()
     {
         return $this->belongsTo('App\Account');
     }

@@ -13,7 +13,7 @@ class ArrangeableTypeSettingTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->setting = create('App\ArrangeableTypeSetting');
     }

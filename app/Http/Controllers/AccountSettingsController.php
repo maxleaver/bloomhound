@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Markup;
-use Illuminate\Http\Request;
 
 class AccountSettingsController extends Controller
 {

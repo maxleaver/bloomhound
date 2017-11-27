@@ -11,9 +11,9 @@ class FlowerTest extends TestCase
 
     protected $flower;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->flower = create('App\Flower');
     }

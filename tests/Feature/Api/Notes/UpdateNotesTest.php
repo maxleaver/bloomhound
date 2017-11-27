@@ -27,18 +27,18 @@ class UpdateNotesTest extends TestCase
     /** @test */
     public function a_user_can_update_a_note()
     {
-    	$this->updateNote($this->note->id)
-    		->assertStatus(200);
+        $this->updateNote($this->note->id)
+            ->assertStatus(200);
 
-    	$this->assertEquals($this->note->fresh()->text, $this->updateText);
+        $this->assertEquals($this->note->fresh()->text, $this->updateText);
     }
 
     /** @test */
     public function users_can_only_update_notes_from_their_account()
     {
-    	$otherNote = create('App\Note')->id;
+        $otherNote = create('App\Note')->id;
         $this->updateNote($otherNote)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */
@@ -52,8 +52,8 @@ class UpdateNotesTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_update_notes()
     {
-    	$this->updateNote($this->note->id, false)
-    		->assertStatus(401);
+        $this->updateNote($this->note->id, false)
+            ->assertStatus(401);
     }
 
     protected function updateNote($id, $signIn = true)

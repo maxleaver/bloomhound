@@ -7,7 +7,7 @@ $factory->define(App\FlowerVarietySource::class, function (Faker $faker) {
         'account_id' => function () {
             return factory('App\Account')->create()->id;
         },
-    	'flower_variety_id' => function () {
+        'flower_variety_id' => function () {
             return factory('App\FlowerVariety')->create()->id;
         },
         'vendor_id' => function (array $source) {

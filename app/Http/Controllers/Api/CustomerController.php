@@ -11,7 +11,7 @@ class CustomerController extends Controller
     public function __construct()
     {
         $this->middleware('in_account:customer')
-            ->except(['index','store']);
+            ->except(['index', 'store']);
     }
 
     /**

@@ -2,11 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Arrangement;
-use App\Http\Resources\Delivery;
-use App\Http\Resources\Discount;
-use App\Http\Resources\Setup;
-use App\Http\Resources\Vendor;
 use Illuminate\Http\Resources\Json\Resource;
 
 class Proposal extends Resource

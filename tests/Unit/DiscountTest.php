@@ -13,7 +13,7 @@ class DiscountTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $arrangement = create('App\Arrangement');
         $this->discount = create('App\Discount', [

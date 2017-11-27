@@ -2,12 +2,11 @@
 
 namespace App;
 
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Note extends Model
 {
-	/**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -28,11 +27,11 @@ class Note extends Model
     protected $with = ['user'];
 
     public function user()
-	{
-		return $this->belongsTo('App\User');
-	}
+    {
+        return $this->belongsTo('App\User');
+    }
 
-	/**
+    /**
      * Get all of the owning notable models.
      */
     public function notable()

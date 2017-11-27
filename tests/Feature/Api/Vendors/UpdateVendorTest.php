@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateVendorTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $request;
     protected $vendor;

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateCustomerTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $customer;
     protected $request;

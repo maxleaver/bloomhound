@@ -15,9 +15,9 @@ $factory->define(App\Item::class, function (Faker $faker) {
         },
         'markup_value' => $faker->randomDigitNotNull,
         'use_default_markup' => true,
-    	'name' => $faker->text(25),
-    	'description' => $faker->sentence,
-    	'inventory' => 10,
+        'name' => $faker->text(25),
+        'description' => $faker->sentence,
+        'inventory' => 10,
         'cost' => $faker->randomDigitNotNull,
     ];
 });

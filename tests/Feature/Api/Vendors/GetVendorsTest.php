@@ -27,21 +27,21 @@ class GetVendorsTest extends TestCase
     /** @test */
     public function a_user_can_get_a_list_of_vendors_for_their_account()
     {
-    	$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $this->signIn($this->user)
             ->getJson($this->url)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->vendors[0]->name])
-    		->assertJsonFragment([$this->vendors[1]->name])
-    		->assertJsonFragment([$this->vendors[2]->name])
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->vendors[0]->name])
+            ->assertJsonFragment([$this->vendors[1]->name])
+            ->assertJsonFragment([$this->vendors[2]->name])
             ->assertJsonMissing([$this->otherVendors[0]->name]);
     }
 
     /** @test */
     public function unauthorized_users_cannot_get_vendors()
     {
-    	$this->getJson($this->url)
-    		->assertStatus(401);
+        $this->getJson($this->url)
+            ->assertStatus(401);
     }
 }

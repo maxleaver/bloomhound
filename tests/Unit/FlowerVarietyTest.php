@@ -11,9 +11,9 @@ class FlowerVarietyTest extends TestCase
 
     protected $variety;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->variety = create('App\FlowerVariety');
     }
@@ -160,7 +160,7 @@ class FlowerVarietyTest extends TestCase
     /** @test */
     public function it_belongs_to_a_flower()
     {
-    	$this->assertInstanceOf('App\Flower', $this->variety->flower);
+        $this->assertInstanceOf('App\Flower', $this->variety->flower);
     }
 
     /** @test */

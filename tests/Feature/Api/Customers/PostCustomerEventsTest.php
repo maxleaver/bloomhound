@@ -19,8 +19,8 @@ class PostCustomerEventsTest extends TestCase
 
         $this->customer = create('App\Customer');
         $this->request = [
-        	'customer_id' => $this->customer->id,
-        	'date' => Carbon::now()->addWeek(2)->toRfc3339String(),
+            'customer_id' => $this->customer->id,
+            'date' => Carbon::now()->addWeek(2)->toRfc3339String(),
             'name' => 'Event Name',
         ];
     }
@@ -28,12 +28,12 @@ class PostCustomerEventsTest extends TestCase
     /** @test */
     public function users_can_add_an_event_for_a_customer()
     {
-    	$this->assertEquals($this->customer->events->count(), 0);
+        $this->assertEquals($this->customer->events->count(), 0);
 
         $this->createEvent($this->customer->id)
-    		->assertStatus(200);
+            ->assertStatus(200);
 
-    	$this->assertEquals($this->customer->fresh()->events->count(), 1);
+        $this->assertEquals($this->customer->fresh()->events->count(), 1);
     }
 
     /** @test */
@@ -63,16 +63,16 @@ class PostCustomerEventsTest extends TestCase
     /** @test */
     public function users_cannot_add_events_to_other_accounts()
     {
-    	$someOtherCustomer = create('App\Customer')->id;
+        $someOtherCustomer = create('App\Customer')->id;
         $this->createEvent($someOtherCustomer)
-    		->assertStatus(404);
+            ->assertStatus(404);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_add_events_for_customers()
     {
-    	$this->createEvent($this->customer->id, false)
-    		->assertStatus(401);
+        $this->createEvent($this->customer->id, false)
+            ->assertStatus(401);
     }
 
     protected function createEvent($id, $signIn = true, $withJson = true)

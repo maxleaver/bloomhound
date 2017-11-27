@@ -13,7 +13,7 @@ class RentalPriceCalculatorTest extends TestCase
 
     protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->item = create('App\Item', [
             'cost' => 500,

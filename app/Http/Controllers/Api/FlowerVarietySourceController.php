@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Auth;
 use DB;
-use Validator;
 use App\FlowerVariety;
 use App\FlowerVarietySource;
 use App\Vendor;
@@ -43,7 +42,7 @@ class FlowerVarietySourceController extends Controller
      */
     public function store(FlowerVariety $flower_variety, StoreFlowerVarietySource $request)
     {
-        $sources = array();
+        $sources = [];
 
         DB::transaction(function () use ($flower_variety, $request, &$sources) {
             foreach ($request->all() as $record) {

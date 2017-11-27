@@ -48,7 +48,7 @@ class ArrangementIngredientController extends Controller
         $ingredients = [];
         $idsByModel = [];
 
-        foreach($request->all() as $entry) {
+        foreach ($request->all() as $entry) {
             $type = $this->getArrangeableClass($entry['type']);
             if (!$type) {
                 // Validation should have caught this,

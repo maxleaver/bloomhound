@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GetProfileTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     protected $request;
     protected $url;
@@ -26,15 +26,15 @@ class GetProfileTest extends TestCase
     {
         $this->signIn($this->user)
             ->getJson($this->url)
-    		->assertStatus(200)
-    		->assertJsonFragment([$this->user->name])
-    		->assertJsonFragment([$this->user->email]);
+            ->assertStatus(200)
+            ->assertJsonFragment([$this->user->name])
+            ->assertJsonFragment([$this->user->email]);
     }
 
     /** @test */
     public function unauthenticated_users_cannot_get_a_profile()
     {
-    	$this->getJson($this->url)
-    		->assertStatus(401);
+        $this->getJson($this->url)
+            ->assertStatus(401);
     }
 }

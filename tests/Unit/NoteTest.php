@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class NoteTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
     /** @test */
     public function a_note_belongs_to_a_user()
@@ -16,7 +16,7 @@ class NoteTest extends TestCase
         $this->assertInstanceOf('App\User', $note->user);
     }
 
-	/** @test */
+    /** @test */
     public function a_note_has_a_notable()
     {
         $customer = create('App\Customer');

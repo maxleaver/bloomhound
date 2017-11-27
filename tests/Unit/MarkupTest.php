@@ -7,18 +7,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MarkupTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	protected $markup;
+    protected $markup;
 
-	protected function setUp()
+    protected function setUp()
     {
-    	parent::setUp();
+        parent::setUp();
 
         $this->markup = create('App\Markup');
     }
 
-	/** @test */
+    /** @test */
     public function it_has_a_name()
     {
         $this->assertNotNull($this->markup->name);
